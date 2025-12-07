@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home - iniPerpus</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="navbar">
+    <a href="/.html" class="navbar-brand">📚 iniPerpus</a>
+    <div class="navbar-links">
+      <a class="nav-link btn-logout" onclick="logout()">Logout</a>
+    </div>
+  </div>
+  
+  <div class="home-container">
+    <h1 class="home-title">iniPerpus</h1>
+    <p class="home-subtitle">Compact, Fast, and Efficient</p>
+    <div class="home-buttons">
+      <a href="/users" class="home-btn">
+        <div class="home-btn-icon">👥</div>
+        <div class="home-btn-title">User Management</div>
+      </a>
+      <a href="/books" class="home-btn">
+        <div class="home-btn-icon">📖</div>
+        <div class="home-btn-title">Book Management</div>
+      </a>
+      <a href="/lending" class="home-btn">
+        <div class="home-btn-icon">🔄</div>
+        <div class="home-btn-title">Lending Management</div>
+      </a>
+    </div>
+  </div>
+
+  <script>
+    // Check if user is logged in
+    window.onload = function(){
+        if (!sessionStorage.getItem('isLoggedIn')) {
+            window.location.href = '/login';
+          }
+    };
+
+    function logout() {
+      sessionStorage.removeItem('isLoggedIn');
+      window.location.href = '/login';
+    }
+  </script>
+</body>
+</html>
