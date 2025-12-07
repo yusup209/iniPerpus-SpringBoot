@@ -5,3 +5,8 @@ Aplikasi ini merupakan sistem manajemen perpustakaan yang ringkas, mudah digunak
 ### Prasyarat Tools untuk Pengembangan
 - NetBeans terbaru
 - Java 25 (JDK)
+
+
+### Screenshoots
+- version alpha 0.0.1
+~[Version Alpha 0.0.1](screenshots/iniperpus-alpha-0.0.1.png)
