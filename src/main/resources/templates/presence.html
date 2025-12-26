@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Presence</title>
+</head>
+<body>
+<h1>Presence</h1>
+<div th:if="${message}">
+    <p th:text="${message}"></p>
+</div>
+<div th:if="${error}">
+    <p th:text="${error}"></p>
+</div>
+
+<h2>Enroll student photo</h2>
+<form method="post" enctype="multipart/form-data" th:action="@{/presence/enroll}">
+    <label>Student:
+        <select name="studentId">
+            <option th:each="s : ${students}" th:value="${s.id}" th:text="${s.name}"></option>
+        </select>
+    </label>
+    <input type="file" name="image" accept="image/*" />
+    <button type="submit">Enroll</button>
+</form>
+
+<h2>Match (take photo)</h2>
+<form method="post" enctype="multipart/form-data" th:action="@{/presence/match}">
+    <input type="file" name="image" accept="image/*" />
+    <button type="submit">Match</button>
+</form>
+
+</body>
+</html>

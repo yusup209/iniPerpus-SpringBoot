@@ -8,9 +8,9 @@
 </head>
 <body>
   <div class="navbar">
-    <a href="/.html" class="navbar-brand">📚 iniPerpus</a>
+    <a href="/" class="navbar-brand">📚 iniPerpus</a>
     <div class="navbar-links">
-      <a class="nav-link btn-logout" onclick="logout()">Logout</a>
+      <a href="#" class="nav-link" onclick="appLogout(event)">Logout</a>
     </div>
   </div>
   
@@ -32,18 +32,15 @@
       </a>
     </div>
   </div>
-
+  <form id="logoutForm" th:action="@{/logout}" method="post" style="display:none;">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+  </form>
   <script>
-    // Check if user is logged in
-    window.onload = function(){
-        if (!sessionStorage.getItem('isLoggedIn')) {
-            window.location.href = '/login';
-          }
-    };
-
-    function logout() {
-      sessionStorage.removeItem('isLoggedIn');
-      window.location.href = '/login';
+    // No client-side auth gating; Spring Security enforces access.
+    function appLogout(e) {
+      e.preventDefault();
+      try { sessionStorage.removeItem('isLoggedIn'); } catch (err) {}
+      document.getElementById('logoutForm').submit();
     }
   </script>
 </body>

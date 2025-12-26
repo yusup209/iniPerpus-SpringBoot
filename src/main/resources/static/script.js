@@ -1,160 +1,152 @@
 // Get data from localStorage or initialize empty arrays
-let users = JSON.parse(localStorage.getItem('users')) || [];
-let books = JSON.parse(localStorage.getItem('books')) || [];
-let loans = JSON.parse(localStorage.getItem('loans')) || [];
-let userIdCounter = parseInt(localStorage.getItem('userIdCounter')) || 1;
-let bookIdCounter = parseInt(localStorage.getItem('bookIdCounter')) || 1;
-let loanIdCounter = parseInt(localStorage.getItem('loanIdCounter')) || 1;
+let users = [];
+let books = [];
+let loans = [];
 
-// Save data to localStorage
-function saveData() {
-  localStorage.setItem('users', JSON.stringify(users));
-  localStorage.setItem('books', JSON.stringify(books));
-  localStorage.setItem('loans', JSON.stringify(loans));
-  localStorage.setItem('userIdCounter', userIdCounter);
-  localStorage.setItem('bookIdCounter', bookIdCounter);
-  localStorage.setItem('loanIdCounter', loanIdCounter);
-}
+const api = {
+  users: '/api/users',
+  books: '/api/books',
+  lendings: '/api/lendings'
+};
 
 // User Management
-function addUser(e) {
+async function addUser(e) {
   e.preventDefault();
-  const user = {
-    id: userIdCounter++,
-    name: document.getElementById('userName').value,
-    email: document.getElementById('userEmail').value,
-    phone: document.getElementById('userPhone').value
-  };
-  users.push(user);
-  saveData();
-  renderUsers();
+  const name = document.getElementById('userName').value;
+  const email = document.getElementById('userEmail').value;
+  const phone = document.getElementById('userPhone').value;
+
+  const payload = { username: email, fullName: name, password: 'password' };
+  await fetch(api.users, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+  await fetchUsers();
   e.target.reset();
 }
 
 function renderUsers() {
   const tbody = document.getElementById('usersBody');
   if (!tbody) return;
-  
+
   tbody.innerHTML = users.map(u => `
     <tr>
-      <td>${u.name}</td>
-      <td>${u.email}</td>
-      <td>${u.phone}</td>
+      <td>${u.fullName}</td>
+      <td>${u.username}</td>
+      <td>—</td>
       <td><button class="btn-delete" onclick="deleteUser(${u.id})">Delete</button></td>
     </tr>
   `).join('');
 }
 
-function deleteUser(id) {
-  users = users.filter(u => u.id !== id);
-  saveData();
+async function deleteUser(id) {
+  await fetch(`${api.users}/${id}`, { method: 'DELETE' });
+  await fetchUsers();
+}
+
+async function fetchUsers() {
+  const resp = await fetch(api.users);
+  users = await resp.json();
   renderUsers();
+  updateLendingDropdowns();
 }
 
 // Book Management
-function addBook(e) {
+async function addBook(e) {
   e.preventDefault();
-  const book = {
-    id: bookIdCounter++,
-    title: document.getElementById('bookTitle').value,
-    author: document.getElementById('bookAuthor').value,
-    isbn: document.getElementById('bookISBN').value,
-    totalCopies: parseInt(document.getElementById('bookCopies').value),
-    availableCopies: parseInt(document.getElementById('bookCopies').value)
-  };
-  books.push(book);
-  saveData();
-  renderBooks();
+  const title = document.getElementById('bookTitle').value;
+  const author = document.getElementById('bookAuthor').value;
+  const isbn = document.getElementById('bookISBN').value;
+  const copies = parseInt(document.getElementById('bookCopies').value);
+
+  const payload = { title: title, author: author, isbn: isbn, copiesTotal: copies, copiesAvailable: copies };
+  await fetch(api.books, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+  await fetchBooks();
   e.target.reset();
 }
 
 function renderBooks() {
   const tbody = document.getElementById('booksBody');
   if (!tbody) return;
-  
+
   tbody.innerHTML = books.map(b => `
     <tr>
       <td>${b.title}</td>
       <td>${b.author}</td>
       <td>${b.isbn}</td>
-      <td>${b.availableCopies}/${b.totalCopies}</td>
+      <td>${b.copiesAvailable || b.copiesAvailable === 0 ? b.copiesAvailable : b.availableCopies}/${b.copiesTotal || b.totalCopies}</td>
       <td><button class="btn-delete" onclick="deleteBook(${b.id})">Delete</button></td>
     </tr>
   `).join('');
 }
 
-function deleteBook(id) {
-  books = books.filter(b => b.id !== id);
-  saveData();
+async function deleteBook(id) {
+  await fetch(`${api.books}/${id}`, { method: 'DELETE' });
+  await fetchBooks();
+}
+
+async function fetchBooks() {
+  const resp = await fetch(api.books);
+  books = await resp.json();
   renderBooks();
+  updateLendingDropdowns();
 }
 
 // Lending Management
 function updateLendingDropdowns() {
   const userSelect = document.getElementById('lendUser');
   const bookSelect = document.getElementById('lendBook');
-  
+
   if (!userSelect || !bookSelect) return;
-  
-  userSelect.innerHTML = '<option value="">Select a user</option>' + 
-    users.map(u => `<option value="${u.id}">${u.name}</option>`).join('');
-  
-  bookSelect.innerHTML = '<option value="">Select a book</option>' + 
-    books.filter(b => b.availableCopies > 0)
-      .map(b => `<option value="${b.id}">${b.title} (${b.availableCopies} available)</option>`).join('');
+
+  userSelect.innerHTML = '<option value="">Select a user</option>' +
+    users.map(u => `<option value="${u.id}">${u.fullName || u.username}</option>`).join('');
+
+  bookSelect.innerHTML = '<option value="">Select a book</option>' +
+    books.filter(b => (b.copiesAvailable || b.copiesAvailable === 0 ? b.copiesAvailable : b.availableCopies) > 0)
+      .map(b => `<option value="${b.id}">${b.title} (${b.copiesAvailable || b.availableCopies} available)</option>`).join('');
 }
 
-function lendBook(e) {
+async function lendBook(e) {
   e.preventDefault();
   const userId = parseInt(document.getElementById('lendUser').value);
   const bookId = parseInt(document.getElementById('lendBook').value);
-  const dueDate = document.getElementById('lendDueDate').value;
-  
-  const user = users.find(u => u.id === userId);
-  const book = books.find(b => b.id === bookId);
-  
-  if (book.availableCopies > 0) {
-    book.availableCopies--;
-    const loan = {
-      id: loanIdCounter++,
-      userId: userId,
-      userName: user.name,
-      bookId: bookId,
-      bookTitle: book.title,
-      dueDate: dueDate,
-      status: 'borrowed'
-    };
-    loans.push(loan);
-    saveData();
-    renderLoans();
-    renderBooks();
-    updateLendingDropdowns();
-    e.target.reset();
-  }
+  const dueDate = document.getElementById('lendDueDate').value || null;
+
+  const payload = { userId: userId, bookId: bookId, dueDate: dueDate };
+  await fetch(api.lendings, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+  await fetchLoans();
+  await fetchBooks();
+  e.target.reset();
 }
 
 function renderLoans() {
   const tbody = document.getElementById('lendingBody');
   if (!tbody) return;
-  
+
   tbody.innerHTML = loans.map(l => `
     <tr>
-      <td>${l.userName}</td>
-      <td>${l.bookTitle}</td>
-      <td>${l.dueDate}</td>
-      <td><span class="status-badge status-${l.status}">${l.status}</span></td>
-      <td><button class="btn-delete" onclick="returnBook(${l.id})">Return</button></td>
+      <td>${l.borrower ? (l.borrower.fullName || l.borrower.username) : '—'}</td>
+      <td>${l.book ? l.book.title : '—'}</td>
+      <td>${l.dueDate ? l.dueDate : ''}</td>
+      <td><span class="status-badge">${l.returnDate ? 'returned' : 'borrowed'}</span></td>
+      <td>${l.returnDate ? '' : `<button class="btn-delete" onclick="returnBook(${l.id})">Return</button>`}</td>
     </tr>
   `).join('');
 }
 
-function returnBook(loanId) {
-  const loan = loans.find(l => l.id === loanId);
-  const book = books.find(b => b.id === loan.bookId);
-  book.availableCopies++;
-  loans = loans.filter(l => l.id !== loanId);
-  saveData();
-  renderLoans();
-  renderBooks();
-  updateLendingDropdowns();
+async function returnBook(loanId) {
+  await fetch(`${api.lendings}/${loanId}/return`, { method: 'POST' });
+  await fetchLoans();
+  await fetchBooks();
 }
+
+async function fetchLoans() {
+  const resp = await fetch(api.lendings);
+  loans = await resp.json();
+  renderLoans();
+}
+
+// Initial fetch
+document.addEventListener('DOMContentLoaded', async () => {
+  await fetchUsers();
+  await fetchBooks();
+  await fetchLoans();
+});

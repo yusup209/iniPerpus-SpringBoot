@@ -13,7 +13,7 @@
                 <a href="/" class="nav-link">Home</a>
                 <a href="/users" class="nav-link">Users</a>
                 <a href="/lending" class="nav-link">Lending</a>
-                <a class="nav-link btn-logout" onclick="logout()">Logout</a>
+                <a href="#" class="nav-link" onclick="appLogout(event)">Logout</a>
             </div>
         </div>
 
@@ -65,22 +65,19 @@
             </div>
         </div>
 
+        <form id="logoutForm" th:action="@{/logout}" method="post" style="display:none;">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+        </form>
+
         <script src="script.js"></script>
         <script>
-                  // Check if user is logged in
-                  window.onload = function () {
-                      if (!sessionStorage.getItem('isLoggedIn')) {
-                          window.location.href = '/';
-                      }
-                  };
-
-                  function logout() {
-                      sessionStorage.removeItem('isLoggedIn');
-                      window.location.href = '/login';
-                  }
-
                   // Render books on page load
                   renderBooks();
+                                    function appLogout(e) {
+                                        e.preventDefault();
+                                        try { sessionStorage.removeItem('isLoggedIn'); } catch (err) {}
+                                        document.getElementById('logoutForm').submit();
+                                    }
         </script>
     </body>
 </html>
