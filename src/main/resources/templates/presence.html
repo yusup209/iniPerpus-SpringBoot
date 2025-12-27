@@ -21,23 +21,34 @@
   <div class="container">
     <div class="page-header">
       <h1>📸 Student Presence</h1>
+      <p style="color:#4b5563; margin-top:8px;">Use the camera to register student faces and check them in via the python-face-service.</p>
     </div>
     
     <div class="grid">
       <div class="card" style="text-align: center;">
-        <h2 style="margin-bottom: 20px;">Camera Check-In</h2>
+        <h2 style="margin-bottom: 20px;">Camera</h2>
         
         <div style="position: relative; display: inline-block; margin-bottom: 20px;">
           <video id="video" width="640" height="480" autoplay style="border-radius: 12px; background: #000; display: block;"></video>
           <canvas id="canvas" width="640" height="480" style="display: none;"></canvas>
         </div>
         
-        <div style="display: flex; gap: 12px; justify-content: center; margin-bottom: 20px;">
+        <div style="display: flex; gap: 12px; justify-content: center; margin-bottom: 12px;">
           <button id="startCameraBtn" onclick="startCamera()">Start Camera</button>
           <button id="checkInBtn" onclick="checkIn()" disabled>Check In</button>
+          <button id="registerBtn" onclick="registerFace()" disabled>Register Face</button>
         </div>
         
-        <div id="result" style="padding: 20px; border-radius: 12px; margin-top: 20px; display: none;"></div>
+        <div style="display:flex; gap:12px; justify-content:center; align-items:center; margin-bottom:12px;">
+          <label for="studentSelect" style="font-weight:600; color:#374151;">Link to Student:</label>
+          <select id="studentSelect" style="min-width:220px; padding:10px 12px; border-radius:10px; border:1px solid #d1d5db;">
+            <option value="">-- Select student --</option>
+            <option th:each="s : ${students}" th:value="${s.id}" th:text="${s.name + ' (' + s.studentId + ')'}" th:attr="data-sid=${s.studentId}"></option>
+          </select>
+        </div>
+
+        <div id="result" style="padding: 20px; border-radius: 12px; margin-top: 10px; display: none;"></div>
+        <div id="enrollResult" style="padding: 16px; border-radius: 12px; margin-top: 10px; display: none;"></div>
       </div>
 
       <div class="card">
@@ -70,7 +81,16 @@
     const ctx = canvas.getContext('2d');
     const startBtn = document.getElementById('startCameraBtn');
     const checkInBtn = document.getElementById('checkInBtn');
+    const registerBtn = document.getElementById('registerBtn');
     const resultDiv = document.getElementById('result');
+    const enrollResultDiv = document.getElementById('enrollResult');
+    const studentSelect = document.getElementById('studentSelect');
+
+    function setStatus(el, html, background) {
+      el.style.display = 'block';
+      el.innerHTML = html;
+      el.style.background = background;
+    }
 
     async function startCamera() {
       try {
@@ -78,48 +98,70 @@
         video.srcObject = stream;
         startBtn.disabled = true;
         checkInBtn.disabled = false;
+        registerBtn.disabled = false;
         resultDiv.style.display = 'none';
+        enrollResultDiv.style.display = 'none';
       } catch (err) {
         alert('Failed to access camera: ' + err.message);
       }
     }
 
     async function checkIn() {
-      // Capture image from video
       ctx.drawImage(video, 0, 0, 640, 480);
-      
-      // Convert canvas to blob
       canvas.toBlob(async (blob) => {
         const formData = new FormData();
         formData.append('image', blob, 'capture.jpg');
-        
-        resultDiv.style.display = 'block';
-        resultDiv.innerHTML = '<p style="color: #667eea;">Processing...</p>';
-        
+
+        setStatus(resultDiv, '<p style="color: #667eea;">Processing check-in...</p>', 'transparent');
+
         try {
-          const response = await fetch('/api/presence/checkin', {
-            method: 'POST',
-            body: formData
-          });
-          
+          const response = await fetch('/api/presence/checkin', { method: 'POST', body: formData });
           const result = await response.json();
-          
+
           if (result.matched) {
-            resultDiv.innerHTML = `
+            setStatus(resultDiv, `
               <p style="color: #10b981; font-size: 1.2em; font-weight: 600;">✓ Check-In Successful!</p>
               <p style="color: #333; margin-top: 10px;">Welcome, ${result.student_id || 'Student'}</p>
-            `;
-            resultDiv.style.background = 'linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%)';
+            `, 'linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%)');
           } else {
-            resultDiv.innerHTML = `
+            setStatus(resultDiv, `
               <p style="color: #ef4444; font-size: 1.2em; font-weight: 600;">✗ Face Not Recognized</p>
               <p style="color: #666; margin-top: 10px;">Please try again or contact administrator</p>
-            `;
-            resultDiv.style.background = 'linear-gradient(135deg, #fee2e2 0%, #fecaca 100%)';
+            `, 'linear-gradient(135deg, #fee2e2 0%, #fecaca 100%)');
           }
         } catch (err) {
-          resultDiv.innerHTML = `<p style="color: #ef4444;">Error: ${err.message}</p>`;
-          resultDiv.style.background = 'linear-gradient(135deg, #fee2e2 0%, #fecaca 100%)';
+          setStatus(resultDiv, `<p style="color: #ef4444;">Error: ${err.message}</p>`, 'linear-gradient(135deg, #fee2e2 0%, #fecaca 100%)');
+        }
+      }, 'image/jpeg');
+    }
+
+    async function registerFace() {
+      const studentId = studentSelect.value;
+      if (!studentId) {
+        alert('Please select a student to register.');
+        return;
+      }
+      ctx.drawImage(video, 0, 0, 640, 480);
+      canvas.toBlob(async (blob) => {
+        const formData = new FormData();
+        formData.append('image', blob, 'capture.jpg');
+        formData.append('studentId', studentId);
+
+        setStatus(enrollResultDiv, '<p style="color: #667eea;">Registering face...</p>', 'transparent');
+
+        try {
+          const response = await fetch('/api/presence/enroll', { method: 'POST', body: formData });
+          const result = await response.json();
+          if (response.ok) {
+            setStatus(enrollResultDiv, `
+              <p style="color: #2563eb; font-size: 1.1em; font-weight: 600;">✓ Face Registered</p>
+              <p style="color: #374151; margin-top: 8px;">Linked to student ${result.student_id || ''}</p>
+            `, 'linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%)');
+          } else {
+            setStatus(enrollResultDiv, `<p style="color: #ef4444;">Failed: ${result.error || 'Unknown error'}</p>`, 'linear-gradient(135deg, #fee2e2 0%, #fecaca 100%)');
+          }
+        } catch (err) {
+          setStatus(enrollResultDiv, `<p style="color: #ef4444;">Error: ${err.message}</p>`, 'linear-gradient(135deg, #fee2e2 0%, #fecaca 100%)');
         }
       }, 'image/jpeg');
     }
@@ -133,7 +175,6 @@
       document.getElementById('logoutForm').submit();
     }
 
-    // Stop camera when leaving page
     window.addEventListener('beforeunload', () => {
       if (stream) {
         stream.getTracks().forEach(track => track.stop());
