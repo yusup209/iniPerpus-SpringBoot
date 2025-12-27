@@ -336,6 +336,29 @@ button:active {
   transform: translateY(0);
 }
 
+.btn-delete-confirm {
+  background: linear-gradient(135deg, #f5576c 0%, #d63447 100%);
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 12px;
+  font-size: 1em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(245, 87, 108, 0.3);
+}
+
+.btn-delete-confirm:hover {
+  background: linear-gradient(135deg, #f76577 0%, #e04757 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(245, 87, 108, 0.4);
+}
+
+.btn-delete-confirm:active {
+  transform: translateY(0);
+}
+
 table {
   width: 100%;
   border-collapse: collapse;

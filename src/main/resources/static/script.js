@@ -128,9 +128,24 @@ function renderBooks() {
   renderPagination('books', books.length, state, 'booksPagination');
 }
 
-async function deleteBook(id) {
-  await fetch(`${api.books}/${id}`, { method: 'DELETE' });
-  await fetchBooks();
+let deleteBookId = null;
+
+function deleteBook(id) {
+  deleteBookId = id;
+  document.getElementById('deleteConfirmModal').style.display = 'block';
+}
+
+async function confirmDelete() {
+  if (deleteBookId) {
+    await fetch(`${api.books}/${deleteBookId}`, { method: 'DELETE' });
+    await fetchBooks();
+    cancelDelete();
+  }
+}
+
+function cancelDelete() {
+  deleteBookId = null;
+  document.getElementById('deleteConfirmModal').style.display = 'none';
 }
 
 function editBook(id) {
@@ -303,3 +318,6 @@ window.changePage = changePage;
 window.setPageSize = setPageSize;
 window.editBook = editBook;
 window.closeEditModal = closeEditModal;
+window.deleteBook = deleteBook;
+window.confirmDelete = confirmDelete;
+window.cancelDelete = cancelDelete;
