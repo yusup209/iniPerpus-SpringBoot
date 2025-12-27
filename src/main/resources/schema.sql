@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS `lending` (
   KEY `fk_lending_book_idx` (`book_id`),
   KEY `fk_lending_borrower_idx` (`borrower_id`),
   CONSTRAINT `fk_lending_book` FOREIGN KEY (`book_id`) REFERENCES `book` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE,
-  CONSTRAINT `fk_lending_borrower` FOREIGN KEY (`borrower_id`) REFERENCES `student` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
+  CONSTRAINT `fk_lending_borrower` FOREIGN KEY (`borrower_id`) REFERENCES `student` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `presence_record` (

@@ -29,10 +29,24 @@ public class ApiStudentController {
     @PostMapping
     public Student create(@RequestBody Student s) { return studentService.save(s); }
 
+    @PutMapping("/{id}")
+    public Student update(@PathVariable Long id, @RequestBody Student updates) {
+        Student existing = studentService.findById(id);
+        if (existing == null) throw new RuntimeException("Student not found");
+        if (updates.getName() != null) existing.setName(updates.getName());
+        if (updates.getStudentId() != null) existing.setStudentId(updates.getStudentId());
+        if (updates.getClassName() != null) existing.setClassName(updates.getClassName());
+        return studentService.save(existing);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
-        studentService.delete(id);
-        return ResponseEntity.noContent().build();
+        try {
+            studentService.delete(id);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Cannot delete student: " + e.getMessage());
+        }
     }
 
     @PostMapping(path = "/{id}/photo", consumes = {"multipart/form-data"})

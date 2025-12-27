@@ -73,15 +73,64 @@ function renderStudents() {
       <td>${s.name}</td>
       <td>${s.studentId}</td>
       <td>${s.className || '—'}</td>
-      <td><button class="btn-delete" onclick="deleteStudent(${s.id})">Delete</button></td>
+      <td style="text-align:center;">
+        <button class="btn-icon-edit" title="Edit" onclick="editStudent(${s.id})">✎</button>
+        <button class="btn-icon-delete" title="Delete" onclick="deleteStudent(${s.id})">🗑</button>
+      </td>
     </tr>
   `).join('');
   renderPagination('students', students.length, state, 'usersPagination');
 }
 
-async function deleteStudent(id) {
-  await fetch(`${api.students}/${id}`, { method: 'DELETE' });
+let deleteStudentId = null;
+
+function deleteStudent(id) {
+  deleteStudentId = id;
+  document.getElementById('deleteConfirmModal').style.display = 'block';
+}
+
+async function confirmDeleteStudent() {
+  if (deleteStudentId) {
+    await fetch(`${api.students}/${deleteStudentId}`, { method: 'DELETE' });
+    await fetchStudents();
+    cancelDeleteStudent();
+  }
+}
+
+function cancelDeleteStudent() {
+  deleteStudentId = null;
+  document.getElementById('deleteConfirmModal').style.display = 'none';
+}
+
+function editStudent(id) {
+  const student = students.find(s => s.id === id);
+  if (!student) return;
+  document.getElementById('editStudentId').value = student.id;
+  document.getElementById('editStudentName').value = student.name;
+  document.getElementById('editStudentStudentId').value = student.studentId;
+  document.getElementById('editStudentClassName').value = student.className || '';
+  document.getElementById('editStudentModal').style.display = 'block';
+}
+
+async function saveStudent(e) {
+  e.preventDefault();
+  const id = document.getElementById('editStudentId').value;
+  const name = document.getElementById('editStudentName').value;
+  const studentId = document.getElementById('editStudentStudentId').value;
+  const className = document.getElementById('editStudentClassName').value;
+  
+  const payload = { name, studentId, className };
+  await fetch(`${api.students}/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
   await fetchStudents();
+  closeEditStudentModal();
+}
+
+function closeEditStudentModal() {
+  document.getElementById('editStudentModal').style.display = 'none';
 }
 
 async function fetchStudents() {
@@ -321,3 +370,9 @@ window.closeEditModal = closeEditModal;
 window.deleteBook = deleteBook;
 window.confirmDelete = confirmDelete;
 window.cancelDelete = cancelDelete;
+window.deleteStudent = deleteStudent;
+window.confirmDeleteStudent = confirmDeleteStudent;
+window.cancelDeleteStudent = cancelDeleteStudent;
+window.editStudent = editStudent;
+window.saveStudent = saveStudent;
+window.closeEditStudentModal = closeEditStudentModal;
