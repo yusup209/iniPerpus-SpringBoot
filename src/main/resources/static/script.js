@@ -3,6 +3,12 @@ let students = [];
 let books = [];
 let loans = [];
 
+const paging = {
+  students: { page: 1, size: 5 },
+  books: { page: 1, size: 5 },
+  loans: { page: 1, size: 5 }
+};
+
 const api = {
   students: '/api/students',
   books: '/api/books',
@@ -29,11 +35,40 @@ async function addStudent(e) {
   e.target.reset();
 }
 
+function ensureValidPage(state, total) {
+  const maxPages = Math.max(1, Math.ceil(total / state.size));
+  if (state.page > maxPages) state.page = maxPages;
+  if (state.page < 1) state.page = 1;
+  return maxPages;
+}
+
+function renderPagination(kind, total, state, elId) {
+  const el = document.getElementById(elId);
+  if (!el) return;
+  const maxPages = Math.max(1, Math.ceil(total / state.size));
+  el.innerHTML = `
+    <div style="display:flex;gap:12px;align-items:center;">
+      <span>Rows per page</span>
+      <select onchange="setPageSize('${kind}', this.value)">
+        <option value="5" ${state.size==5?'selected':''}>5</option>
+        <option value="10" ${state.size==10?'selected':''}>10</option>
+        <option value="25" ${state.size==25?'selected':''}>25</option>
+      </select>
+      <span>Page ${state.page} / ${maxPages}</span>
+      <button onclick="changePage('${kind}', -1)">Prev</button>
+      <button onclick="changePage('${kind}', 1)">Next</button>
+    </div>`;
+}
+
 function renderStudents() {
   const tbody = document.getElementById('usersBody');
   if (!tbody) return;
+  const state = paging.students;
+  const maxPages = ensureValidPage(state, students.length);
+  const start = (state.page - 1) * state.size;
+  const pageRows = students.slice(start, start + state.size);
 
-  tbody.innerHTML = students.map(s => `
+  tbody.innerHTML = pageRows.map(s => `
     <tr>
       <td>${s.name}</td>
       <td>${s.studentId}</td>
@@ -41,6 +76,7 @@ function renderStudents() {
       <td><button class="btn-delete" onclick="deleteStudent(${s.id})">Delete</button></td>
     </tr>
   `).join('');
+  renderPagination('students', students.length, state, 'usersPagination');
 }
 
 async function deleteStudent(id) {
@@ -72,8 +108,12 @@ async function addBook(e) {
 function renderBooks() {
   const tbody = document.getElementById('booksBody');
   if (!tbody) return;
+  const state = paging.books;
+  const maxPages = ensureValidPage(state, books.length);
+  const start = (state.page - 1) * state.size;
+  const pageRows = books.slice(start, start + state.size);
 
-  tbody.innerHTML = books.map(b => `
+  tbody.innerHTML = pageRows.map(b => `
     <tr>
       <td>${b.title}</td>
       <td>${b.author}</td>
@@ -82,6 +122,7 @@ function renderBooks() {
       <td><button class="btn-delete" onclick="deleteBook(${b.id})">Delete</button></td>
     </tr>
   `).join('');
+  renderPagination('books', books.length, state, 'booksPagination');
 }
 
 async function deleteBook(id) {
@@ -162,8 +203,12 @@ async function lendBook(e) {
 function renderLoans() {
   const tbody = document.getElementById('lendingBody');
   if (!tbody) return;
+  const state = paging.loans;
+  const maxPages = ensureValidPage(state, loans.length);
+  const start = (state.page - 1) * state.size;
+  const pageRows = loans.slice(start, start + state.size);
 
-  tbody.innerHTML = loans.map(l => `
+  tbody.innerHTML = pageRows.map(l => `
     <tr>
       <td>${l.borrower ? (l.borrower.name || l.borrower.studentId) : '—'}</td>
       <td>${l.book ? l.book.title : '—'}</td>
@@ -172,6 +217,7 @@ function renderLoans() {
       <td>${l.returnDate ? '' : `<button class="btn-delete" onclick="returnBook(${l.id})">Return</button>`}</td>
     </tr>
   `).join('');
+  renderPagination('loans', loans.length, state, 'lendingPagination');
 }
 
 async function returnBook(loanId) {
@@ -200,5 +246,26 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 });
 
+function changePage(kind, delta) {
+  const state = paging[kind];
+  const total = kind === 'students' ? students.length : kind === 'books' ? books.length : loans.length;
+  const max = ensureValidPage(state, total);
+  state.page = Math.min(max, Math.max(1, state.page + delta));
+  if (kind === 'students') renderStudents();
+  else if (kind === 'books') renderBooks();
+  else renderLoans();
+}
+
+function setPageSize(kind, size) {
+  const state = paging[kind];
+  state.size = parseInt(size);
+  state.page = 1;
+  if (kind === 'students') renderStudents();
+  else if (kind === 'books') renderBooks();
+  else renderLoans();
+}
+
 // Ensure functions used by inline handlers are globally accessible
 window.lendBook = lendBook;
+window.changePage = changePage;
+window.setPageSize = setPageSize;
