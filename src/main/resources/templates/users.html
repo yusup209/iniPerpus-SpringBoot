@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>User Management - Library System</title>
+  <title>Student Management - Library System</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -19,37 +19,37 @@
 
   <div class="container">
     <div class="page-header">
-      <h1>👥 User Management</h1>
+      <h1>👥 Student Management</h1>
     </div>
     <div class="grid">
       <div class="card">
-        <h2 style="margin-bottom: 20px;">Add New User</h2>
-        <form onsubmit="addUser(event)">
+        <h2 style="margin-bottom: 20px;">Add New Student</h2>
+        <form onsubmit="addStudent(event)">
           <div class="form-group">
             <label>Name</label>
             <input type="text" id="userName" required>
           </div>
           <div class="form-group">
-            <label>Email</label>
-            <input type="email" id="userEmail" required>
+            <label>Student ID</label>
+            <input type="text" id="userEmail" required>
           </div>
           <div class="form-group">
-            <label>Phone</label>
-            <input type="tel" id="userPhone" required>
+            <label>Class</label>
+            <input type="text" id="userPhone" required>
           </div>
           <button type="submit">Add User</button>
         </form>
       </div>
 
       <div class="card">
-        <h2 style="margin-bottom: 20px;">User List</h2>
+        <h2 style="margin-bottom: 20px;">Student List</h2>
         <div style="overflow-x: auto;">
           <table id="usersTable">
             <thead>
               <tr>
                 <th>Name</th>
-                <th>Email</th>
-                <th>Phone</th>
+                <th>Student ID</th>
+                <th>Class</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -66,8 +66,8 @@
 
   <script src="script.js"></script>
   <script>
-    // Render users on page load
-    renderUsers();
+    // Render students on page load
+    renderStudents();
     function appLogout(e) {
       e.preventDefault();
       try { sessionStorage.removeItem('isLoggedIn'); } catch (err) {}

@@ -2,6 +2,7 @@ package com.kkp.iniperpus.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
+import com.kkp.iniperpus.model.Student;
 
 @Entity
 public class Lending {
@@ -13,7 +14,7 @@ public class Lending {
     private Book book;
 
     @ManyToOne(optional = false)
-    private User borrower;
+    private Student borrower;
 
     private LocalDate lendDate;
     private LocalDate dueDate;
@@ -23,8 +24,8 @@ public class Lending {
     public void setId(Long id) { this.id = id; }
     public Book getBook() { return book; }
     public void setBook(Book book) { this.book = book; }
-    public User getBorrower() { return borrower; }
-    public void setBorrower(User borrower) { this.borrower = borrower; }
+    public Student getBorrower() { return borrower; }
+    public void setBorrower(Student borrower) { this.borrower = borrower; }
     public LocalDate getLendDate() { return lendDate; }
     public void setLendDate(LocalDate lendDate) { this.lendDate = lendDate; }
     public LocalDate getDueDate() { return dueDate; }

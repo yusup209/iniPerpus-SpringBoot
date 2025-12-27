@@ -1,50 +1,57 @@
 // Get data from localStorage or initialize empty arrays
-let users = [];
+let students = [];
 let books = [];
 let loans = [];
 
 const api = {
-  users: '/api/users',
+  students: '/api/students',
   books: '/api/books',
   lendings: '/api/lendings'
 };
 
-// User Management
-async function addUser(e) {
+function setLendingStatus(message, isError = false) {
+  const el = document.getElementById('lendingStatus');
+  if (!el) return;
+  el.textContent = message || '';
+  el.style.color = isError ? '#b00020' : '#0a6d0a';
+}
+
+// Student Management
+async function addStudent(e) {
   e.preventDefault();
   const name = document.getElementById('userName').value;
-  const email = document.getElementById('userEmail').value;
-  const phone = document.getElementById('userPhone').value;
+  const studentId = document.getElementById('userEmail').value; // reuse email field as studentId input field id
+  const className = document.getElementById('userPhone').value;
 
-  const payload = { username: email, fullName: name, password: 'password' };
-  await fetch(api.users, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-  await fetchUsers();
+  const payload = { name: name, studentId: studentId, className: className };
+  await fetch(api.students, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+  await fetchStudents();
   e.target.reset();
 }
 
-function renderUsers() {
+function renderStudents() {
   const tbody = document.getElementById('usersBody');
   if (!tbody) return;
 
-  tbody.innerHTML = users.map(u => `
+  tbody.innerHTML = students.map(s => `
     <tr>
-      <td>${u.fullName}</td>
-      <td>${u.username}</td>
-      <td>—</td>
-      <td><button class="btn-delete" onclick="deleteUser(${u.id})">Delete</button></td>
+      <td>${s.name}</td>
+      <td>${s.studentId}</td>
+      <td>${s.className || '—'}</td>
+      <td><button class="btn-delete" onclick="deleteStudent(${s.id})">Delete</button></td>
     </tr>
   `).join('');
 }
 
-async function deleteUser(id) {
-  await fetch(`${api.users}/${id}`, { method: 'DELETE' });
-  await fetchUsers();
+async function deleteStudent(id) {
+  await fetch(`${api.students}/${id}`, { method: 'DELETE' });
+  await fetchStudents();
 }
 
-async function fetchUsers() {
-  const resp = await fetch(api.users);
-  users = await resp.json();
-  renderUsers();
+async function fetchStudents() {
+  const resp = await fetch(api.students, { credentials: 'same-origin', headers: { 'Accept': 'application/json' } });
+  students = await resp.json();
+  renderStudents();
   updateLendingDropdowns();
 }
 
@@ -83,7 +90,7 @@ async function deleteBook(id) {
 }
 
 async function fetchBooks() {
-  const resp = await fetch(api.books);
+  const resp = await fetch(api.books, { credentials: 'same-origin', headers: { 'Accept': 'application/json' } });
   books = await resp.json();
   renderBooks();
   updateLendingDropdowns();
@@ -96,8 +103,8 @@ function updateLendingDropdowns() {
 
   if (!userSelect || !bookSelect) return;
 
-  userSelect.innerHTML = '<option value="">Select a user</option>' +
-    users.map(u => `<option value="${u.id}">${u.fullName || u.username}</option>`).join('');
+  userSelect.innerHTML = '<option value="">Select a student</option>' +
+    students.map(s => `<option value="${s.id}">${s.name || s.studentId}</option>`).join('');
 
   bookSelect.innerHTML = '<option value="">Select a book</option>' +
     books.filter(b => (b.copiesAvailable || b.copiesAvailable === 0 ? b.copiesAvailable : b.availableCopies) > 0)
@@ -105,16 +112,51 @@ function updateLendingDropdowns() {
 }
 
 async function lendBook(e) {
+  console.log('lendBook called with event:', e);
   e.preventDefault();
-  const userId = parseInt(document.getElementById('lendUser').value);
+  console.log('preventDefault executed');
+  const studentId = parseInt(document.getElementById('lendUser').value);
   const bookId = parseInt(document.getElementById('lendBook').value);
   const dueDate = document.getElementById('lendDueDate').value || null;
 
-  const payload = { userId: userId, bookId: bookId, dueDate: dueDate };
-  await fetch(api.lendings, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-  await fetchLoans();
-  await fetchBooks();
-  e.target.reset();
+  if (!studentId || !bookId) {
+    alert('Please select both student and book.');
+    return;
+  }
+
+  const payload = { studentId: studentId, bookId: bookId, dueDate: dueDate };
+  console.log('Lending payload:', payload);
+  try {
+    const resp = await fetch(api.lendings, {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    console.log('Lend response status:', resp.status);
+    const respText = await resp.text();
+    console.log('Lend response body:', respText);
+    
+    if (!resp.ok) {
+      alert('Failed to lend: ' + (respText || resp.status));
+      setLendingStatus('Failed to lend: ' + (respText || resp.status), true);
+      return;
+    }
+    setLendingStatus('Lending saved.', false);
+    await fetchLoans();
+    await fetchBooks();
+    if (e && e.target && e.target.form) {
+      e.target.form.reset();
+    } else {
+      const btn = document.getElementById('lendBookBtn');
+      const form = (btn && btn.closest('form')) || document.querySelector('form');
+      if (form) form.reset();
+    }
+  } catch (err) {
+    console.error('Lend error:', err);
+    alert('Error lending book: ' + err);
+    setLendingStatus('Error lending book: ' + err, true);
+  }
 }
 
 function renderLoans() {
@@ -123,7 +165,7 @@ function renderLoans() {
 
   tbody.innerHTML = loans.map(l => `
     <tr>
-      <td>${l.borrower ? (l.borrower.fullName || l.borrower.username) : '—'}</td>
+      <td>${l.borrower ? (l.borrower.name || l.borrower.studentId) : '—'}</td>
       <td>${l.book ? l.book.title : '—'}</td>
       <td>${l.dueDate ? l.dueDate : ''}</td>
       <td><span class="status-badge">${l.returnDate ? 'returned' : 'borrowed'}</span></td>
@@ -139,14 +181,24 @@ async function returnBook(loanId) {
 }
 
 async function fetchLoans() {
-  const resp = await fetch(api.lendings);
+  const resp = await fetch(api.lendings, { credentials: 'same-origin', headers: { 'Accept': 'application/json' } });
   loans = await resp.json();
   renderLoans();
 }
 
 // Initial fetch
 document.addEventListener('DOMContentLoaded', async () => {
-  await fetchUsers();
+  await fetchStudents();
   await fetchBooks();
   await fetchLoans();
+  const btn = document.getElementById('lendBookBtn');
+  if (btn) {
+    console.log('Attaching click handler to lendBookBtn');
+    btn.addEventListener('click', lendBook);
+  } else {
+    console.warn('lendBookBtn not found');
+  }
 });
+
+// Ensure functions used by inline handlers are globally accessible
+window.lendBook = lendBook;

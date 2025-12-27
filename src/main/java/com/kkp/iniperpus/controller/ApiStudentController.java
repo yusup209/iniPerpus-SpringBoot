@@ -29,6 +29,12 @@ public class ApiStudentController {
     @PostMapping
     public Student create(@RequestBody Student s) { return studentService.save(s); }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable Long id) {
+        studentService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
     @PostMapping(path = "/{id}/photo", consumes = {"multipart/form-data"})
     public ResponseEntity<?> uploadPhoto(@PathVariable Long id, @RequestParam("image") MultipartFile image) {
         try {

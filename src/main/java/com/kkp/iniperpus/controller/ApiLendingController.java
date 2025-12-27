@@ -5,6 +5,8 @@ import com.kkp.iniperpus.service.LendingService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -14,6 +16,7 @@ import java.util.List;
 public class ApiLendingController {
 
     private final LendingService lendingService;
+    private static final Logger log = LoggerFactory.getLogger(ApiLendingController.class);
 
     public ApiLendingController(LendingService lendingService) {
         this.lendingService = lendingService;
@@ -25,9 +28,15 @@ public class ApiLendingController {
     @PostMapping
     public ResponseEntity<?> lend(@Valid @RequestBody LendingRequest req) {
         try {
-            var l = lendingService.lend(req.userId, req.bookId, req.dueDate);
+            log.info("LEND request studentId={}, bookId={}, dueDate={}", req.studentId, req.bookId, req.dueDate);
+            var l = lendingService.lend(req.studentId, req.bookId, req.dueDate);
+            log.info("LEND success id={} borrower={} book={} dueDate={} ", l.getId(),
+                    l.getBorrower() != null ? l.getBorrower().getId() : null,
+                    l.getBook() != null ? l.getBook().getId() : null,
+                    l.getDueDate());
             return ResponseEntity.ok(l);
         } catch (IllegalArgumentException | IllegalStateException ex) {
+            log.warn("LEND failed: {}", ex.getMessage());
             return ResponseEntity.badRequest().body(ex.getMessage());
         }
     }
@@ -44,7 +53,7 @@ public class ApiLendingController {
 
     static class LendingRequest {
         @jakarta.validation.constraints.NotNull
-        public Long userId;
+        public Long studentId;
         @jakarta.validation.constraints.NotNull
         public Long bookId;
         public LocalDate dueDate;

@@ -24,9 +24,9 @@
     <div class="grid">
       <div class="card">
         <h2 style="margin-bottom: 20px;">Lend Book</h2>
-        <form onsubmit="lendBook(event)">
+        <form>
           <div class="form-group">
-            <label>Select User</label>
+            <label>Select Student</label>
             <select id="lendUser" required></select>
           </div>
           <div class="form-group">
@@ -37,8 +37,9 @@
             <label>Due Date</label>
             <input type="date" id="lendDueDate" required>
           </div>
-          <button type="submit">Lend Book</button>
+          <button type="button" id="lendBookBtn">Lend Book</button>
         </form>
+        <div id="lendingStatus" style="margin-top:10px;font-weight:600;"></div>
       </div>
 
       <div class="card">
@@ -67,6 +68,9 @@
 
   <script src="script.js"></script>
   <script>
+    console.log('lending.html script block loaded');
+    console.log('lendBook function exists:', typeof lendBook);
+    
     // Set minimum date to today
     const today = new Date().toISOString().split('T')[0];
     document.getElementById('lendDueDate').min = today;

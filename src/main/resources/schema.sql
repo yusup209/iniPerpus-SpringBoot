@@ -42,6 +42,16 @@ CREATE TABLE IF NOT EXISTS `book` (
   KEY `idx_book_isbn` (`isbn`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+CREATE TABLE IF NOT EXISTS `student` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `student_id` VARCHAR(100) DEFAULT NULL,
+  `name` VARCHAR(255) DEFAULT NULL,
+  `class_name` VARCHAR(255) DEFAULT NULL,
+  `photo_filename` VARCHAR(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_student_studentId` (`student_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 CREATE TABLE IF NOT EXISTS `lending` (
   `id` BIGINT NOT NULL AUTO_INCREMENT,
   `book_id` BIGINT NOT NULL,
@@ -53,17 +63,7 @@ CREATE TABLE IF NOT EXISTS `lending` (
   KEY `fk_lending_book_idx` (`book_id`),
   KEY `fk_lending_borrower_idx` (`borrower_id`),
   CONSTRAINT `fk_lending_book` FOREIGN KEY (`book_id`) REFERENCES `book` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE,
-  CONSTRAINT `fk_lending_borrower` FOREIGN KEY (`borrower_id`) REFERENCES `user` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-CREATE TABLE IF NOT EXISTS `student` (
-  `id` BIGINT NOT NULL AUTO_INCREMENT,
-  `student_id` VARCHAR(100) DEFAULT NULL,
-  `name` VARCHAR(255) DEFAULT NULL,
-  `class_name` VARCHAR(255) DEFAULT NULL,
-  `photo_filename` VARCHAR(255) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `uk_student_studentId` (`student_id`)
+  CONSTRAINT `fk_lending_borrower` FOREIGN KEY (`borrower_id`) REFERENCES `student` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `presence_record` (

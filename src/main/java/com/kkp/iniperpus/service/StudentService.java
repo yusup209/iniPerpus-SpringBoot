@@ -33,4 +33,6 @@ public class StudentService {
         s.setPhotoFilename(filename);
         return studentRepository.save(s);
     }
+
+    public void delete(Long id) { studentRepository.deleteById(id); }
 }
