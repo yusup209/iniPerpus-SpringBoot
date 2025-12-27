@@ -119,7 +119,10 @@ function renderBooks() {
       <td>${b.author}</td>
       <td>${b.isbn}</td>
       <td>${b.copiesAvailable || b.copiesAvailable === 0 ? b.copiesAvailable : b.availableCopies}/${b.copiesTotal || b.totalCopies}</td>
-      <td><button class="btn-delete" onclick="deleteBook(${b.id})">Delete</button></td>
+      <td style="text-align:center;">
+        <button class="btn-icon-edit" title="Edit" onclick="editBook(${b.id})">✎</button>
+        <button class="btn-icon-delete" title="Delete" onclick="deleteBook(${b.id})">🗑</button>
+      </td>
     </tr>
   `).join('');
   renderPagination('books', books.length, state, 'booksPagination');
@@ -128,6 +131,35 @@ function renderBooks() {
 async function deleteBook(id) {
   await fetch(`${api.books}/${id}`, { method: 'DELETE' });
   await fetchBooks();
+}
+
+function editBook(id) {
+  const book = books.find(b => b.id === id);
+  if (!book) return;
+  document.getElementById('editBookId').value = book.id;
+  document.getElementById('editBookTitle').value = book.title;
+  document.getElementById('editBookAuthor').value = book.author;
+  document.getElementById('editBookISBN').value = book.isbn || '';
+  document.getElementById('editBookCopies').value = book.copiesTotal || '';
+  document.getElementById('editBookModal').style.display = 'block';
+}
+
+async function saveBook(e) {
+  e.preventDefault();
+  const id = document.getElementById('editBookId').value;
+  const title = document.getElementById('editBookTitle').value;
+  const author = document.getElementById('editBookAuthor').value;
+  const isbn = document.getElementById('editBookISBN').value;
+  const copies = parseInt(document.getElementById('editBookCopies').value);
+
+  const payload = { title: title, author: author, isbn: isbn, copiesTotal: copies };
+  await fetch(`${api.books}/${id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+  document.getElementById('editBookModal').style.display = 'none';
+  await fetchBooks();
+}
+
+function closeEditModal() {
+  document.getElementById('editBookModal').style.display = 'none';
 }
 
 async function fetchBooks() {
@@ -269,3 +301,5 @@ function setPageSize(kind, size) {
 window.lendBook = lendBook;
 window.changePage = changePage;
 window.setPageSize = setPageSize;
+window.editBook = editBook;
+window.closeEditModal = closeEditModal;

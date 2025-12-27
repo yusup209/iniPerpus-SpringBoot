@@ -24,6 +24,11 @@ public class ApiBookController {
     @PostMapping
     public Book create(@Valid @RequestBody Book b) { return bookService.create(b); }
 
+    @PutMapping("/{id}")
+    public Book update(@PathVariable Long id, @Valid @RequestBody Book updates) {
+        return bookService.update(id, updates);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
         bookService.delete(id);

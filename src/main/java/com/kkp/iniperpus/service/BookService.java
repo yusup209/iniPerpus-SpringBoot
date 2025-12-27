@@ -24,5 +24,14 @@ public class BookService {
         return bookRepository.save(b);
     }
 
+    public Book update(Long id, Book updates) {
+        Book b = bookRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("book not found"));
+        if (updates.getTitle() != null && !updates.getTitle().isBlank()) b.setTitle(updates.getTitle());
+        if (updates.getAuthor() != null && !updates.getAuthor().isBlank()) b.setAuthor(updates.getAuthor());
+        if (updates.getIsbn() != null && !updates.getIsbn().isBlank()) b.setIsbn(updates.getIsbn());
+        if (updates.getCopiesTotal() != null && updates.getCopiesTotal() > 0) b.setCopiesTotal(updates.getCopiesTotal());
+        return bookRepository.save(b);
+    }
+
     public void delete(Long id) { bookRepository.deleteById(id); }
 }
