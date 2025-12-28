@@ -1,38 +1,192 @@
 # iniPerpus - Library Management System
 
-A comprehensive library management system with face recognition-based student attendance. Built with Spring Boot (Java) and FastAPI (Python).
+Sistem manajemen perpustakaan komprehensif dengan fitur presensi siswa berbasis pengenalan wajah. Dibangun dengan Spring Boot (Java) dan FastAPI (Python).
 
-## 📋 Table of Contents
+---
 
-- [Features](#features)
-- [Technical Stack](#technical-stack)
-- [System Requirements](#system-requirements)
-- [Project Structure](#project-structure)
-- [Installation & Setup](#installation--setup)
-  - [Database Setup](#1-database-setup)
-  - [Spring Boot Application](#2-spring-boot-application)
-  - [Python Face Recognition Service](#3-python-face-recognition-service)
-- [Running the Application](#running-the-application)
-- [Usage Guide](#usage-guide)
-- [Configuration](#configuration)
-- [Screenshots](#screenshots)
+*A comprehensive library management system with face recognition-based student attendance. Built with Spring Boot (Java) and FastAPI (Python).*
 
-## ✨ Features
+## 📋 Daftar Isi / Table of Contents
 
-### Core Functionality
-- **Student Management**: Add, edit, delete student records with pagination
-- **Book Management**: Complete CRUD operations for book inventory with pagination
-- **Lending Management**: Track book loans with due dates and return management
-- **Student Presence**: Face recognition-based attendance system using camera
+- [Fitur / Features](#fitur--features)
+- [Stack Teknologi / Technical Stack](#-stack-teknologi--technical-stack)
+- [Kebutuhan Sistem / System Requirements](#-kebutuhan-sistem--system-requirements)
+- [Struktur Proyek / Project Structure](#-struktur-proyek--project-structure)
+- [Instalasi & Setup / Installation & Setup](#-instalasi--setup--installation--setup)
+- [Menjalankan Aplikasi / Running the Application](#-menjalankan-aplikasi--running-the-application)
+- [Panduan Penggunaan / Usage Guide](#-panduan-penggunaan--usage-guide)
+- [Konfigurasi / Configuration](#-konfigurasi--configuration)
+- [Screenshots](#-screenshots)
 
-### Advanced Features
-- Face registration and enrollment for students
-- Real-time face matching for student check-ins
-- Automatic face data cleanup on student deletion
-- Session persistence during development with DevTools
-- Responsive UI with glassmorphism design
-- Client-side pagination for all data tables
-- Confirmation dialogs for delete operations
+## ✨ Fitur / Features
+
+### 👥 Manajemen Siswa / Student Management
+- **Tambah Siswa**: Menambahkan data siswa baru dengan informasi nama, NIS, dan kelas
+- **Edit Siswa**: Memperbarui informasi siswa yang sudah ada melalui dialog modal
+- **Hapus Siswa**: Menghapus siswa dengan dialog konfirmasi dan penghapusan cascade otomatis
+- **Cari & Filter**: Fungsi pencarian real-time untuk semua data siswa
+- **Paginasi**: Navigasi melalui daftar siswa dengan ukuran halaman yang dapat disesuaikan (5, 10, 25)
+- **Tampilan Total**: Melihat jumlah total siswa yang terdaftar secara langsung
+- **Integrasi Data Wajah**: Link langsung ke registrasi wajah dari data siswa
+- **Aksi Berbasis Ikon**: Ikon intuitif untuk edit (✎), hapus (🗑️), dan kamera (📸) untuk aksi cepat
+
+### 📚 Manajemen Buku / Book Management
+- **Operasi CRUD Lengkap**: Tambah, lihat, edit, dan hapus data buku
+- **Detail Buku**: Melacak judul, pengarang, ISBN, dan ketersediaan eksemplar
+- **Pelacakan Inventori**: Memantau eksemplar tersedia vs total eksemplar untuk setiap buku
+- **Ketersediaan Cerdas**: Update otomatis eksemplar tersedia saat buku dipinjam atau dikembalikan
+- **Perlindungan Hapus**: Modal konfirmasi mencegah penghapusan buku secara tidak sengaja
+- **Modal Edit**: Pengeditan dalam halaman tanpa gangguan navigasi
+- **Sistem Paginasi**: Jelajahi koleksi buku besar secara efisien
+- **Hitungan Real-time**: Menampilkan jumlah total buku di perpustakaan
+- **Umpan Balik Visual**: Indikasi jelas status ketersediaan buku
+
+### 🔄 Manajemen Peminjaman / Lending Management
+- **Pinjam Buku**: Meminjamkan buku ke siswa dengan perhitungan tanggal jatuh tempo otomatis
+- **Proses Pengembalian**: Tandai buku sebagai dikembalikan dan pulihkan inventori
+- **Pelacakan Pinjaman Aktif**: Lihat semua buku yang sedang dipinjam dalam satu tempat
+- **Manajemen Tanggal Jatuh Tempo**: Periode pinjaman 14 hari otomatis dengan tampilan tanggal jatuh tempo visual
+- **Hubungan Siswa-Buku**: Menghubungkan peminjam dengan item yang dipinjam secara mulus
+- **Validasi**: Mencegah peminjaman saat tidak ada eksemplar tersedia
+- **Update Status**: Refleksi real-time status peminjaman di seluruh sistem
+- **Dukungan Paginasi**: Menangani riwayat peminjaman besar secara efisien
+- **Tampilan Total Pinjaman**: Ringkasan cepat transaksi peminjaman aktif
+
+### 📸 Presensi Siswa (Pengenalan Wajah) / Student Presence (Face Recognition)
+- **Integrasi Kamera**: Akses webcam langsung untuk menangkap wajah
+- **Pendaftaran Wajah**: Mendaftarkan wajah siswa yang terhubung dengan data siswa mereka
+- **Pencocokan Wajah**: Pengenalan wajah real-time untuk check-in otomatis
+- **Pencatatan Check-in**: Pencatatan kehadiran otomatis dengan timestamp
+- **Pendaftaran Ulang**: Memperbarui data wajah untuk siswa yang sudah ada
+- **Kepercayaan Pencocokan**: Threshold 0.6 untuk pencocokan wajah yang akurat
+- **Check-in Terbaru**: Lihat catatan kehadiran terbaru dengan detail siswa
+- **Paginasi**: Navigasi melalui riwayat kehadiran
+- **Umpan Balik Visual**: Pesan sukses/error yang jelas dengan alert berkode warna
+- **Toggle Kamera**: Mulai/hentikan kamera dengan satu klik tombol
+- **Video Responsif**: Ukuran feed kamera adaptif untuk berbagai ukuran layar
+- **Pembersihan Data Wajah**: Penghapusan otomatis encoding wajah saat siswa dihapus
+- **Integrasi Layanan Python**: Microservice terpisah untuk pemrosesan wajah
+
+### 🔐 Keamanan & Autentikasi / Security & Authentication
+- **Login Pengguna**: Autentikasi berbasis form yang aman dengan Spring Security
+- **Konfirmasi Logout**: Dialog modal mencegah logout tidak sengaja
+- **Manajemen Sesi**: Sesi persisten selama development
+- **Perlindungan CSRF**: Perlindungan Cross-Site Request Forgery bawaan
+- **Enkripsi Password**: Penyimpanan password aman dengan BCrypt
+- **Akses Berbasis Role**: Diferensiasi role admin dan user
+- **Logout Otomatis**: Pemutusan sesi yang bersih dengan konfirmasi
+- **Alert Gaya Bootstrap**: Pesan error dan sukses yang user-friendly dengan ikon
+
+### 🎨 Antarmuka Pengguna / User Interface
+- **Desain Glassmorphism**: Estetika kaca buram modern dengan backdrop blur
+- **Background Animasi**: Transisi warna gradien yang mulus
+- **Layout Responsif**: Menyesuaikan dengan desktop, tablet, dan layar mobile
+- **Dialog Modal**: Konfirmasi edit dan hapus yang tidak mengganggu
+- **Paginasi Client-side**: Navigasi cepat tanpa reload halaman
+- **Update Real-time**: Refleksi perubahan instan di seluruh antarmuka
+- **Ikon Intuitif**: Indikator aksi visual untuk UX yang lebih baik
+- **Alert Berkode Warna**: Styling pesan sukses (hijau), error (merah), info (biru)
+- **Loading States**: Umpan balik pengguna selama operasi asinkron
+- **Styling Konsisten**: Bahasa desain terpadu di seluruh halaman
+
+### 🛠 Manajemen Data / Data Management
+- **Penghapusan Cascade**: Pembersihan otomatis record terkait (peminjaman, presensi, data wajah)
+- **Constraint Foreign Key**: Integritas database dengan ON DELETE CASCADE
+- **Seeding Data Awal**: Pembuatan otomatis user admin dan data sampel saat pertama kali dijalankan
+- **Inisialisasi Idempotent**: Data dummy hanya diisi sekali
+- **RESTful API**: Endpoint API berbasis JSON untuk semua operasi CRUD
+- **Validasi**: Validasi input server-side dan client-side
+- **Penanganan Error**: Pesan error yang elegan dan recovery
+- **Manajemen Skema Database**: Skema berbasis SQL dengan kontrol manual
+
+### 🚀 Fitur Development / Development Features
+- **Hot Reload**: Integrasi DevTools untuk restart aplikasi otomatis
+- **Live Reload**: Auto-refresh browser saat ada perubahan kode
+- **Persistensi Sesi**: Mempertahankan state login selama restart development
+- **Debug Logging**: Logging komprehensif untuk security dan query JPA
+- **Konfigurasi Test**: Database H2 in-memory terpisah untuk testing
+- **Gradle Wrapper**: Environment build yang konsisten di semua mesin
+- **Python Virtual Environment**: Dependensi terisolasi untuk layanan wajah
+- **Dokumentasi API**: Dokumen Swagger/OpenAPI untuk layanan Python
+
+### 📚 Book Management
+- **Complete CRUD Operations**: Add, view, edit, and delete book records
+- **Book Details**: Track title, author, ISBN, and copy availability
+- **Inventory Tracking**: Monitor available copies vs. total copies for each book
+- **Smart Availability**: Automatic update of available copies when books are lent or returned
+- **Delete Protection**: Confirmation modal prevents accidental book deletion
+- **Edit Modal**: In-page editing without navigation disruption
+- **Pagination System**: Browse through large book collections efficiently
+- **Real-time Count**: Display total number of books in the library
+- **Visual Feedback**: Clear indication of book availability status
+
+### 🔄 Lending Management
+- **Lend Books**: Issue books to students with automatic due date calculation
+- **Return Processing**: Mark books as returned and restore inventory
+- **Active Loans Tracking**: View all currently borrowed books in one place
+- **Due Date Management**: Automatic 14-day loan period with visual due date display
+- **Student-Book Linking**: Connect borrowers with borrowed items seamlessly
+- **Validation**: Prevent lending when no copies are available
+- **Status Updates**: Real-time reflection of lending status across the system
+- **Pagination Support**: Handle large lending histories efficiently
+- **Total Loans Display**: Quick overview of active lending transactions
+
+### 📸 Student Presence (Face Recognition)
+- **Camera Integration**: Live webcam access for face capture
+- **Face Enrollment**: Register student faces linked to their student records
+- **Face Matching**: Real-time face recognition for automatic check-ins
+- **Check-in Recording**: Automatic attendance logging with timestamps
+- **Re-registration**: Update face data for existing students
+- **Match Confidence**: 0.6 threshold for accurate face matching
+- **Recent Check-ins**: View latest attendance records with student details
+- **Pagination**: Navigate through attendance history
+- **Visual Feedback**: Clear success/error messages with color-coded alerts
+- **Camera Toggle**: Start/stop camera with single button click
+- **Responsive Video**: Adaptive camera feed sizing for different screen sizes
+- **Face Data Cleanup**: Automatic removal of face encodings when students are deleted
+- **Python Service Integration**: Separate microservice for face processing
+
+### 🔐 Security & Authentication
+- **User Login**: Secure form-based authentication with Spring Security
+- **Logout Confirmation**: Modal dialog prevents accidental logout
+- **Session Management**: Persistent sessions during development
+- **CSRF Protection**: Built-in Cross-Site Request Forgery protection
+- **Password Encryption**: Secure password storage with BCrypt
+- **Role-based Access**: Admin and user role differentiation
+- **Automatic Logout**: Clean session termination with confirmation
+- **Bootstrap-style Alerts**: User-friendly error and success messages with icons
+
+### 🎨 User Interface
+- **Glassmorphism Design**: Modern frosted glass aesthetic with backdrop blur
+- **Animated Background**: Smooth gradient color transitions
+- **Responsive Layout**: Adapts to desktop, tablet, and mobile screens
+- **Modal Dialogs**: Non-intrusive edit and delete confirmations
+- **Client-side Pagination**: Fast navigation without page reloads
+- **Real-time Updates**: Instant reflection of changes across the interface
+- **Intuitive Icons**: Visual action indicators for better UX
+- **Color-coded Alerts**: Success (green), error (red), info (blue) message styling
+- **Loading States**: User feedback during asynchronous operations
+- **Consistent Styling**: Unified design language across all pages
+
+### 🛠 Data Management
+- **Cascade Deletion**: Automatic cleanup of related records (lending, presence, face data)
+- **Foreign Key Constraints**: Database integrity with ON DELETE CASCADE
+- **Initial Data Seeding**: Automatic creation of admin user and sample data on first run
+- **Idempotent Initialization**: Dummy data populated only once
+- **RESTful API**: JSON-based API endpoints for all CRUD operations
+- **Validation**: Server-side and client-side input validation
+- **Error Handling**: Graceful error messages and recovery
+- **Database Schema Management**: SQL-based schema with manual control
+
+### 🚀 Development Features
+- **Hot Reload**: DevTools integration for automatic application restart
+- **Live Reload**: Browser auto-refresh on code changes
+- **Session Persistence**: Maintain login state during development restarts
+- **Debug Logging**: Comprehensive security and JPA query logging
+- **Test Configuration**: Separate H2 in-memory database for testing
+- **Gradle Wrapper**: Consistent build environment across machines
+- **Python Virtual Environment**: Isolated dependencies for face service
+- **API Documentation**: Swagger/OpenAPI docs for Python service
 
 ## 🛠 Technical Stack
 
