@@ -67,6 +67,7 @@
             <tbody id="presenceBody"></tbody>
           </table>
         </div>
+        <div id="presencePagination" style="margin-top:12px;"></div>
       </div>
     </div>
   </div>
@@ -77,6 +78,8 @@
 
   <script>
     let stream = null;
+    let presenceRecords = [];
+    const pagingPresence = { page: 1, size: 5 };
     const video = document.getElementById('video');
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
@@ -87,11 +90,49 @@
     const enrollResultDiv = document.getElementById('enrollResult');
     const studentSelect = document.getElementById('studentSelect');
 
+    // Pagination helper
+    function ensureValidPagePresence(total) {
+      const maxPages = Math.max(1, Math.ceil(total / pagingPresence.size));
+      if (pagingPresence.page > maxPages) pagingPresence.page = maxPages;
+      if (pagingPresence.page < 1) pagingPresence.page = 1;
+      return maxPages;
+    }
+
+    function renderPaginationPresence(total) {
+      const el = document.getElementById('presencePagination');
+      if (!el) return;
+      const maxPages = Math.max(1, Math.ceil(total / pagingPresence.size));
+      el.innerHTML = `
+        <div style="display:flex;gap:12px;align-items:center;">
+          <select onchange="setPageSizePresence(this.value)" style="padding:8px 10px;border-radius:8px;border:1px solid #d1d5db;">
+            <option value="5" ${pagingPresence.size==5?'selected':''}>5</option>
+            <option value="10" ${pagingPresence.size==10?'selected':''}>10</option>
+            <option value="25" ${pagingPresence.size==25?'selected':''}>25</option>
+          </select>
+          <span>Page ${pagingPresence.page} / ${maxPages}</span>
+          <button onclick="changePagePresence(-1)">Prev</button>
+          <button onclick="changePagePresence(1)">Next</button>
+        </div>`;
+    }
+
+    function changePagePresence(delta) {
+      const max = ensureValidPagePresence(presenceRecords.length);
+      pagingPresence.page = Math.min(max, Math.max(1, pagingPresence.page + delta));
+      renderPresenceRecords(presenceRecords);
+    }
+
+    function setPageSizePresence(size) {
+      pagingPresence.size = parseInt(size);
+      pagingPresence.page = 1;
+      renderPresenceRecords(presenceRecords);
+    }
+
     // Fetch and render presence records
     async function fetchPresenceRecords() {
       try {
         const response = await fetch('/api/presence/records');
         const records = await response.json();
+        presenceRecords = records;
         renderPresenceRecords(records);
       } catch (err) {
         console.error('Failed to fetch presence records:', err);
@@ -104,9 +145,13 @@
       if (totalEl) totalEl.textContent = records ? records.length : 0;
       if (!records || records.length === 0) {
         tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#9ca3af;">No check-ins yet</td></tr>';
+        document.getElementById('presencePagination').innerHTML = '';
         return;
       }
-      tbody.innerHTML = records.slice(0, 10).map(r => {
+      const maxPages = ensureValidPagePresence(records.length);
+      const start = (pagingPresence.page - 1) * pagingPresence.size;
+      const pageRows = records.slice(start, start + pagingPresence.size);
+      tbody.innerHTML = pageRows.map(r => {
         const time = new Date(r.timestamp).toLocaleString();
         const studentId = r.student ? r.student.studentId : '—';
         const name = r.student ? r.student.name : '—';
@@ -120,6 +165,7 @@
           </tr>
         `;
       }).join('');
+      renderPaginationPresence(records.length);
     }
 
     function setStatus(el, html, background) {
