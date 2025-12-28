@@ -28,13 +28,13 @@
       <div class="card" style="text-align: center;">
         <h2 style="margin-bottom: 20px;">Camera</h2>
         
-        <div style="position: relative; display: inline-block; margin-bottom: 20px;">
-          <video id="video" width="640" height="480" autoplay style="border-radius: 12px; background: #000; display: block;"></video>
-          <canvas id="canvas" width="640" height="480" style="display: none;"></canvas>
+        <div style="position: relative; display: inline-block; margin: 20px; max-width: 90%; width: 100%;">
+          <video id="video" autoplay style="border-radius: 12px; background: #000; display: block; width: 100%; max-width: 800px; height: auto; margin: 0 auto;"></video>
+          <canvas id="canvas" style="display: none;"></canvas>
         </div>
         
         <div style="display: flex; gap: 12px; justify-content: center; margin-bottom: 12px;">
-          <button id="startCameraBtn" onclick="startCamera()">Start Camera</button>
+          <button id="startCameraBtn" onclick="toggleCamera()">Start Camera</button>
           <button id="checkInBtn" onclick="checkIn()" disabled>Check In</button>
           <button id="registerBtn" onclick="registerFace()" disabled>Register Face</button>
         </div>
@@ -86,28 +86,79 @@
     const enrollResultDiv = document.getElementById('enrollResult');
     const studentSelect = document.getElementById('studentSelect');
 
+    // Fetch and render presence records
+    async function fetchPresenceRecords() {
+      try {
+        const response = await fetch('/api/presence/records');
+        const records = await response.json();
+        renderPresenceRecords(records);
+      } catch (err) {
+        console.error('Failed to fetch presence records:', err);
+      }
+    }
+
+    function renderPresenceRecords(records) {
+      const tbody = document.getElementById('presenceBody');
+      if (!records || records.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#9ca3af;">No check-ins yet</td></tr>';
+        return;
+      }
+      tbody.innerHTML = records.slice(0, 10).map(r => {
+        const time = new Date(r.timestamp).toLocaleString();
+        const studentId = r.student ? r.student.studentId : '—';
+        const name = r.student ? r.student.name : '—';
+        const status = r.matched ? '<span style="color:#10b981;">✓ Matched</span>' : '<span style="color:#ef4444;">✗ Not matched</span>';
+        return `
+          <tr>
+            <td>${time}</td>
+            <td>${studentId}</td>
+            <td>${name}</td>
+            <td>${status}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
     function setStatus(el, html, background) {
       el.style.display = 'block';
       el.innerHTML = html;
       el.style.background = background;
     }
 
-    async function startCamera() {
-      try {
-        stream = await navigator.mediaDevices.getUserMedia({ video: true });
-        video.srcObject = stream;
-        startBtn.disabled = true;
-        checkInBtn.disabled = false;
-        registerBtn.disabled = false;
+    async function toggleCamera() {
+      if (stream) {
+        // Stop camera
+        stream.getTracks().forEach(track => track.stop());
+        stream = null;
+        video.srcObject = null;
+        startBtn.disabled = false;
+        startBtn.textContent = 'Start Camera';
+        checkInBtn.disabled = true;
+        registerBtn.disabled = true;
         resultDiv.style.display = 'none';
         enrollResultDiv.style.display = 'none';
-      } catch (err) {
-        alert('Failed to access camera: ' + err.message);
+      } else {
+        // Start camera
+        try {
+          stream = await navigator.mediaDevices.getUserMedia({ video: true });
+          video.srcObject = stream;
+          startBtn.textContent = 'Stop Camera';
+          checkInBtn.disabled = false;
+          registerBtn.disabled = false;
+          resultDiv.style.display = 'none';
+          enrollResultDiv.style.display = 'none';
+        } catch (err) {
+          alert('Failed to access camera: ' + err.message);
+        }
       }
     }
 
     async function checkIn() {
-      ctx.drawImage(video, 0, 0, 640, 480);
+      const width = video.videoWidth;
+      const height = video.videoHeight;
+      canvas.width = width;
+      canvas.height = height;
+      ctx.drawImage(video, 0, 0, width, height);
       canvas.toBlob(async (blob) => {
         const formData = new FormData();
         formData.append('image', blob, 'capture.jpg');
@@ -123,6 +174,7 @@
               <p style="color: #10b981; font-size: 1.2em; font-weight: 600;">✓ Check-In Successful!</p>
               <p style="color: #333; margin-top: 10px;">Welcome, ${result.student_id || 'Student'}</p>
             `, 'linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%)');
+            fetchPresenceRecords();
           } else {
             setStatus(resultDiv, `
               <p style="color: #ef4444; font-size: 1.2em; font-weight: 600;">✗ Face Not Recognized</p>
@@ -141,7 +193,11 @@
         alert('Please select a student to register.');
         return;
       }
-      ctx.drawImage(video, 0, 0, 640, 480);
+      const width = video.videoWidth;
+      const height = video.videoHeight;
+      canvas.width = width;
+      canvas.height = height;
+      ctx.drawImage(video, 0, 0, width, height);
       canvas.toBlob(async (blob) => {
         const formData = new FormData();
         formData.append('image', blob, 'capture.jpg');
@@ -180,6 +236,9 @@
         stream.getTracks().forEach(track => track.stop());
       }
     });
+
+    // Load presence records on page load
+    fetchPresenceRecords();
   </script>
 </body>
 </html>
