@@ -96,9 +96,9 @@ async def match(image: UploadFile = File(...)):
 
     # threshold (0.6 common); return score
     threshold = 0.6
-    matched = best_id is not None and best_distance <= threshold
+    matched = bool(best_id is not None and best_distance <= threshold)
 
-    return JSONResponse({"matched": matched, "student_id": best_id if matched else None, "distance": float(best_distance)})
+    return {"matched": matched, "student_id": best_id if matched else None, "distance": float(best_distance)}
 
 @app.get("/students")
 def students():
