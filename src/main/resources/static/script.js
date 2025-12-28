@@ -63,6 +63,8 @@ function renderPagination(kind, total, state, elId) {
 function renderStudents() {
   const tbody = document.getElementById('usersBody');
   if (!tbody) return;
+  const totalEl = document.getElementById('totalStudents');
+  if (totalEl) totalEl.textContent = students.length;
   const state = paging.students;
   const maxPages = ensureValidPage(state, students.length);
   const start = (state.page - 1) * state.size;
@@ -157,6 +159,8 @@ async function addBook(e) {
 function renderBooks() {
   const tbody = document.getElementById('booksBody');
   if (!tbody) return;
+  const totalEl = document.getElementById('totalBooks');
+  if (totalEl) totalEl.textContent = books.length;
   const state = paging.books;
   const maxPages = ensureValidPage(state, books.length);
   const start = (state.page - 1) * state.size;
@@ -299,6 +303,8 @@ async function lendBook(e) {
 function renderLoans() {
   const tbody = document.getElementById('lendingBody');
   if (!tbody) return;
+  const totalEl = document.getElementById('totalLoans');
+  if (totalEl) totalEl.textContent = loans.length;
   const state = paging.loans;
   const maxPages = ensureValidPage(state, loans.length);
   const start = (state.page - 1) * state.size;
