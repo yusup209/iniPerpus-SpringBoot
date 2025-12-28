@@ -85,4 +85,14 @@ public class PresenceService {
 
         return result;
     }
+
+    public void deleteFaceData(String studentId) {
+        try {
+            String url = faceServiceUrl + "/student/" + studentId;
+            restTemplate.delete(url);
+        } catch (Exception e) {
+            // Log error but don't fail the student deletion
+            System.err.println("Failed to delete face data for student " + studentId + ": " + e.getMessage());
+        }
+    }
 }

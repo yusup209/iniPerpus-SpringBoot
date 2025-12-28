@@ -105,3 +105,18 @@ def students():
     with lock:
         db = load_encodings()
     return {"students": list(db.keys())}
+
+@app.delete("/student/{student_id}")
+async def delete_student(student_id: str):
+    with lock:
+        db = load_encodings()
+        if student_id in db:
+            del db[student_id]
+            save_encodings(db)
+            # delete image file if exists
+            img_path = IMAGES_DIR / f"{student_id}.jpg"
+            if img_path.exists():
+                img_path.unlink()
+            return {"student_id": student_id, "status": "deleted"}
+        else:
+            raise HTTPException(status_code=404, detail="Student face data not found")

@@ -42,6 +42,11 @@ public class ApiStudentController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
         try {
+            Student student = studentService.findById(id);
+            if (student != null && student.getStudentId() != null) {
+                // Delete face data from face service
+                presenceService.deleteFaceData(student.getStudentId());
+            }
             studentService.delete(id);
             return ResponseEntity.noContent().build();
         } catch (Exception e) {

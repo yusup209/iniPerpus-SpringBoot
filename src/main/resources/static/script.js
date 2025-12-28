@@ -79,6 +79,9 @@ function renderStudents() {
         <button class="btn-icon-edit" title="Edit" onclick="editStudent(${s.id})">✎</button>
         <button class="btn-icon-delete" title="Delete" onclick="deleteStudent(${s.id})">🗑</button>
       </td>
+      <td style="text-align:center;">
+        <a href="/presence" style="text-decoration:none; color:#667eea; font-size:1.2em;" title="Register/Update Face">📸</a>
+      </td>
     </tr>
   `).join('');
   renderPagination('students', students.length, state, 'usersPagination');
