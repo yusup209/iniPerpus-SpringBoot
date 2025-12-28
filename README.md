@@ -593,6 +593,437 @@ mysql -u root -p iniperpus_2 < src/main/resources/schema.sql
 - **Security**: CSRF protection enabled for all POST requests
 - **Tests**: Run with `./gradlew test` or skip with `-x test`
 
+## ☁️ Deployment Cloud & Keamanan / Cloud Deployment & Security
+
+### Opsi Deployment Cloud / Cloud Deployment Options
+
+#### 1. **AWS (Amazon Web Services)**
+
+**Spring Boot Application:**
+- **AWS Elastic Beanstalk**: Deploy JAR file with auto-scaling
+- **AWS EC2**: Full control with Ubuntu/Amazon Linux instance
+- **AWS ECS/Fargate**: Docker containerization
+- **Amazon RDS for MariaDB**: Managed database service
+
+**Python Face Service:**
+- **AWS Lambda + API Gateway**: Serverless (requires optimization)
+- **AWS EC2**: Traditional VM deployment
+- **AWS ECS**: Docker container deployment
+
+**Storage:**
+- **Amazon S3**: Store face encodings and images
+
+**Estimasi Biaya / Estimated Cost:** $20-50/bulan untuk small-medium traffic
+
+---
+
+#### 2. **Google Cloud Platform (GCP)**
+
+**Spring Boot Application:**
+- **Google App Engine**: Managed platform with auto-scaling
+- **Google Compute Engine**: VM instances
+- **Google Kubernetes Engine (GKE)**: Container orchestration
+
+**Python Face Service:**
+- **Cloud Run**: Serverless container platform (recommended)
+- **Compute Engine**: Traditional VM
+- **Cloud Functions**: Serverless (with limitations)
+
+**Database:**
+- **Cloud SQL for MySQL/MariaDB**: Fully managed
+
+**Storage:**
+- **Cloud Storage**: Object storage for face data
+
+**Estimasi Biaya / Estimated Cost:** $25-60/bulan
+
+---
+
+#### 3. **Microsoft Azure**
+
+**Spring Boot Application:**
+- **Azure App Service**: PaaS with Java support
+- **Azure Virtual Machines**: Full control
+- **Azure Container Instances**: Containerized deployment
+
+**Python Face Service:**
+- **Azure Functions**: Serverless
+- **Azure Container Instances**: Simple containers
+- **Azure App Service**: Web apps for containers
+
+**Database:**
+- **Azure Database for MySQL**: Managed service
+
+**Storage:**
+- **Azure Blob Storage**: File storage
+
+**Estimasi Biaya / Estimated Cost:** $30-70/bulan
+
+---
+
+#### 4. **DigitalOcean** (Recommended untuk Budget)
+
+**Deployment:**
+- **Droplets**: Simple VPS ($6-12/month)
+- **App Platform**: PaaS untuk Spring Boot dan Python
+- **Managed Databases**: MariaDB/MySQL
+
+**Kelebihan:**
+- Harga terjangkau
+- Setup sederhana
+- Dokumentasi lengkap
+
+**Estimasi Biaya / Estimated Cost:** $12-30/bulan
+
+---
+
+#### 5. **Heroku**
+
+**Spring Boot:** Heroku Java buildpack
+**Python Service:** Heroku Python buildpack
+**Database:** Heroku Postgres atau JawsDB MySQL
+
+**Catatan:** Free tier dihapus, mulai dari $7/dyno/bulan
+
+---
+
+### 🔒 Konfigurasi Keamanan Produksi / Production Security Configuration
+
+#### 1. Application Properties untuk Production
+
+Buat `application-prod.properties`:
+
+```properties
+# Nonaktifkan debug mode / Disable debug mode
+spring.security.debug=false
+logging.level.org.springframework.security=WARN
+
+# Nonaktifkan DevTools / Disable DevTools
+spring.devtools.restart.enabled=false
+spring.devtools.livereload.enabled=false
+
+# Jangan tampilkan SQL query / Don't show SQL queries
+spring.jpa.show-sql=false
+
+# SSL/HTTPS (jika menggunakan sertifikat sendiri)
+server.ssl.enabled=true
+server.ssl.key-store=classpath:keystore.p12
+server.ssl.key-store-password=${SSL_KEYSTORE_PASSWORD}
+server.ssl.key-store-type=PKCS12
+
+# Session timeout (30 menit)
+server.servlet.session.timeout=30m
+
+# Cookie security
+server.servlet.session.cookie.secure=true
+server.servlet.session.cookie.http-only=true
+server.servlet.session.cookie.same-site=strict
+
+# Compression
+server.compression.enabled=true
+
+# Database connection pool
+spring.datasource.hikari.maximum-pool-size=10
+spring.datasource.hikari.connection-timeout=30000
+```
+
+#### 2. Keamanan Web / Web Security Configuration
+
+**Update `SecurityConfig.java` atau buat `ProductionSecurityConfig.java`:**
+
+```java
+@Configuration
+@Profile("prod")
+public class ProductionSecurityConfig {
+    
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+            // HTTPS Only
+            .requiresChannel(channel -> channel
+                .anyRequest().requiresSecure()
+            )
+            // Security Headers
+            .headers(headers -> headers
+                .contentSecurityPolicy("default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';")
+                .xssProtection()
+                .frameOptions().deny()
+                .httpStrictTransportSecurity(hsts -> hsts
+                    .maxAgeInSeconds(31536000)
+                    .includeSubDomains(true)
+                )
+            )
+            // CSRF Protection (sudah enabled)
+            .csrf(csrf -> csrf
+                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+            )
+            // Rate Limiting (gunakan library tambahan)
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/login", "/register", "/error").permitAll()
+                .anyRequest().authenticated()
+            )
+            .formLogin(form -> form
+                .loginPage("/login")
+                .loginProcessingUrl("/perform_login")
+                .defaultSuccessUrl("/", true)
+                .failureUrl("/login?error=true")
+                .permitAll()
+            )
+            .logout(logout -> logout
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/login?logout=true")
+                .invalidateHttpSession(true)
+                .deleteCookies("JSESSIONID")
+                .permitAll()
+            )
+            .sessionManagement(session -> session
+                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                .maximumSessions(1)
+                .maxSessionsPreventsLogin(false)
+            );
+        
+        return http.build();
+    }
+}
+```
+
+#### 3. Firewall & Network Security
+
+**Konfigurasi Server:**
+```bash
+# UFW Firewall (Ubuntu)
+sudo ufw enable
+sudo ufw allow 22/tcp    # SSH
+sudo ufw allow 80/tcp    # HTTP
+sudo ufw allow 443/tcp   # HTTPS
+sudo ufw deny 8080/tcp   # Block direct access to Spring Boot
+sudo ufw deny 8001/tcp   # Block direct Python service access
+
+# Gunakan Nginx sebagai reverse proxy
+```
+
+**Nginx Configuration:**
+```nginx
+server {
+    listen 80;
+    server_name your-domain.com;
+    return 301 https://$server_name$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    server_name your-domain.com;
+
+    # SSL Certificate (Let's Encrypt)
+    ssl_certificate /etc/letsencrypt/live/your-domain.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/your-domain.com/privkey.pem;
+    
+    # Security headers
+    add_header X-Frame-Options "DENY";
+    add_header X-Content-Type-Options "nosniff";
+    add_header X-XSS-Protection "1; mode=block";
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains";
+    
+    # Rate limiting
+    limit_req_zone $binary_remote_addr zone=login_limit:10m rate=5r/m;
+    
+    location / {
+        proxy_pass http://localhost:8080;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+    
+    location /login {
+        limit_req zone=login_limit burst=3 nodelay;
+        proxy_pass http://localhost:8080/login;
+    }
+    
+    # Python face service (internal only)
+    location /api/presence/ {
+        proxy_pass http://localhost:8001/;
+        proxy_set_header Host $host;
+    }
+}
+```
+
+#### 4. Database Security
+
+```properties
+# Gunakan user database terbatas / Use limited database user
+spring.datasource.username=iniperpus_app
+spring.datasource.password=${DB_PASSWORD}  # Dari environment variable
+
+# SSL Connection
+spring.datasource.url=jdbc:mariadb://your-db-host:3306/iniperpus_2?useSSL=true&requireSSL=true&serverTimezone=UTC
+```
+
+**Create Limited Database User:**
+```sql
+CREATE USER 'iniperpus_app'@'%' IDENTIFIED BY 'strong_password_here';
+GRANT SELECT, INSERT, UPDATE, DELETE ON iniperpus_2.* TO 'iniperpus_app'@'%';
+FLUSH PRIVILEGES;
+```
+
+#### 5. Environment Variables (Jangan hardcode secrets!)
+
+```bash
+# .env atau systemd service file
+export DB_PASSWORD="your_secure_password"
+export FACE_SERVICE_URL="http://localhost:8001"
+export SSL_KEYSTORE_PASSWORD="keystore_password"
+export SPRING_PROFILES_ACTIVE="prod"
+```
+
+#### 6. Dependency Security
+
+**Scan dependencies untuk vulnerability:**
+```bash
+# Gradle
+./gradlew dependencyCheckAnalyze
+
+# Python
+pip install safety
+safety check -r requirements.txt
+```
+
+#### 7. Monitoring & Logging
+
+**Spring Boot Actuator (production-safe):**
+```properties
+management.endpoints.web.exposure.include=health,info,metrics
+management.endpoint.health.show-details=when-authorized
+management.endpoints.web.base-path=/actuator
+```
+
+**Logging Configuration:**
+```properties
+# Log ke file / Log to file
+logging.file.name=/var/log/iniperpus/application.log
+logging.file.max-size=10MB
+logging.file.max-history=30
+
+# Log security events
+logging.level.org.springframework.security=INFO
+```
+
+#### 8. Backup Strategy
+
+```bash
+# Automated daily backup script
+#!/bin/bash
+BACKUP_DIR="/backup/iniperpus"
+DATE=$(date +%Y%m%d_%H%M%S)
+
+# Database backup
+mysqldump -u root -p iniperpus_2 > "$BACKUP_DIR/db_$DATE.sql"
+
+# Face data backup
+tar -czf "$BACKUP_DIR/faces_$DATE.tar.gz" /path/to/python-face-service/data/
+
+# Keep only last 30 days
+find $BACKUP_DIR -type f -mtime +30 -delete
+```
+
+#### 9. Docker Deployment (Recommended)
+
+**docker-compose.yml:**
+```yaml
+version: '3.8'
+
+services:
+  mariadb:
+    image: mariadb:10.11
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: iniperpus_2
+      MYSQL_USER: iniperpus_app
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - iniperpus-network
+    restart: unless-stopped
+
+  spring-app:
+    build: .
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      DB_PASSWORD: ${DB_PASSWORD}
+      FACE_SERVICE_URL: http://face-service:8001
+    depends_on:
+      - mariadb
+      - face-service
+    networks:
+      - iniperpus-network
+    restart: unless-stopped
+
+  face-service:
+    build: ./python-face-service
+    volumes:
+      - face_data:/app/data
+    networks:
+      - iniperpus-network
+    restart: unless-stopped
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - /etc/letsencrypt:/etc/letsencrypt
+    depends_on:
+      - spring-app
+    networks:
+      - iniperpus-network
+    restart: unless-stopped
+
+volumes:
+  db_data:
+  face_data:
+
+networks:
+  iniperpus-network:
+    driver: bridge
+```
+
+#### 10. Checklist Keamanan Sebelum Production
+
+- [ ] Nonaktifkan debug mode dan security debug
+- [ ] Gunakan HTTPS dengan sertifikat SSL valid (Let's Encrypt)
+- [ ] Set semua password via environment variables
+- [ ] Aktifkan firewall dan tutup port yang tidak perlu
+- [ ] Implementasi rate limiting untuk login
+- [ ] Set session timeout yang wajar (30 menit)
+- [ ] Enable security headers (CSP, HSTS, X-Frame-Options)
+- [ ] Gunakan reverse proxy (Nginx/Apache)
+- [ ] Buat database user dengan privilege terbatas
+- [ ] Setup automated backup (database + face data)
+- [ ] Implementasi monitoring dan alerting
+- [ ] Update dependencies secara berkala
+- [ ] Set log rotation untuk mencegah disk penuh
+- [ ] Dokumentasikan incident response plan
+
+### Rekomendasi Deployment untuk Pemula / Beginner Recommendation
+
+**Option 1: DigitalOcean Droplet + Docker Compose**
+- Paling mudah dan terjangkau
+- Kontrol penuh atas environment
+- Biaya: ~$12-24/bulan
+
+**Option 2: Google Cloud Run + Cloud SQL**
+- Auto-scaling otomatis
+- Pay-per-use (murah untuk traffic rendah)
+- Setup lebih kompleks
+
+**Option 3: AWS Elastic Beanstalk + RDS**
+- Managed platform
+- Easy deployment via CLI
+- Free tier tersedia (1 tahun)
+
 ## 🤝 Contributing
 
 Contributions are welcome! Please follow these steps:
