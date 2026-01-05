@@ -1,7 +1,7 @@
 package com.kkp.iniperpus.service;
 
 import com.kkp.iniperpus.model.PresenceRecord;
-import com.kkp.iniperpus.model.Student;
+import com.kkp.iniperpus.model.Borrower;
 import com.kkp.iniperpus.repository.PresenceRecordRepository;
 import com.kkp.iniperpus.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,23 +22,23 @@ import java.util.Map;
 @Service
 public class PresenceService {
 
-    private final StudentRepository studentRepository;
+    private final StudentRepository borrowerRepository;
     private final PresenceRecordRepository presenceRecordRepository;
     private final RestTemplate restTemplate = new RestTemplate();
 
     @Value("${face.service.url}")
     private String faceServiceUrl;
 
-    public PresenceService(StudentRepository studentRepository, PresenceRecordRepository presenceRecordRepository) {
-        this.studentRepository = studentRepository;
+    public PresenceService(StudentRepository borrowerRepository, PresenceRecordRepository presenceRecordRepository) {
+        this.borrowerRepository = borrowerRepository;
         this.presenceRecordRepository = presenceRecordRepository;
     }
 
-    public Map<String, Object> enroll(String studentId, MultipartFile image) throws Exception {
+    public Map<String, Object> enroll(String borrowerId, MultipartFile image) throws Exception {
         String url = faceServiceUrl + "/enroll";
 
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-        body.add("student_id", studentId);
+        body.add("student_id", borrowerId);
         ByteArrayResource contents = new ByteArrayResource(image.getBytes()) {
             @Override
             public String getFilename() { return image.getOriginalFilename() == null ? "image.jpg" : image.getOriginalFilename(); }
@@ -71,11 +71,11 @@ public class PresenceService {
         ResponseEntity<Map> resp = restTemplate.postForEntity(url, requestEntity, Map.class);
         Map<String, Object> result = resp.getBody();
 
-        // persist presence record if matched to a student
+        // persist presence record if matched to a borrower
         boolean matched = result != null && Boolean.TRUE.equals(result.get("matched"));
         String sid = result != null ? (String) result.get("student_id") : null;
-        Student s = null;
-        if (sid != null) s = studentRepository.findByStudentId(sid);
+        Borrower s = null;
+        if (sid != null) s = borrowerRepository.findByStudentId(sid);
 
         PresenceRecord pr = new PresenceRecord();
         pr.setTimestamp(LocalDateTime.now());
@@ -86,13 +86,13 @@ public class PresenceService {
         return result;
     }
 
-    public void deleteFaceData(String studentId) {
+    public void deleteFaceData(String borrowerId) {
         try {
-            String url = faceServiceUrl + "/student/" + studentId;
+            String url = faceServiceUrl + "/student/" + borrowerId;
             restTemplate.delete(url);
         } catch (Exception e) {
-            // Log error but don't fail the student deletion
-            System.err.println("Failed to delete face data for student " + studentId + ": " + e.getMessage());
+            // Log error but don't fail the borrower deletion
+            System.err.println("Failed to delete face data for borrower " + borrowerId + ": " + e.getMessage());
         }
     }
 }

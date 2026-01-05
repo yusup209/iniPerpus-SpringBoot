@@ -1,8 +1,8 @@
 package com.kkp.iniperpus.repository;
 
-import com.kkp.iniperpus.model.Student;
+import com.kkp.iniperpus.model.Borrower;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface StudentRepository extends JpaRepository<Student, Long> {
-    Student findByStudentId(String studentId);
+public interface StudentRepository extends JpaRepository<Borrower, Long> {
+    Borrower findByStudentId(String studentId);
 }

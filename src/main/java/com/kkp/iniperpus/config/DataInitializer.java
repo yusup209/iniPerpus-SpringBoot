@@ -2,7 +2,7 @@ package com.kkp.iniperpus.config;
 
 import com.kkp.iniperpus.model.Book;
 import com.kkp.iniperpus.model.Role;
-import com.kkp.iniperpus.model.Student;
+import com.kkp.iniperpus.model.Borrower;
 import com.kkp.iniperpus.model.User;
 import com.kkp.iniperpus.repository.RoleRepository;
 import com.kkp.iniperpus.repository.UserRepository;
@@ -39,11 +39,11 @@ public class DataInitializer {
                 } catch (Exception ignored) {}
             }
 
-            // Create sample students only if no students exist
+            // Create sample borrowers only if no borrowers exist
             if (studentService.findAll().isEmpty()) {
                 try {
-                    Student s1 = new Student(); s1.setStudentId("S001"); s1.setName("Alice"); s1.setClassName("10A"); studentService.save(s1);
-                    Student s2 = new Student(); s2.setStudentId("S002"); s2.setName("Bob"); s2.setClassName("10B"); studentService.save(s2);
+                    Borrower s1 = new Borrower(); s1.setStudentId("S001"); s1.setName("Alice"); s1.setClassName("10A"); studentService.save(s1);
+                    Borrower s2 = new Borrower(); s2.setStudentId("S002"); s2.setName("Bob"); s2.setClassName("10B"); studentService.save(s2);
                 } catch (Exception ignored) {}
             }
         };

@@ -1,7 +1,7 @@
 package com.kkp.iniperpus.controller;
 
 import com.kkp.iniperpus.model.PresenceRecord;
-import com.kkp.iniperpus.model.Student;
+import com.kkp.iniperpus.model.Borrower;
 import com.kkp.iniperpus.repository.PresenceRecordRepository;
 import com.kkp.iniperpus.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,25 +24,25 @@ import java.time.LocalDateTime;
 @Controller
 public class PresenceController {
 
-    private final StudentRepository studentRepository;
+    private final StudentRepository borrowerRepository;
     private final PresenceRecordRepository presenceRecordRepository;
     private final com.kkp.iniperpus.service.PresenceService presenceService;
 
-    public PresenceController(StudentRepository studentRepository, PresenceRecordRepository presenceRecordRepository, com.kkp.iniperpus.service.PresenceService presenceService) {
-        this.studentRepository = studentRepository;
+    public PresenceController(StudentRepository borrowerRepository, PresenceRecordRepository presenceRecordRepository, com.kkp.iniperpus.service.PresenceService presenceService) {
+        this.borrowerRepository = borrowerRepository;
         this.presenceRecordRepository = presenceRecordRepository;
         this.presenceService = presenceService;
     }
 
     @GetMapping("/presence")
     public String presencePage(Model model) {
-        model.addAttribute("students", studentRepository.findAll());
+        model.addAttribute("borrowers", borrowerRepository.findAll());
         return "presence";
     }
 
     @PostMapping("/presence/enroll")
-    public String enroll(@RequestParam("studentId") Long studentId, @RequestParam("image") MultipartFile image, Model model) {
-        Student s = studentRepository.findById(studentId).orElse(null);
+    public String enroll(@RequestParam("borrowerId") Long borrowerId, @RequestParam("image") MultipartFile image, Model model) {
+        Borrower s = borrowerRepository.findById(borrowerId).orElse(null);
         if (s == null) {
             model.addAttribute("error", "Student not found");
             return "presence";
@@ -50,13 +50,13 @@ public class PresenceController {
 
         try {
             var resp = presenceService.enroll(s.getStudentId(), image);
-            // update student photo filename via StudentService if needed (not done here)
+            // update borrower photo filename via StudentService if needed (not done here)
             model.addAttribute("message", "Enrolled: " + resp);
         } catch (Exception ex) {
             model.addAttribute("error", "Enroll failed: " + ex.getMessage());
         }
 
-        model.addAttribute("students", studentRepository.findAll());
+        model.addAttribute("borrowers", borrowerRepository.findAll());
         return "presence";
     }
 
@@ -68,7 +68,7 @@ public class PresenceController {
         } catch (Exception ex) {
             model.addAttribute("error", "Match failed: " + ex.getMessage());
         }
-        model.addAttribute("students", studentRepository.findAll());
+        model.addAttribute("borrowers", borrowerRepository.findAll());
         return "presence";
     }
 }

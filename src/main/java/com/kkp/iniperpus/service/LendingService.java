@@ -2,7 +2,7 @@ package com.kkp.iniperpus.service;
 
 import com.kkp.iniperpus.model.Book;
 import com.kkp.iniperpus.model.Lending;
-import com.kkp.iniperpus.model.Student;
+import com.kkp.iniperpus.model.Borrower;
 import com.kkp.iniperpus.repository.BookRepository;
 import com.kkp.iniperpus.repository.LendingRepository;
 import com.kkp.iniperpus.repository.StudentRepository;
@@ -27,7 +27,7 @@ public class LendingService {
     public List<Lending> findAll() { return lendingRepository.findAll(); }
 
     public Lending lend(Long studentId, Long bookId, LocalDate dueDate) {
-        Student s = studentRepository.findById(studentId).orElseThrow(() -> new IllegalArgumentException("invalid student"));
+        Borrower s = studentRepository.findById(studentId).orElseThrow(() -> new IllegalArgumentException("invalid student"));
         Book b = bookRepository.findById(bookId).orElseThrow(() -> new IllegalArgumentException("invalid book"));
         if (b.getCopiesAvailable() == null || b.getCopiesAvailable() <= 0) throw new IllegalStateException("no copies available");
 

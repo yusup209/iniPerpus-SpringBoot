@@ -1,6 +1,6 @@
 package com.kkp.iniperpus.controller;
 
-import com.kkp.iniperpus.model.Student;
+import com.kkp.iniperpus.model.Borrower;
 import com.kkp.iniperpus.service.PresenceService;
 import com.kkp.iniperpus.service.StudentService;
 import org.springframework.http.ResponseEntity;
@@ -15,39 +15,39 @@ import java.util.List;
 @RequestMapping("/api/students")
 public class ApiStudentController {
 
-    private final StudentService studentService;
+    private final StudentService borrowerService;
     private final PresenceService presenceService;
 
-    public ApiStudentController(StudentService studentService, PresenceService presenceService) {
-        this.studentService = studentService;
+    public ApiStudentController(StudentService borrowerService, PresenceService presenceService) {
+        this.borrowerService = borrowerService;
         this.presenceService = presenceService;
     }
 
     @GetMapping
-    public List<Student> list() { return studentService.findAll(); }
+    public List<Borrower> list() { return borrowerService.findAll(); }
 
     @PostMapping
-    public Student create(@RequestBody Student s) { return studentService.save(s); }
+    public Borrower create(@RequestBody Borrower s) { return borrowerService.save(s); }
 
     @PutMapping("/{id}")
-    public Student update(@PathVariable Long id, @RequestBody Student updates) {
-        Student existing = studentService.findById(id);
+    public Borrower update(@PathVariable Long id, @RequestBody Borrower updates) {
+        Borrower existing = borrowerService.findById(id);
         if (existing == null) throw new RuntimeException("Student not found");
         if (updates.getName() != null) existing.setName(updates.getName());
         if (updates.getStudentId() != null) existing.setStudentId(updates.getStudentId());
         if (updates.getClassName() != null) existing.setClassName(updates.getClassName());
-        return studentService.save(existing);
+        return borrowerService.save(existing);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
         try {
-            Student student = studentService.findById(id);
-            if (student != null && student.getStudentId() != null) {
+            Borrower borrower = borrowerService.findById(id);
+            if (borrower != null && borrower.getStudentId() != null) {
                 // Delete face data from face service
-                presenceService.deleteFaceData(student.getStudentId());
+                presenceService.deleteFaceData(borrower.getStudentId());
             }
-            studentService.delete(id);
+            borrowerService.delete(id);
             return ResponseEntity.noContent().build();
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Cannot delete student: " + e.getMessage());
@@ -58,7 +58,7 @@ public class ApiStudentController {
     public ResponseEntity<?> uploadPhoto(@PathVariable Long id, @RequestParam("image") MultipartFile image) {
         try {
             // store locally
-            var saved = studentService.enrollPhoto(id, image, Path.of(System.getProperty("user.dir"), "student-photos"));
+            var saved = borrowerService.enrollPhoto(id, image, Path.of(System.getProperty("user.dir"), "student-photos"));
             // enroll with face service
             presenceService.enroll(saved.getStudentId(), image);
             return ResponseEntity.ok(saved);

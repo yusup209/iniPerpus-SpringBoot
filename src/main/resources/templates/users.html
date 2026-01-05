@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Student Management - iniPerpus</title>
+  <title>Borrower Management - iniPerpus</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -19,12 +19,12 @@
 
   <div class="container">
     <div class="page-header">
-      <h1>👥 Student Management</h1>
+      <h1>👥 Borrower Management</h1>
     </div>
     <div class="grid">
       <div class="card">
-        <h2 style="margin-bottom: 20px;">Add New Student</h2>
-        <form onsubmit="addStudent(event)">
+        <h2 style="margin-bottom: 20px;">Add New Borrower</h2>
+        <form onsubmit="addBorrower(event)">
           <div class="form-group">
             <label>Name</label>
             <input type="text" id="userName" required>
@@ -42,8 +42,8 @@
       </div>
 
       <div class="card">
-        <h2 style="margin-bottom: 20px;">Student List</h2>
-        <p style="color: #6b7280; margin-bottom: 16px; font-size: 14px;">Total Students: <span id="totalStudents" style="font-weight: 600; color: #374151;">0</span></p>
+        <h2 style="margin-bottom: 20px;">Borrower List</h2>
+        <p style="color: #6b7280; margin-bottom: 16px; font-size: 14px;">Total Borrowers: <span id="totalStudents" style="font-weight: 600; color: #374151;">0</span></p>
         <div style="overflow-x: auto;">
           <table id="usersTable">
             <thead>
@@ -63,27 +63,27 @@
     </div>
   </div>
 
-  <!-- Edit Student Modal -->
-  <div id="editStudentModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:1000;">
+  <!-- Edit Borrower Modal -->
+  <div id="editBorrowerModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:1000;">
     <div style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); background:white; padding:32px; border-radius:12px; width:90%; max-width:450px; box-shadow:0 10px 40px rgba(0,0,0,0.3);">
-      <h2 style="margin-bottom:24px; color:#333;">Edit Student</h2>
-      <form onsubmit="saveStudent(event)">
-        <input type="hidden" id="editStudentId">
+      <h2 style="margin-bottom:24px; color:#333;">Edit Borrower</h2>
+      <form onsubmit="saveBorrower(event)">
+        <input type="hidden" id="editBorrowerId">
         <div class="form-group">
           <label style="color:#333; font-weight:500;">Name</label>
-          <input type="text" id="editStudentName" required>
+          <input type="text" id="editBorrowerName" required>
         </div>
         <div class="form-group">
           <label style="color:#333; font-weight:500;">Student ID</label>
-          <input type="text" id="editStudentStudentId" required>
+          <input type="text" id="editBorrowerStudentId" required>
         </div>
         <div class="form-group">
           <label style="color:#333; font-weight:500;">Class</label>
-          <input type="text" id="editStudentClassName" required>
+          <input type="text" id="editBorrowerClassName" required>
         </div>
         <div style="display:flex; gap:12px; margin-top:24px;">
           <button type="submit" style="flex:1;">Save</button>
-          <button type="button" class="btn-cancel" onclick="closeEditStudentModal()">Cancel</button>
+          <button type="button" class="btn-cancel" onclick="closeEditBorrowerModal()">Cancel</button>
         </div>
       </form>
     </div>
@@ -93,10 +93,10 @@
   <div id="deleteConfirmModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:1000;">
     <div style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); background:white; padding:32px; border-radius:12px; width:90%; max-width:500px; box-shadow:0 10px 40px rgba(0,0,0,0.3);">
       <h2 style="color:#333; margin-bottom:16px;">Confirm Delete</h2>
-      <p style="color:#666; margin-bottom:24px; font-size:16px;">Are you sure you want to delete this student? This action cannot be undone.</p>
+      <p style="color:#666; margin-bottom:24px; font-size:16px;">Are you sure you want to delete this borrower? This action cannot be undone.</p>
       <div style="display:flex; gap:12px; justify-content:flex-end;">
-        <button type="button" class="btn-cancel" onclick="cancelDeleteStudent()">Cancel</button>
-        <button type="button" class="btn-delete-confirm" onclick="confirmDeleteStudent()">Delete</button>
+        <button type="button" class="btn-cancel" onclick="cancelDeleteBorrower()">Cancel</button>
+        <button type="button" class="btn-delete-confirm" onclick="confirmDeleteBorrower()">Delete</button>
       </div>
     </div>
   </div>
@@ -119,8 +119,8 @@
 
   <script src="script.js"></script>
   <script>
-    // Render students on page load
-    renderStudents();
+    // Render borrowers on page load
+    renderBorrowers();
     function appLogout(e) {
       e.preventDefault();
       document.getElementById('logoutConfirmModal').style.display = 'block';

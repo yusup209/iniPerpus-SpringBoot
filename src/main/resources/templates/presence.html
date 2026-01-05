@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Student Presence - iniPerpus</title>
+  <title>Borrower Presence - iniPerpus</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -13,15 +13,15 @@
       <a href="/" class="nav-link">Home</a>
       <a href="/books" class="nav-link">Books</a>
       <a href="/lending" class="nav-link">Lending</a>
-      <a href="/users" class="nav-link">Students</a>
+      <a href="/users" class="nav-link">Borrowers</a>
       <a href="#" class="nav-link" onclick="appLogout(event)">Logout</a>
     </div>
   </div>
 
   <div class="container">
     <div class="page-header">
-      <h1>📸 Student Presence</h1>
-      <p style="color:#4b5563; margin-top:8px;">Use the camera to register student faces and check them in via the python-face-service.</p>
+      <h1>📸 Borrower Presence</h1>
+      <p style="color:#4b5563; margin-top:8px;">Use the camera to register borrower faces and check them in via the python-face-service.</p>
     </div>
     
     <div class="grid">
@@ -40,10 +40,10 @@
         </div>
         
         <div style="display:flex; gap:12px; justify-content:center; align-items:center; margin-bottom:12px;">
-          <label for="studentSelect" style="font-weight:600; color:#374151;">Link to Student:</label>
-          <select id="studentSelect" style="min-width:220px; padding:10px 12px; border-radius:10px; border:1px solid #d1d5db;">
-            <option value="">-- Select student --</option>
-            <option th:each="s : ${students}" th:value="${s.id}" th:text="${s.name + ' (' + s.studentId + ')'}" th:attr="data-sid=${s.studentId}"></option>
+          <label for="borrowerSelect" style="font-weight:600; color:#374151;">Link to Borrower:</label>
+          <select id="borrowerSelect" style="min-width:220px; padding:10px 12px; border-radius:10px; border:1px solid #d1d5db;">
+            <option value="">-- Select borrower --</option>
+            <option th:each="s : ${borrowers}" th:value="${s.id}" th:text="${s.name + ' (' + s.studentId + ')'}" th:attr="data-sid=${s.studentId}"></option>
           </select>
         </div>
 
@@ -88,7 +88,7 @@
     const registerBtn = document.getElementById('registerBtn');
     const resultDiv = document.getElementById('result');
     const enrollResultDiv = document.getElementById('enrollResult');
-    const studentSelect = document.getElementById('studentSelect');
+    const borrowerSelect = document.getElementById('borrowerSelect');
 
     // Pagination helper
     function ensureValidPagePresence(total) {
@@ -221,7 +221,7 @@
           if (result.matched) {
             setStatus(resultDiv, `
               <p style="color: #10b981; font-size: 1.2em; font-weight: 600;">✓ Check-In Successful!</p>
-              <p style="color: #333; margin-top: 10px;">Welcome, ${result.student_id || 'Student'}</p>
+              <p style="color: #333; margin-top: 10px;">Welcome, ${result.student_id || 'Borrower'}</p>
             `, 'linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%)');
             fetchPresenceRecords();
           } else {
@@ -237,9 +237,9 @@
     }
 
     async function registerFace() {
-      const studentId = studentSelect.value;
-      if (!studentId) {
-        alert('Please select a student to register.');
+      const borrowerId = borrowerSelect.value;
+      if (!borrowerId) {
+        alert('Please select a borrower to register.');
         return;
       }
       const width = video.videoWidth;
@@ -250,7 +250,7 @@
       canvas.toBlob(async (blob) => {
         const formData = new FormData();
         formData.append('image', blob, 'capture.jpg');
-        formData.append('studentId', studentId);
+        formData.append('borrowerId', borrowerId);
 
         setStatus(enrollResultDiv, '<p style="color: #667eea;">Registering face...</p>', 'transparent');
 
@@ -260,7 +260,7 @@
           if (response.ok) {
             setStatus(enrollResultDiv, `
               <p style="color: #2563eb; font-size: 1.1em; font-weight: 600;">✓ Face Registered</p>
-              <p style="color: #374151; margin-top: 8px;">Linked to student ${result.student_id || ''}</p>
+              <p style="color: #374151; margin-top: 8px;">Linked to borrower ${result.student_id || ''}</p>
             `, 'linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%)');
           } else {
             setStatus(enrollResultDiv, `<p style="color: #ef4444;">Failed: ${result.error || 'Unknown error'}</p>`, 'linear-gradient(135deg, #fee2e2 0%, #fecaca 100%)');

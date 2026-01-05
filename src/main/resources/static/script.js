@@ -22,8 +22,8 @@ function setLendingStatus(message, isError = false) {
   el.style.color = isError ? '#b00020' : '#0a6d0a';
 }
 
-// Student Management
-async function addStudent(e) {
+// Borrower Management
+async function addBorrower(e) {
   e.preventDefault();
   const name = document.getElementById('userName').value;
   const studentId = document.getElementById('userEmail').value; // reuse email field as studentId input field id
@@ -31,7 +31,7 @@ async function addStudent(e) {
 
   const payload = { name: name, studentId: studentId, className: className };
   await fetch(api.students, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-  await fetchStudents();
+  await fetchBorrowers();
   e.target.reset();
 }
 
@@ -60,7 +60,7 @@ function renderPagination(kind, total, state, elId) {
     </div>`;
 }
 
-function renderStudents() {
+function renderBorrowers() {
   const tbody = document.getElementById('usersBody');
   if (!tbody) return;
   const totalEl = document.getElementById('totalStudents');
@@ -87,42 +87,42 @@ function renderStudents() {
   renderPagination('students', students.length, state, 'usersPagination');
 }
 
-let deleteStudentId = null;
+let deleteBorrowerId = null;
 
-function deleteStudent(id) {
-  deleteStudentId = id;
+function deleteBorrower(id) {
+  deleteBorrowerId = id;
   document.getElementById('deleteConfirmModal').style.display = 'block';
 }
 
-async function confirmDeleteStudent() {
-  if (deleteStudentId) {
-    await fetch(`${api.students}/${deleteStudentId}`, { method: 'DELETE' });
-    await fetchStudents();
-    cancelDeleteStudent();
+async function confirmDeleteBorrower() {
+  if (deleteBorrowerId) {
+    await fetch(`${api.students}/${deleteBorrowerId}`, { method: 'DELETE' });
+    await fetchBorrowers();
+    cancelDeleteBorrower();
   }
 }
 
-function cancelDeleteStudent() {
-  deleteStudentId = null;
+function cancelDeleteBorrower() {
+  deleteBorrowerId = null;
   document.getElementById('deleteConfirmModal').style.display = 'none';
 }
 
-function editStudent(id) {
-  const student = students.find(s => s.id === id);
-  if (!student) return;
-  document.getElementById('editStudentId').value = student.id;
-  document.getElementById('editStudentName').value = student.name;
-  document.getElementById('editStudentStudentId').value = student.studentId;
-  document.getElementById('editStudentClassName').value = student.className || '';
-  document.getElementById('editStudentModal').style.display = 'block';
+function editBorrower(id) {
+  const borrower = students.find(s => s.id === id);
+  if (!borrower) return;
+  document.getElementById('editBorrowerId').value = borrower.id;
+  document.getElementById('editBorrowerName').value = borrower.name;
+  document.getElementById('editBorrowerStudentId').value = borrower.studentId;
+  document.getElementById('editBorrowerClassName').value = borrower.className || '';
+  document.getElementById('editBorrowerModal').style.display = 'block';
 }
 
-async function saveStudent(e) {
+async function saveBorrower(e) {
   e.preventDefault();
-  const id = document.getElementById('editStudentId').value;
-  const name = document.getElementById('editStudentName').value;
-  const studentId = document.getElementById('editStudentStudentId').value;
-  const className = document.getElementById('editStudentClassName').value;
+  const id = document.getElementById('editBorrowerId').value;
+  const name = document.getElementById('editBorrowerName').value;
+  const studentId = document.getElementById('editBorrowerStudentId').value;
+  const className = document.getElementById('editBorrowerClassName').value;
   
   const payload = { name, studentId, className };
   await fetch(`${api.students}/${id}`, {
@@ -130,18 +130,18 @@ async function saveStudent(e) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload)
   });
-  await fetchStudents();
-  closeEditStudentModal();
+  await fetchBorrowers();
+  closeEditBorrowerModal();
 }
 
-function closeEditStudentModal() {
-  document.getElementById('editStudentModal').style.display = 'none';
+function closeEditBorrowerModal() {
+  document.getElementById('editBorrowerModal').style.display = 'none';
 }
 
-async function fetchStudents() {
+async function fetchBorrowers() {
   const resp = await fetch(api.students, { credentials: 'same-origin', headers: { 'Accept': 'application/json' } });
   students = await resp.json();
-  renderStudents();
+  renderBorrowers();
   updateLendingDropdowns();
 }
 
@@ -339,7 +339,7 @@ async function fetchLoans() {
 
 // Initial fetch
 document.addEventListener('DOMContentLoaded', async () => {
-  await fetchStudents();
+  await fetchBorrowers();
   await fetchBooks();
   await fetchLoans();
   const btn = document.getElementById('lendBookBtn');

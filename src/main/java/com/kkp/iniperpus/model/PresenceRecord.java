@@ -10,15 +10,15 @@ public class PresenceRecord {
     private Long id;
 
     @ManyToOne(optional = false)
-    private Student student;
+    private Borrower student;
 
     private LocalDateTime timestamp;
     private Boolean matched = true;
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
-    public Student getStudent() { return student; }
-    public void setStudent(Student student) { this.student = student; }
+    public Borrower getStudent() { return student; }
+    public void setStudent(Borrower student) { this.student = student; }
     public LocalDateTime getTimestamp() { return timestamp; }
     public void setTimestamp(LocalDateTime timestamp) { this.timestamp = timestamp; }
     public Boolean getMatched() { return matched; }
