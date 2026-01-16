@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iniPerpus - Library Management System Documentation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 60px 40px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        nav {
+            background: #f8f9fa;
+            padding: 20px 40px;
+            border-bottom: 1px solid #e9ecef;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        nav a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover {
+            color: #764ba2;
+        }
+
+        main {
+            padding: 40px;
+        }
+
+        section {
+            margin-bottom: 50px;
+        }
+
+        h2 {
+            color: #667eea;
+            font-size: 2em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        h3 {
+            color: #764ba2;
+            font-size: 1.5em;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        h4 {
+            color: #555;
+            font-size: 1.2em;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .overview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .card h4 {
+            color: #667eea;
+            margin-top: 0;
+        }
+
+        .tech-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+        }
+
+        .tech-table th {
+            background: #667eea;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .tech-table td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .tech-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .feature-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .feature-list {
+            list-style: none;
+            margin: 15px 0;
+        }
+
+        .feature-list li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .feature-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .image-placeholder {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: 2px dashed #999;
+            border-radius: 8px;
+            height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.1em;
+            font-weight: 500;
+            text-align: center;
+            margin: 20px 0;
+            font-style: italic;
+        }
+
+        .use-case {
+            background: #e7f3ff;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 15px 0;
+        }
+
+        .use-case strong {
+            color: #2196F3;
+        }
+
+        .steps {
+            background: #fff9e6;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 15px 0;
+        }
+
+        .steps ol {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+
+        .steps li {
+            margin: 8px 0;
+        }
+
+        .architecture-box {
+            background: white;
+            border: 2px solid #667eea;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-family: monospace;
+            overflow-x: auto;
+        }
+
+        .component-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+        }
+
+        .component-table th {
+            background: #764ba2;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .component-table td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .component-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .prerequisite-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .prerequisite-item {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 15px;
+            border-radius: 4px;
+        }
+
+        .prerequisite-item strong {
+            color: #2e7d32;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        .scenario {
+            background: #f3e5f5;
+            border-left: 4px solid #9c27b0;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 15px 0;
+        }
+
+        .scenario strong {
+            color: #6a1b9a;
+        }
+
+        .best-practices {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .practice-card {
+            background: #fff3cd;
+            border-left: 4px solid #ff9800;
+            padding: 15px;
+            border-radius: 4px;
+        }
+
+        .practice-card strong {
+            color: #e65100;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        footer {
+            background: #f8f9fa;
+            border-top: 1px solid #e9ecef;
+            padding: 20px 40px;
+            text-align: center;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            main {
+                padding: 20px;
+            }
+
+            nav ul {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .overview-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .image-placeholder {
+                height: 200px;
+            }
+        }
+
+        .toc {
+            background: #f0f4ff;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .toc ul {
+            list-style: none;
+        }
+
+        .toc li {
+            margin: 8px 0;
+            padding-left: 20px;
+        }
+
+        .toc li:before {
+            content: "→";
+            position: absolute;
+            margin-left: -20px;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .toc a {
+            color: #667eea;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .toc a:hover {
+            color: #764ba2;
+            text-decoration: underline;
+        }
+
+        .highlight {
+            background: #fffacd;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>iniPerpus</h1>
+            <p>Library Management System with Face Recognition</p>
+            <p style="font-size: 0.95em; margin-top: 15px; opacity: 0.8;">A Comprehensive System for User Attendance and Book Management</p>
+        </header>
+
+        <nav>
+            <ul>
+                <li><a href="#overview">Overview</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#guides">Guides</a></li>
+                <li><a href="#architecture">Architecture</a></li>
+                <li><a href="#getting-started">Getting Started</a></li>
+            </ul>
+        </nav>
+
+        <main>
+            <!-- Overview Section -->
+            <section id="overview">
+                <h2>🎯 Overview</h2>
+                <p>iniPerpus simplifies library management for educational institutions by providing an integrated platform that combines traditional library operations with modern face recognition technology for attendance tracking.</p>
+
+                <div class="overview-grid">
+                    <div class="card">
+                        <h4>📚 Book Management</h4>
+                        <p>Complete inventory control with real-time availability tracking</p>
+                    </div>
+                    <div class="card">
+                        <h4>👥 User Records</h4>
+                        <p>Centralized user information with face recognition integration</p>
+                    </div>
+                    <div class="card">
+                        <h4>🔄 Lending System</h4>
+                        <p>Efficient book borrowing and return processing</p>
+                    </div>
+                    <div class="card">
+                        <h4>📸 Face Recognition</h4>
+                        <p>Automated attendance with biometric technology</p>
+                    </div>
+                    <div class="card">
+                        <h4>🔐 Security</h4>
+                        <p>Role-based access with BCrypt password encryption</p>
+                    </div>
+                    <div class="card">
+                        <h4>🎨 Modern UI</h4>
+                        <p>Responsive glassmorphism design for all devices</p>
+                    </div>
+                </div>
+
+                <h3>Technology Stack</h3>
+                <table class="tech-table">
+                    <thead>
+                        <tr>
+                            <th>Component</th>
+                            <th>Technology</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Backend</strong></td>
+                            <td>Spring Boot 4.0.0, Java 25</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Database</strong></td>
+                            <td>MariaDB 10.x+</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Frontend</strong></td>
+                            <td>Thymeleaf, JavaScript ES6+, CSS3</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Face Recognition</strong></td>
+                            <td>Python FastAPI, face_recognition library</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Build Tool</strong></td>
+                            <td>Gradle</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Features Section -->
+            <section id="features">
+                <h2>✨ Key Features</h2>
+
+                <!-- User Management -->
+                <div class="feature-section">
+                    <h3>👥 User Management</h3>
+                    <p>Manage user records efficiently with intuitive CRUD operations and face recognition integration.</p>
+                    
+                    <div class="image-placeholder">
+                        [Place Image Here: User Management Interface]
+                    </div>
+
+                    <h4>Capabilities:</h4>
+                    <ul class="feature-list">
+                        <li>Add new users with NIS (User ID) and class information</li>
+                        <li>Edit existing user information through modal dialogs</li>
+                        <li>Delete user records with cascade cleanup of related data</li>
+                        <li>Real-time search and filtering across all users</li>
+                        <li>Pagination with customizable page sizes (5, 10, 25 records)</li>
+                        <li>Direct integration with face recognition system</li>
+                        <li>Quick action icons for common operations</li>
+                    </ul>
+
+                    <div class="use-case">
+                        <strong>Use Case:</strong> When a new user enrolls, navigate to the Users section, click "Add User", enter their details (Name, NIS, Class), and save. The system automatically prepares the user for face registration.
+                    </div>
+                </div>
+
+                <!-- Book Management -->
+                <div class="feature-section">
+                    <h3>📚 Book Management</h3>
+                    <p>Maintain your library's book collection with complete inventory control and real-time availability tracking.</p>
+                    
+                    <div class="image-placeholder">
+                        [Place Image Here: Book Management Interface]
+                    </div>
+
+                    <h4>Capabilities:</h4>
+                    <ul class="feature-list">
+                        <li>Complete CRUD operations for book records</li>
+                        <li>Track essential information: Title, Author, ISBN, Copy Count</li>
+                        <li>Smart inventory management with automatic availability updates</li>
+                        <li>Real-time monitoring of available vs. total copies</li>
+                        <li>Edit books inline without leaving the page</li>
+                        <li>Delete protection with confirmation dialogs</li>
+                        <li>Efficient pagination for large collections</li>
+                        <li>Total book count display for quick statistics</li>
+                    </ul>
+
+                    <div class="use-case">
+                        <strong>Use Case:</strong> To add a new book to the library, go to Books section, click "Add Book", fill in the details (Title, Author, ISBN, Total Copies), and save. When books are lent or returned, the available copy count updates automatically.
+                    </div>
+                </div>
+
+                <!-- Lending Management -->
+                <div class="feature-section">
+                    <h3>🔄 Lending Management</h3>
+                    <p>Track all borrowing transactions and manage due dates effortlessly with automatic calculations.</p>
+                    
+                    <div class="image-placeholder">
+                        [Place Image Here: Lending Management Interface]
+                    </div>
+
+                    <h4>Capabilities:</h4>
+                    <ul class="feature-list">
+                        <li>Lend books to users with automatic due date calculation</li>
+                        <li>Process returns and automatically restore inventory</li>
+                        <li>View all active loans in one centralized location</li>
+                        <li>Automatic 14-day loan period</li>
+                        <li>Visual due date indicators</li>
+                        <li>Prevention of lending when no copies available</li>
+                        <li>Real-time status updates across the system</li>
+                        <li>Complete lending history with pagination</li>
+                        <li>Total active loans display</li>
+                    </ul>
+
+                    <div class="use-case">
+                        <strong>Use Case:</strong> When a user wants to borrow a book, navigate to Lending section, click "Add Lending", select the user and book, enter the lending date. The system automatically calculates the due date (14 days later). When the user returns the book, mark it as returned and the book's availability count increases.
+                    </div>
+                </div>
+
+                <!-- Face Recognition -->
+                <div class="feature-section">
+                    <h3>📸 User Presence (Face Recognition)</h3>
+                    <p>Automate attendance tracking with intelligent face recognition technology for seamless check-ins.</p>
+                    
+                    <div class="image-placeholder">
+                        [Place Image Here: Face Recognition Interface]
+                    </div>
+
+                    <h4>Capabilities:</h4>
+                    <ul class="feature-list">
+                        <li>Live webcam integration for real-time face capture</li>
+                        <li>Register user faces linked to their profiles</li>
+                        <li>Automatic face recognition for instant check-ins</li>
+                        <li>Timestamp recording for attendance tracking</li>
+                        <li>Re-register or update existing user faces</li>
+                        <li>0.6 confidence threshold for accurate matching</li>
+                        <li>View recent check-ins with user details</li>
+                        <li>Responsive video feed for all screen sizes</li>
+                        <li>Clear visual feedback with color-coded alerts</li>
+                        <li>Automatic cleanup of face data when users are deleted</li>
+                    </ul>
+
+                    <h4>How It Works:</h4>
+                    <div class="steps">
+                        <strong>Face Registration:</strong>
+                        <ol>
+                            <li>Go to Presence section</li>
+                            <li>Click "Register Face"</li>
+                            <li>Click camera icon to start</li>
+                            <li>Select user from dropdown</li>
+                            <li>Allow camera access when prompted</li>
+                            <li>Position face in frame</li>
+                            <li>Successfully registered</li>
+                        </ol>
+                    </div>
+
+                    <div class="steps">
+                        <strong>User Check-in:</strong>
+                        <ol>
+                            <li>Go to Presence section</li>
+                            <li>Click "Start Camera"</li>
+                            <li>System automatically recognizes registered faces</li>
+                            <li>Attendance recorded instantly with timestamp</li>
+                            <li>View recent check-ins below</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- Authentication -->
+                <div class="feature-section">
+                    <h3>🔐 Authentication & Authorization</h3>
+                    <p>Secure access to the system with role-based permissions and industry-standard encryption.</p>
+                    
+                    <div class="image-placeholder">
+                        [Place Image Here: Login Interface]
+                    </div>
+
+                    <h4>Capabilities:</h4>
+                    <ul class="feature-list">
+                        <li>Secure form-based authentication</li>
+                        <li>Role-based access control (Admin, User)</li>
+                        <li>BCrypt password encryption</li>
+                        <li>Session management and persistence</li>
+                        <li>CSRF protection</li>
+                        <li>Safe logout with confirmation dialog</li>
+                        <li>Error messages with helpful guidance</li>
+                    </ul>
+
+                    <div class="use-case">
+                        <strong>Use Case:</strong> At login page, enter username and password. System validates credentials securely. After login, role determines available features. Admin can manage users and system settings. To logout, click logout button and confirm in dialog.
+                    </div>
+                </div>
+
+                <!-- User Interface -->
+                <div class="feature-section">
+                    <h3>🎨 User Interface</h3>
+                    <p>Experience a modern, responsive interface designed for productivity and user engagement.</p>
+                    
+                    <div class="image-placeholder">
+                        [Place Image Here: Dashboard Interface]
+                    </div>
+
+                    <h4>Design Features:</h4>
+                    <ul class="feature-list">
+                        <li><span class="highlight">Glassmorphism Design</span> - Frosted glass effect with modern aesthetics</li>
+                        <li><span class="highlight">Animated Background</span> - Smooth gradient color transitions</li>
+                        <li><span class="highlight">Responsive Layout</span> - Seamless experience on desktop, tablet, and mobile</li>
+                        <li><span class="highlight">Modal Dialogs</span> - Non-intrusive confirmations for critical actions</li>
+                        <li><span class="highlight">Client-side Pagination</span> - Fast navigation without page reloads</li>
+                        <li><span class="highlight">Real-time Updates</span> - Instant reflection of changes across the interface</li>
+                        <li><span class="highlight">Intuitive Icons</span> - Clear visual indicators for actions</li>
+                        <li>Color-coded Alerts: 🟢 Green (success), 🔴 Red (error), 🔵 Blue (info)</li>
+                        <li>Consistent Styling - Unified design language throughout</li>
+                        <li>Accessible Navigation - Clear menu structure and breadcrumbs</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Feature Guides Section -->
+            <section id="guides">
+                <h2>🎓 Feature Guides</h2>
+
+                <h3>How to Add a User</h3>
+                <div class="steps">
+                    <ol>
+                        <li>Click on <strong>"Users"</strong> in the navigation menu</li>
+                        <li>Click the <strong>"Add User"</strong> button</li>
+                        <li>Fill in the required fields:
+                            <ul style="margin: 10px 0; margin-left: 40px;">
+                                <li><strong>Name</strong> - User's full name</li>
+                                <li><strong>NIS</strong> - User identification number</li>
+                                <li><strong>Class</strong> - User's class/grade</li>
+                            </ul>
+                        </li>
+                        <li>Click <strong>"Save"</strong></li>
+                        <li>User appears in the list and is ready for face registration</li>
+                    </ol>
+                </div>
+
+                <h3>How to Register a User's Face</h3>
+                <div class="steps">
+                    <ol>
+                        <li>Navigate to <strong>"Presence"</strong> section</li>
+                        <li>Click <strong>"Register Face"</strong> button</li>
+                        <li>Click the <strong>Camera Icon</strong> to activate webcam</li>
+                        <li>Select user from the dropdown menu</li>
+                        <li>Ensure good lighting and position face clearly in the frame</li>
+                        <li>Click <strong>"Capture & Register"</strong> when ready</li>
+                        <li>System will process and save the face encoding</li>
+                        <li>Confirmation message will appear</li>
+                    </ol>
+                </div>
+
+                <h3>How to Lend a Book</h3>
+                <div class="steps">
+                    <ol>
+                        <li>Go to <strong>"Lending"</strong> section</li>
+                        <li>Click <strong>"Add Lending"</strong> button</li>
+                        <li>Select <strong>User</strong> from the dropdown</li>
+                        <li>Select <strong>Book</strong> from the available books list</li>
+                        <li>Set the <strong>Lending Date</strong> (usually today)</li>
+                        <li>System automatically calculates due date (14 days)</li>
+                        <li>Click <strong>"Save"</strong></li>
+                        <li>Book count decreases automatically in inventory</li>
+                    </ol>
+                </div>
+
+                <h3>How to Process a Book Return</h3>
+                <div class="steps">
+                    <ol>
+                        <li>Navigate to <strong>"Lending"</strong> section</li>
+                        <li>Find the book being returned in the active loans list</li>
+                        <li>Click the <strong>Return</strong> button next to the lending record</li>
+                        <li>Confirm the return in the dialog</li>
+                        <li>Book availability count increases automatically</li>
+                        <li>Lending record moves to history</li>
+                    </ol>
+                </div>
+
+                <h3>How to Search and Filter</h3>
+                <div class="steps">
+                    <strong>For Users:</strong>
+                    <ol>
+                        <li>In Users section, locate the search box</li>
+                        <li>Type user name, NIS, or class</li>
+                        <li>Results update in real-time</li>
+                        <li>Clear search to see all users</li>
+                    </ol>
+                </div>
+                <div class="steps">
+                    <strong>For Books:</strong>
+                    <ol>
+                        <li>In Books section, use the search functionality</li>
+                        <li>Enter book title, author, or ISBN</li>
+                        <li>Matching books display instantly</li>
+                        <li>Adjust pagination to view more results</li>
+                    </ol>
+                </div>
+
+                <h3>How to Check Attendance Records</h3>
+                <div class="steps">
+                    <ol>
+                        <li>Go to <strong>"Presence"</strong> section</li>
+                        <li>View <strong>"Recent Check-ins"</strong> at the bottom</li>
+                        <li>Each record shows:
+                            <ul style="margin: 10px 0; margin-left: 40px;">
+                                <li>User name and NIS</li>
+                                <li>Check-in timestamp</li>
+                                <li>Confidence level of face match</li>
+                            </ul>
+                        </li>
+                        <li>Use pagination to browse through history</li>
+                    </ol>
+                </div>
+            </section>
+
+            <!-- Architecture Section -->
+            <section id="architecture">
+                <h2>🏗️ System Architecture</h2>
+
+                <h3>System Components</h3>
+                <div class="architecture-box">
+┌─────────────────────────────────────────────────────────┐
+│                    iniPerpus System                      │
+├─────────────────────────────────────────────────────────┤
+│                                                           │
+│  ┌──────────────┐          ┌────────────────────┐       │
+│  │   Frontend   │          │  Spring Boot App   │       │
+│  │ (Thymeleaf,  │◄────────►│  (REST API,        │       │
+│  │ JavaScript)  │ AJAX/JSON│   Business Logic)  │       │
+│  └──────────────┘          └────────────────────┘       │
+│                                    │                     │
+│                                    ▼                     │
+│                            ┌─────────────────┐           │
+│                            │    MariaDB      │           │
+│                            │   Database      │           │
+│                            └─────────────────┘           │
+│                                                           │
+│  ┌──────────────────────┐   ┌────────────────────┐      │
+│  │   Camera/Webcam      │──►│  Python FastAPI    │      │
+│  │  (Face Capture)      │   │  Face Recognition  │      │
+│  └──────────────────────┘   └────────────────────┘      │
+│                                    │                     │
+│                                    ▼                     │
+│                            ┌─────────────────┐           │
+│                            │  Face Encodings │           │
+│                            │  (Face Data)    │           │
+│                            └─────────────────┘           │
+│                                                           │
+└─────────────────────────────────────────────────────────┘
+                </div>
+
+                <h3>Component Overview</h3>
+                <table class="component-table">
+                    <thead>
+                        <tr>
+                            <th>Component</th>
+                            <th>Purpose</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Frontend</strong></td>
+                            <td>User interface built with Thymeleaf templates and vanilla JavaScript</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Controllers</strong></td>
+                            <td>Handle HTTP requests and route them to appropriate services</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Services</strong></td>
+                            <td>Implement business logic and orchestrate operations</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Repositories</strong></td>
+                            <td>Access database through Spring Data JPA</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Models</strong></td>
+                            <td>Represent database entities (User, Book, Lending, etc.)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Python Service</strong></td>
+                            <td>Process face recognition requests in isolation</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Database</strong></td>
+                            <td>Store all persistent data (users, books, loans, attendance)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Getting Started Section -->
+            <section id="getting-started">
+                <h2>🚀 Getting Started</h2>
+
+                <h3>Prerequisites</h3>
+                <div class="prerequisite-grid">
+                    <div class="prerequisite-item">
+                        <strong>Java Development Kit (JDK)</strong>
+                        Version 25 or compatible
+                    </div>
+                    <div class="prerequisite-item">
+                        <strong>MariaDB</strong>
+                        Version 10.x or higher
+                    </div>
+                    <div class="prerequisite-item">
+                        <strong>Python</strong>
+                        Version 3.8 or higher
+                    </div>
+                    <div class="prerequisite-item">
+                        <strong>Git</strong>
+                        For cloning the repository
+                    </div>
+                    <div class="prerequisite-item">
+                        <strong>IDE</strong>
+                        VS Code or IntelliJ IDEA (recommended)
+                    </div>
+                    <div class="prerequisite-item">
+                        <strong>C++ Build Tools</strong>
+                        Required for face_recognition library
+                    </div>
+                </div>
+
+                <h3>Quick Setup Steps</h3>
+
+                <h4>1. Clone the Repository</h4>
+                <div class="code-block">git clone &lt;repository-url&gt;
+cd iniPerpus-SpringBoot</div>
+
+                <h4>2. Configure Database</h4>
+                <div class="code-block">CREATE DATABASE iniperpus_2 CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;</div>
+                <p>Update <code style="background: #f0f0f0; padding: 2px 5px; border-radius: 3px;">application.properties</code> with your database credentials</p>
+
+                <h4>3. Setup Python Face Service</h4>
+                <div class="code-block">cd python-face-service
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+pip install -r requirements.txt
+python main.py</div>
+
+                <h4>4. Run Spring Boot Application</h4>
+                <div class="code-block">./gradlew bootRun</div>
+                <p>Application will be available at <code style="background: #f0f0f0; padding: 2px 5px; border-radius: 3px;">http://localhost:8080</code></p>
+
+                <h4>5. Login</h4>
+                <ul style="margin-left: 20px;">
+                    <li>Default Admin: <code style="background: #f0f0f0; padding: 2px 5px; border-radius: 3px;">admin</code> / <code style="background: #f0f0f0; padding: 2px 5px; border-radius: 3px;">admin</code></li>
+                    <li>Create additional users as needed</li>
+                </ul>
+
+                <h3>Troubleshooting</h3>
+
+                <div class="scenario">
+                    <strong>Issue:</strong> Camera not working in Presence section
+                    <br><strong>Solution:</strong> Ensure browser has camera permissions enabled and Python service is running
+                </div>
+
+                <div class="scenario">
+                    <strong>Issue:</strong> Face recognition not matching
+                    <br><strong>Solution:</strong> Register face in good lighting, ensure face is clearly visible, re-register if needed
+                </div>
+
+                <div class="scenario">
+                    <strong>Issue:</strong> Book lend fails
+                    <br><strong>Solution:</strong> Ensure user and book are selected, and available copies > 0
+                </div>
+
+                <h3>Real-World Scenarios</h3>
+
+                <h4>Scenario 1: School Opening Day</h4>
+                <div class="scenario">
+                    <ol>
+                        <li>Admin logs in and adds all users from enrollment list</li>
+                        <li>Registers each user's face in the Presence section</li>
+                        <li>Teachers can now use face recognition for attendance</li>
+                        <li>Library books are added to the system with inventory counts</li>
+                        <li>Users can borrow books by asking librarian</li>
+                    </ol>
+                </div>
+
+                <h4>Scenario 2: Weekly Book Circulation</h4>
+                <div class="scenario">
+                    <ul style="margin-left: 20px;">
+                        <li><strong>Monday:</strong> Users borrow books (lending records created)</li>
+                        <li><strong>Wednesday:</strong> Face recognition checks attendance</li>
+                        <li><strong>Friday:</strong> Some books are returned (inventory updated)</li>
+                        <li>System tracks overdue books automatically via due dates</li>
+                    </ul>
+                </div>
+
+                <h4>Scenario 3: User Transfer</h4>
+                <div class="scenario">
+                    <ol>
+                        <li>User's original data is deleted from system</li>
+                        <li>Face encodings automatically removed</li>
+                        <li>All lending records cascade deleted</li>
+                        <li>Attendance history preserved in database</li>
+                        <li>User's data can be re-added if needed</li>
+                    </ol>
+                </div>
+
+                <h3>Best Practices</h3>
+
+                <div class="best-practices">
+                    <div class="practice-card">
+                        <strong>User Management</strong>
+                        <ul style="margin-left: 20px; margin-top: 8px;">
+                            <li>Keep user information up-to-date</li>
+                            <li>Register faces immediately after enrollment</li>
+                            <li>Re-register annually or if recognition fails</li>
+                        </ul>
+                    </div>
+                    <div class="practice-card">
+                        <strong>Book Management</strong>
+                        <ul style="margin-left: 20px; margin-top: 8px;">
+                            <li>Maintain accurate copy counts</li>
+                            <li>Set realistic total copy counts</li>
+                            <li>Regularly review ISBN entries</li>
+                        </ul>
+                    </div>
+                    <div class="practice-card">
+                        <strong>Lending Operations</strong>
+                        <ul style="margin-left: 20px; margin-top: 8px;">
+                            <li>Process returns promptly</li>
+                            <li>Monitor due dates</li>
+                            <li>Follow up on unreturned books</li>
+                        </ul>
+                    </div>
+                    <div class="practice-card">
+                        <strong>Face Recognition</strong>
+                        <ul style="margin-left: 20px; margin-top: 8px;">
+                            <li>Register in well-lit areas</li>
+                            <li>Ensure natural lighting</li>
+                            <li>Register one user at a time</li>
+                            <li>Update if appearance changes</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Support Section -->
+            <section>
+                <h2>💡 Support & Feedback</h2>
+                <p>For issues, suggestions, or feature requests:</p>
+                <ul style="margin-left: 20px; margin-top: 15px;">
+                    <li>Check the main README.md for detailed technical documentation</li>
+                    <li>Review application logs for error messages</li>
+                    <li>Ensure all services (Spring Boot + Python) are running</li>
+                </ul>
+            </section>
+        </main>
+
+        <footer>
+            <p><strong>iniPerpus - Library Management System</strong></p>
+            <p>A comprehensive solution for educational institutions | Last Updated: January 2026 | Version: 1.0</p>
+            <p style="margin-top: 10px; font-size: 0.9em;">This project is provided as-is for educational purposes.</p>
+        </footer>
+    </div>
+</body>
+</html>

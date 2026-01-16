@@ -3,7 +3,7 @@ Face Recognition Microservice
 Endpoints:
 - POST /enroll: multipart form `student_id` + `image` -> enroll student photo
 - POST /match: multipart form `image` -> return best-matching student_id and distance
-- GET /students: list enrolled student IDs
+- GET /students: list enrolled borrower (user) IDs
 
 Run (recommended in virtualenv):
 

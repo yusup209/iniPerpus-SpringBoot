@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iniPerpus - Dokumentasi Sistem Manajemen Perpustakaan</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 60px 40px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        nav {
+            background: #f8f9fa;
+            padding: 20px 40px;
+            border-bottom: 1px solid #e9ecef;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        nav a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover {
+            color: #764ba2;
+        }
+
+        main {
+            padding: 40px;
+        }
+
+        section {
+            margin-bottom: 50px;
+        }
+
+        h2 {
+            color: #667eea;
+            font-size: 2em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        h3 {
+            color: #764ba2;
+            font-size: 1.5em;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        h4 {
+            color: #555;
+            font-size: 1.2em;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .overview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .card h4 {
+            color: #667eea;
+            margin-top: 0;
+        }
+
+        .tech-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+        }
+
+        .tech-table th {
+            background: #667eea;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .tech-table td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .tech-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .feature-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .feature-list {
+            list-style: none;
+            margin: 15px 0;
+        }
+
+        .feature-list li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .feature-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .image-placeholder {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: 2px dashed #999;
+            border-radius: 8px;
+            height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.1em;
+            font-weight: 500;
+            text-align: center;
+            margin: 20px 0;
+            font-style: italic;
+        }
+
+        .use-case {
+            background: #e7f3ff;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 15px 0;
+        }
+
+        .use-case strong {
+            color: #2196F3;
+        }
+
+        .steps {
+            background: #fff9e6;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 15px 0;
+        }
+
+        .steps ol {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+
+        .steps li {
+            margin: 8px 0;
+        }
+
+        .architecture-box {
+            background: white;
+            border: 2px solid #667eea;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-family: monospace;
+            overflow-x: auto;
+        }
+
+        .component-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+        }
+
+        .component-table th {
+            background: #764ba2;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .component-table td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .component-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .prerequisite-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .prerequisite-item {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 15px;
+            border-radius: 4px;
+        }
+
+        .prerequisite-item strong {
+            color: #2e7d32;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        .scenario {
+            background: #f3e5f5;
+            border-left: 4px solid #9c27b0;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 15px 0;
+        }
+
+        .scenario strong {
+            color: #6a1b9a;
+        }
+
+        .best-practices {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .practice-card {
+            background: #fff3cd;
+            border-left: 4px solid #ff9800;
+            padding: 15px;
+            border-radius: 4px;
+        }
+
+        .practice-card strong {
+            color: #e65100;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        footer {
+            background: #f8f9fa;
+            border-top: 1px solid #e9ecef;
+            padding: 20px 40px;
+            text-align: center;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            main {
+                padding: 20px;
+            }
+
+            nav ul {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .overview-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .image-placeholder {
+                height: 200px;
+            }
+        }
+
+        .toc {
+            background: #f0f4ff;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .toc ul {
+            list-style: none;
+        }
+
+        .toc li {
+            margin: 8px 0;
+            padding-left: 20px;
+        }
+
+        .toc li:before {
+            content: "→";
+            position: absolute;
+            margin-left: -20px;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .toc a {
+            color: #667eea;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .toc a:hover {
+            color: #764ba2;
+            text-decoration: underline;
+        }
+
+        .highlight {
+            background: #fffacd;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>iniPerpus</h1>
+            <p>Sistem Manajemen Perpustakaan dengan Pengenalan Wajah</p>
+            <p style="font-size: 0.95em; margin-top: 15px; opacity: 0.8;">Sistem Komprehensif untuk Presensi Pengguna dan Manajemen Buku</p>
+        </header>
+
+        <nav>
+            <ul>
+                <li><a href="#overview">Ikhtisar</a></li>
+                <li><a href="#features">Fitur</a></li>
+                <li><a href="#guides">Panduan</a></li>
+                <li><a href="#architecture">Arsitektur</a></li>
+                <li><a href="#getting-started">Memulai</a></li>
+            </ul>
+        </nav>
+
+        <main>
+            <!-- Bagian Ikhtisar -->
+            <section id="overview">
+                <h2>🎯 Ikhtisar</h2>
+                <p>iniPerpus menyederhanakan manajemen perpustakaan untuk institusi pendidikan dengan menyediakan platform terpadu yang menggabungkan operasi perpustakaan tradisional dengan teknologi pengenalan wajah modern untuk pelacakan kehadiran.</p>
+
+                <div class="overview-grid">
+                    <div class="card">
+                        <h4>📚 Manajemen Buku</h4>
+                        <p>Kontrol inventaris lengkap dengan pelacakan ketersediaan real-time</p>
+                    </div>
+                    <div class="card">
+                        <h4>👥 Catatan Pengguna</h4>
+                        <p>Informasi pengguna terpusat dengan integrasi pengenalan wajah</p>
+                    </div>
+                    <div class="card">
+                        <h4>🔄 Sistem Peminjaman</h4>
+                        <p>Pemrosesan peminjaman dan pengembalian buku yang efisien</p>
+                    </div>
+                    <div class="card">
+                        <h4>📸 Pengenalan Wajah</h4>
+                        <p>Kehadiran otomatis dengan teknologi biometrik</p>
+                    </div>
+                    <div class="card">
+                        <h4>🔐 Keamanan</h4>
+                        <p>Akses berbasis peran dengan enkripsi password BCrypt</p>
+                    </div>
+                    <div class="card">
+                        <h4>🎨 UI Modern</h4>
+                        <p>Desain glassmorphism responsif untuk semua perangkat</p>
+                    </div>
+                </div>
+
+                <h3>Tumpukan Teknologi</h3>
+                <table class="tech-table">
+                    <thead>
+                        <tr>
+                            <th>Komponen</th>
+                            <th>Teknologi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Backend</strong></td>
+                            <td>Spring Boot 4.0.0, Java 25</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Database</strong></td>
+                            <td>MariaDB 10.x+</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Frontend</strong></td>
+                            <td>Thymeleaf, JavaScript ES6+, CSS3</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Pengenalan Wajah</strong></td>
+                            <td>Python FastAPI, library face_recognition</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Build Tool</strong></td>
+                            <td>Gradle</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Bagian Fitur -->
+            <section id="features">
+                <h2>✨ Fitur Utama</h2>
+
+                <!-- Manajemen Pengguna -->
+                <div class="feature-section">
+                    <h3>👥 Manajemen Pengguna</h3>
+                    <p>Kelola catatan pengguna secara efisien dengan operasi CRUD yang intuitif dan integrasi pengenalan wajah.</p>
+                    
+                    <div class="image-placeholder">
+                        [Tempatkan Gambar Di Sini: Antarmuka Manajemen Pengguna]
+                    </div>
+
+                    <h4>Kemampuan:</h4>
+                    <ul class="feature-list">
+                        <li>Tambahkan pengguna baru dengan NIS (ID Pengguna) dan informasi kelas</li>
+                        <li>Edit informasi pengguna yang ada melalui dialog modal</li>
+                        <li>Hapus catatan pengguna dengan pembersihan cascade data terkait</li>
+                        <li>Pencarian dan penyaringan real-time di semua pengguna</li>
+                        <li>Paginasi dengan ukuran halaman yang dapat disesuaikan (5, 10, 25 catatan)</li>
+                        <li>Integrasi langsung dengan sistem pengenalan wajah</li>
+                        <li>Ikon aksi cepat untuk operasi umum</li>
+                    </ul>
+
+                    <div class="use-case">
+                        <strong>Kasus Penggunaan:</strong> Ketika pengguna baru mendaftar, navigasi ke bagian Pengguna, klik "Tambah Pengguna", masukkan detail mereka (Nama, NIS, Kelas), dan simpan. Sistem secara otomatis mempersiapkan pengguna untuk pendaftaran wajah.
+                    </div>
+                </div>
+
+                <!-- Manajemen Buku -->
+                <div class="feature-section">
+                    <h3>📚 Manajemen Buku</h3>
+                    <p>Pertahankan koleksi buku perpustakaan Anda dengan kontrol inventaris lengkap dan pelacakan ketersediaan real-time.</p>
+                    
+                    <div class="image-placeholder">
+                        [Tempatkan Gambar Di Sini: Antarmuka Manajemen Buku]
+                    </div>
+
+                    <h4>Kemampuan:</h4>
+                    <ul class="feature-list">
+                        <li>Operasi CRUD lengkap untuk catatan buku</li>
+                        <li>Lacak informasi penting: Judul, Penulis, ISBN, Jumlah Salinan</li>
+                        <li>Manajemen inventaris cerdas dengan pembaruan ketersediaan otomatis</li>
+                        <li>Pemantauan real-time salinan yang tersedia vs total</li>
+                        <li>Edit buku secara inline tanpa meninggalkan halaman</li>
+                        <li>Perlindungan penghapusan dengan dialog konfirmasi</li>
+                        <li>Paginasi efisien untuk koleksi besar</li>
+                        <li>Tampilan jumlah total buku untuk statistik cepat</li>
+                    </ul>
+
+                    <div class="use-case">
+                        <strong>Kasus Penggunaan:</strong> Untuk menambahkan buku baru ke perpustakaan, buka bagian Buku, klik "Tambah Buku", isi detail (Judul, Penulis, ISBN, Total Salinan), dan simpan. Ketika buku dipinjam atau dikembalikan, jumlah salinan yang tersedia diperbarui secara otomatis.
+                    </div>
+                </div>
+
+                <!-- Manajemen Peminjaman -->
+                <div class="feature-section">
+                    <h3>🔄 Manajemen Peminjaman</h3>
+                    <p>Lacak semua transaksi peminjaman dan kelola tanggal jatuh tempo dengan mudah menggunakan perhitungan otomatis.</p>
+                    
+                    <div class="image-placeholder">
+                        [Tempatkan Gambar Di Sini: Antarmuka Manajemen Peminjaman]
+                    </div>
+
+                    <h4>Kemampuan:</h4>
+                    <ul class="feature-list">
+                        <li>Pinjamkan buku kepada pengguna dengan perhitungan tanggal jatuh tempo otomatis</li>
+                        <li>Proses pengembalian dan pulihkan inventaris secara otomatis</li>
+                        <li>Lihat semua pinjaman aktif di satu lokasi terpusat</li>
+                        <li>Periode pinjaman otomatis 14 hari</li>
+                        <li>Indikator tanggal jatuh tempo visual</li>
+                        <li>Pencegahan peminjaman ketika tidak ada salinan yang tersedia</li>
+                        <li>Pembaruan status real-time di seluruh sistem</li>
+                        <li>Riwayat peminjaman lengkap dengan paginasi</li>
+                        <li>Tampilan total pinjaman aktif</li>
+                    </ul>
+
+                    <div class="use-case">
+                        <strong>Kasus Penggunaan:</strong> Ketika pengguna ingin meminjam buku, navigasi ke bagian Peminjaman, klik "Tambah Peminjaman", pilih pengguna dan buku, masukkan tanggal peminjaman. Sistem secara otomatis menghitung tanggal jatuh tempo (14 hari kemudian). Ketika pengguna mengembalikan buku, tandai sebagai dikembalikan dan jumlah ketersediaan buku meningkat.
+                    </div>
+                </div>
+
+                <!-- Pengenalan Wajah -->
+                <div class="feature-section">
+                    <h3>📸 Presensi Pengguna (Pengenalan Wajah)</h3>
+                    <p>Otomatiskan pelacakan kehadiran dengan teknologi pengenalan wajah yang cerdas untuk check-in yang mulus.</p>
+                    
+                    <div class="image-placeholder">
+                        [Tempatkan Gambar Di Sini: Antarmuka Pengenalan Wajah]
+                    </div>
+
+                    <h4>Kemampuan:</h4>
+                    <ul class="feature-list">
+                        <li>Integrasi webcam langsung untuk pengambilan wajah real-time</li>
+                        <li>Daftarkan wajah pengguna yang terhubung ke profil mereka</li>
+                        <li>Pengenalan wajah otomatis untuk check-in instan</li>
+                        <li>Pencatatan timestamp untuk pelacakan kehadiran</li>
+                        <li>Daftarkan ulang atau perbarui wajah pengguna yang ada</li>
+                        <li>Ambang batas kepercayaan 0.6 untuk pencocokan yang akurat</li>
+                        <li>Lihat check-in terbaru dengan detail pengguna</li>
+                        <li>Feed video responsif untuk semua ukuran layar</li>
+                        <li>Umpan balik visual yang jelas dengan alert berkode warna</li>
+                        <li>Pembersihan otomatis data wajah ketika pengguna dihapus</li>
+                    </ul>
+
+                    <h4>Cara Kerja:</h4>
+                    <div class="steps">
+                        <strong>Pendaftaran Wajah:</strong>
+                        <ol>
+                            <li>Buka bagian Presensi</li>
+                            <li>Klik "Daftarkan Wajah"</li>
+                            <li>Klik ikon kamera untuk memulai</li>
+                            <li>Pilih pengguna dari dropdown</li>
+                            <li>Izinkan akses kamera saat diminta</li>
+                            <li>Posisikan wajah di frame</li>
+                            <li>Berhasil didaftarkan</li>
+                        </ol>
+                    </div>
+
+                    <div class="steps">
+                        <strong>Check-in Pengguna:</strong>
+                        <ol>
+                            <li>Buka bagian Presensi</li>
+                            <li>Klik "Mulai Kamera"</li>
+                            <li>Sistem secara otomatis mengenali wajah yang terdaftar</li>
+                            <li>Kehadiran dicatat secara instan dengan timestamp</li>
+                            <li>Lihat check-in terbaru di bawah</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- Autentikasi -->
+                <div class="feature-section">
+                    <h3>🔐 Autentikasi & Otorisasi</h3>
+                    <p>Akses aman ke sistem dengan izin berbasis peran dan enkripsi standar industri.</p>
+                    
+                    <div class="image-placeholder">
+                        [Tempatkan Gambar Di Sini: Antarmuka Login]
+                    </div>
+
+                    <h4>Kemampuan:</h4>
+                    <ul class="feature-list">
+                        <li>Autentikasi berbasis form yang aman</li>
+                        <li>Kontrol akses berbasis peran (Admin, User)</li>
+                        <li>Enkripsi password BCrypt</li>
+                        <li>Manajemen dan persistensi sesi</li>
+                        <li>Perlindungan CSRF</li>
+                        <li>Logout aman dengan dialog konfirmasi</li>
+                        <li>Pesan error dengan panduan yang membantu</li>
+                    </ul>
+
+                    <div class="use-case">
+                        <strong>Kasus Penggunaan:</strong> Di halaman login, masukkan username dan password. Sistem memvalidasi kredensial dengan aman. Setelah login, peran menentukan fitur yang tersedia. Admin dapat mengelola pengguna dan pengaturan sistem. Untuk logout, klik tombol logout dan konfirmasi di dialog.
+                    </div>
+                </div>
+
+                <!-- Antarmuka Pengguna -->
+                <div class="feature-section">
+                    <h3>🎨 Antarmuka Pengguna</h3>
+                    <p>Rasakan antarmuka modern dan responsif yang dirancang untuk produktivitas dan keterlibatan pengguna.</p>
+                    
+                    <div class="image-placeholder">
+                        [Tempatkan Gambar Di Sini: Antarmuka Dashboard]
+                    </div>
+
+                    <h4>Fitur Desain:</h4>
+                    <ul class="feature-list">
+                        <li><span class="highlight">Desain Glassmorphism</span> - Efek kaca buram dengan estetika modern</li>
+                        <li><span class="highlight">Background Animasi</span> - Transisi warna gradien yang halus</li>
+                        <li><span class="highlight">Tata Letak Responsif</span> - Pengalaman mulus di desktop, tablet, dan mobile</li>
+                        <li><span class="highlight">Dialog Modal</span> - Konfirmasi non-intrusif untuk tindakan kritis</li>
+                        <li><span class="highlight">Paginasi Client-side</span> - Navigasi cepat tanpa reload halaman</li>
+                        <li><span class="highlight">Pembaruan Real-time</span> - Refleksi instan perubahan di antarmuka</li>
+                        <li><span class="highlight">Ikon Intuitif</span> - Indikator visual yang jelas untuk tindakan</li>
+                        <li>Alert Berkode Warna: 🟢 Hijau (sukses), 🔴 Merah (error), 🔵 Biru (info)</li>
+                        <li>Styling Konsisten - Bahasa desain terpadu di seluruh</li>
+                        <li>Navigasi Dapat Diakses - Struktur menu yang jelas dan breadcrumb</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Bagian Panduan Fitur -->
+            <section id="guides">
+                <h2>🎓 Panduan Fitur</h2>
+
+                <h3>Cara Menambahkan Pengguna</h3>
+                <div class="steps">
+                    <ol>
+                        <li>Klik <strong>"Pengguna"</strong> di menu navigasi</li>
+                        <li>Klik tombol <strong>"Tambah Pengguna"</strong></li>
+                        <li>Isi field yang diperlukan:
+                            <ul style="margin: 10px 0; margin-left: 40px;">
+                                <li><strong>Nama</strong> - Nama lengkap pengguna</li>
+                                <li><strong>NIS</strong> - Nomor identifikasi pengguna</li>
+                                <li><strong>Kelas</strong> - Kelas/tingkat pengguna</li>
+                            </ul>
+                        </li>
+                        <li>Klik <strong>"Simpan"</strong></li>
+                        <li>Pengguna muncul di daftar dan siap untuk pendaftaran wajah</li>
+                    </ol>
+                </div>
+
+                <h3>Cara Mendaftarkan Wajah Pengguna</h3>
+                <div class="steps">
+                    <ol>
+                        <li>Navigasi ke bagian <strong>"Presensi"</strong></li>
+                        <li>Klik tombol <strong>"Daftarkan Wajah"</strong></li>
+                        <li>Klik <strong>Ikon Kamera</strong> untuk mengaktifkan webcam</li>
+                        <li>Pilih pengguna dari menu dropdown</li>
+                        <li>Pastikan pencahayaan bagus dan posisikan wajah dengan jelas di frame</li>
+                        <li>Klik <strong>"Tangkap & Daftarkan"</strong> saat siap</li>
+                        <li>Sistem akan memproses dan menyimpan encoding wajah</li>
+                        <li>Pesan konfirmasi akan muncul</li>
+                    </ol>
+                </div>
+
+                <h3>Cara Meminjamkan Buku</h3>
+                <div class="steps">
+                    <ol>
+                        <li>Buka bagian <strong>"Peminjaman"</strong></li>
+                        <li>Klik tombol <strong>"Tambah Peminjaman"</strong></li>
+                        <li>Pilih <strong>Pengguna</strong> dari dropdown</li>
+                        <li>Pilih <strong>Buku</strong> dari daftar buku yang tersedia</li>
+                        <li>Atur <strong>Tanggal Peminjaman</strong> (biasanya hari ini)</li>
+                        <li>Sistem secara otomatis menghitung tanggal jatuh tempo (14 hari)</li>
+                        <li>Klik <strong>"Simpan"</strong></li>
+                        <li>Jumlah buku berkurang secara otomatis di inventaris</li>
+                    </ol>
+                </div>
+
+                <h3>Cara Memproses Pengembalian Buku</h3>
+                <div class="steps">
+                    <ol>
+                        <li>Navigasi ke bagian <strong>"Peminjaman"</strong></li>
+                        <li>Temukan buku yang dikembalikan di daftar pinjaman aktif</li>
+                        <li>Klik tombol <strong>Kembalikan</strong> di sebelah catatan peminjaman</li>
+                        <li>Konfirmasi pengembalian di dialog</li>
+                        <li>Jumlah ketersediaan buku meningkat secara otomatis</li>
+                        <li>Catatan peminjaman pindah ke riwayat</li>
+                    </ol>
+                </div>
+
+                <h3>Cara Mencari dan Menyaring</h3>
+                <div class="steps">
+                    <strong>Untuk Pengguna:</strong>
+                    <ol>
+                        <li>Di bagian Pengguna, cari kotak pencarian</li>
+                        <li>Ketik nama pengguna, NIS, atau kelas</li>
+                        <li>Hasil diperbarui secara real-time</li>
+                        <li>Hapus pencarian untuk melihat semua pengguna</li>
+                    </ol>
+                </div>
+                <div class="steps">
+                    <strong>Untuk Buku:</strong>
+                    <ol>
+                        <li>Di bagian Buku, gunakan fungsionalitas pencarian</li>
+                        <li>Masukkan judul buku, penulis, atau ISBN</li>
+                        <li>Buku yang cocok ditampilkan secara instan</li>
+                        <li>Sesuaikan paginasi untuk melihat lebih banyak hasil</li>
+                    </ol>
+                </div>
+
+                <h3>Cara Memeriksa Catatan Kehadiran</h3>
+                <div class="steps">
+                    <ol>
+                        <li>Buka bagian <strong>"Presensi"</strong></li>
+                        <li>Lihat <strong>"Check-in Terbaru"</strong> di bagian bawah</li>
+                        <li>Setiap catatan menunjukkan:
+                            <ul style="margin: 10px 0; margin-left: 40px;">
+                                <li>Nama pengguna dan NIS</li>
+                                <li>Timestamp check-in</li>
+                                <li>Tingkat kepercayaan pencocokan wajah</li>
+                            </ul>
+                        </li>
+                        <li>Gunakan paginasi untuk menelusuri riwayat</li>
+                    </ol>
+                </div>
+            </section>
+
+            <!-- Bagian Arsitektur -->
+            <section id="architecture">
+                <h2>🏗️ Arsitektur Sistem</h2>
+
+                <h3>Komponen Sistem</h3>
+                <div class="architecture-box">
+┌─────────────────────────────────────────────────────────┐
+│                    Sistem iniPerpus                      │
+├─────────────────────────────────────────────────────────┤
+│                                                           │
+│  ┌──────────────┐          ┌────────────────────┐       │
+│  │   Frontend   │          │  Aplikasi Spring   │       │
+│  │ (Thymeleaf,  │◄────────►│  Boot (REST API,   │       │
+│  │ JavaScript)  │ AJAX/JSON│   Logika Bisnis)   │       │
+│  └──────────────┘          └────────────────────┘       │
+│                                    │                     │
+│                                    ▼                     │
+│                            ┌─────────────────┐           │
+│                            │    MariaDB      │           │
+│                            │   Database      │           │
+│                            └─────────────────┘           │
+│                                                           │
+│  ┌──────────────────────┐   ┌────────────────────┐      │
+│  │   Kamera/Webcam      │──►│  Python FastAPI    │      │
+│  │  (Tangkap Wajah)     │   │  Pengenalan Wajah  │      │
+│  └──────────────────────┘   └────────────────────┘      │
+│                                    │                     │
+│                                    ▼                     │
+│                            ┌─────────────────┐           │
+│                            │  Face Encodings │           │
+│                            │  (Data Wajah)   │           │
+│                            └─────────────────┘           │
+│                                                           │
+└─────────────────────────────────────────────────────────┘
+                </div>
+
+                <h3>Ikhtisar Komponen</h3>
+                <table class="component-table">
+                    <thead>
+                        <tr>
+                            <th>Komponen</th>
+                            <th>Tujuan</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Frontend</strong></td>
+                            <td>Antarmuka pengguna yang dibangun dengan template Thymeleaf dan JavaScript vanilla</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Controllers</strong></td>
+                            <td>Menangani permintaan HTTP dan mengarahkan ke layanan yang sesuai</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Services</strong></td>
+                            <td>Mengimplementasikan logika bisnis dan mengorkestrasikan operasi</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Repositories</strong></td>
+                            <td>Mengakses database melalui Spring Data JPA</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Models</strong></td>
+                            <td>Mewakili entitas database (User, Book, Lending, dll.)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Layanan Python</strong></td>
+                            <td>Memproses permintaan pengenalan wajah secara terpisah</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Database</strong></td>
+                            <td>Menyimpan semua data persisten (pengguna, buku, pinjaman, kehadiran)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Bagian Memulai -->
+            <section id="getting-started">
+                <h2>🚀 Memulai</h2>
+
+                <h3>Prasyarat</h3>
+                <div class="prerequisite-grid">
+                    <div class="prerequisite-item">
+                        <strong>Java Development Kit (JDK)</strong>
+                        Versi 25 atau kompatibel
+                    </div>
+                    <div class="prerequisite-item">
+                        <strong>MariaDB</strong>
+                        Versi 10.x atau lebih tinggi
+                    </div>
+                    <div class="prerequisite-item">
+                        <strong>Python</strong>
+                        Versi 3.8 atau lebih tinggi
+                    </div>
+                    <div class="prerequisite-item">
+                        <strong>Git</strong>
+                        Untuk kloning repositori
+                    </div>
+                    <div class="prerequisite-item">
+                        <strong>IDE</strong>
+                        VS Code atau IntelliJ IDEA (direkomendasikan)
+                    </div>
+                    <div class="prerequisite-item">
+                        <strong>C++ Build Tools</strong>
+                        Diperlukan untuk library face_recognition
+                    </div>
+                </div>
+
+                <h3>Langkah Pengaturan Cepat</h3>
+
+                <h4>1. Klon Repositori</h4>
+                <div class="code-block">git clone &lt;repository-url&gt;
+cd iniPerpus-SpringBoot</div>
+
+                <h4>2. Konfigurasi Database</h4>
+                <div class="code-block">CREATE DATABASE iniperpus_2 CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;</div>
+                <p>Perbarui <code style="background: #f0f0f0; padding: 2px 5px; border-radius: 3px;">application.properties</code> dengan kredensial database Anda</p>
+
+                <h4>3. Setup Layanan Wajah Python</h4>
+                <div class="code-block">cd python-face-service
+python -m venv venv
+source venv/bin/activate  # Di Windows: venv\Scripts\activate
+pip install -r requirements.txt
+python main.py</div>
+
+                <h4>4. Jalankan Aplikasi Spring Boot</h4>
+                <div class="code-block">./gradlew bootRun</div>
+                <p>Aplikasi akan tersedia di <code style="background: #f0f0f0; padding: 2px 5px; border-radius: 3px;">http://localhost:8080</code></p>
+
+                <h4>5. Login</h4>
+                <ul style="margin-left: 20px;">
+                    <li>Admin Default: <code style="background: #f0f0f0; padding: 2px 5px; border-radius: 3px;">admin</code> / <code style="background: #f0f0f0; padding: 2px 5px; border-radius: 3px;">admin</code></li>
+                    <li>Buat pengguna tambahan sesuai kebutuhan</li>
+                </ul>
+
+                <h3>Pemecahan Masalah</h3>
+
+                <div class="scenario">
+                    <strong>Masalah:</strong> Kamera tidak berfungsi di bagian Presensi
+                    <br><strong>Solusi:</strong> Pastikan browser memiliki izin kamera yang diaktifkan dan layanan Python berjalan
+                </div>
+
+                <div class="scenario">
+                    <strong>Masalah:</strong> Pengenalan wajah tidak cocok
+                    <br><strong>Solusi:</strong> Daftarkan wajah di pencahayaan yang baik, pastikan wajah terlihat jelas, daftarkan ulang jika diperlukan
+                </div>
+
+                <div class="scenario">
+                    <strong>Masalah:</strong> Peminjaman buku gagal
+                    <br><strong>Solusi:</strong> Pastikan pengguna dan buku dipilih, dan salinan yang tersedia > 0
+                </div>
+
+                <h3>Skenario Dunia Nyata</h3>
+
+                <h4>Skenario 1: Hari Pembukaan Sekolah</h4>
+                <div class="scenario">
+                    <ol>
+                        <li>Admin login dan menambahkan semua pengguna dari daftar pendaftaran</li>
+                        <li>Mendaftarkan wajah setiap pengguna di bagian Presensi</li>
+                        <li>Guru sekarang dapat menggunakan pengenalan wajah untuk kehadiran</li>
+                        <li>Buku perpustakaan ditambahkan ke sistem dengan jumlah inventaris</li>
+                        <li>Pengguna dapat meminjam buku dengan meminta pustakawan</li>
+                    </ol>
+                </div>
+
+                <h4>Skenario 2: Sirkulasi Buku Mingguan</h4>
+                <div class="scenario">
+                    <ul style="margin-left: 20px;">
+                        <li><strong>Senin:</strong> Pengguna meminjam buku (catatan peminjaman dibuat)</li>
+                        <li><strong>Rabu:</strong> Pengenalan wajah memeriksa kehadiran</li>
+                        <li><strong>Jumat:</strong> Beberapa buku dikembalikan (inventaris diperbarui)</li>
+                        <li>Sistem melacak buku yang terlambat secara otomatis melalui tanggal jatuh tempo</li>
+                    </ul>
+                </div>
+
+                <h4>Skenario 3: Transfer Pengguna</h4>
+                <div class="scenario">
+                    <ol>
+                        <li>Data asli pengguna dihapus dari sistem</li>
+                        <li>Encoding wajah dihapus secara otomatis</li>
+                        <li>Semua catatan peminjaman dihapus secara cascade</li>
+                        <li>Riwayat kehadiran dipertahankan di database</li>
+                        <li>Data pengguna dapat ditambahkan kembali jika diperlukan</li>
+                    </ol>
+                </div>
+
+                <h3>Praktik Terbaik</h3>
+
+                <div class="best-practices">
+                    <div class="practice-card">
+                        <strong>Manajemen Pengguna</strong>
+                        <ul style="margin-left: 20px; margin-top: 8px;">
+                            <li>Jaga informasi pengguna tetap terkini</li>
+                            <li>Daftarkan wajah segera setelah pendaftaran</li>
+                            <li>Daftarkan ulang setiap tahun atau jika pengenalan gagal</li>
+                        </ul>
+                    </div>
+                    <div class="practice-card">
+                        <strong>Manajemen Buku</strong>
+                        <ul style="margin-left: 20px; margin-top: 8px;">
+                            <li>Pertahankan jumlah salinan yang akurat</li>
+                            <li>Tetapkan jumlah total salinan yang realistis</li>
+                            <li>Tinjau entri ISBN secara teratur</li>
+                        </ul>
+                    </div>
+                    <div class="practice-card">
+                        <strong>Operasi Peminjaman</strong>
+                        <ul style="margin-left: 20px; margin-top: 8px;">
+                            <li>Proses pengembalian dengan segera</li>
+                            <li>Pantau tanggal jatuh tempo</li>
+                            <li>Tindak lanjuti buku yang tidak dikembalikan</li>
+                        </ul>
+                    </div>
+                    <div class="practice-card">
+                        <strong>Pengenalan Wajah</strong>
+                        <ul style="margin-left: 20px; margin-top: 8px;">
+                            <li>Daftarkan di area yang cukup cahaya</li>
+                            <li>Pastikan pencahayaan alami</li>
+                            <li>Daftarkan satu pengguna pada satu waktu</li>
+                            <li>Perbarui jika penampilan berubah</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Bagian Dukungan -->
+            <section>
+                <h2>💡 Dukungan & Umpan Balik</h2>
+                <p>Untuk masalah, saran, atau permintaan fitur:</p>
+                <ul style="margin-left: 20px; margin-top: 15px;">
+                    <li>Periksa README.md utama untuk dokumentasi teknis terperinci</li>
+                    <li>Tinjau log aplikasi untuk pesan error</li>
+                    <li>Pastikan semua layanan (Spring Boot + Python) berjalan</li>
+                </ul>
+            </section>
+        </main>
+
+        <footer>
+            <p><strong>iniPerpus - Sistem Manajemen Perpustakaan</strong></p>
+            <p>Solusi komprehensif untuk institusi pendidikan | Terakhir Diperbarui: Januari 2026 | Versi: 1.0</p>
+            <p style="margin-top: 10px; font-size: 0.9em;">Proyek ini disediakan apa adanya untuk tujuan pendidikan.</p>
+        </footer>
+    </div>
+</body>
+</html>

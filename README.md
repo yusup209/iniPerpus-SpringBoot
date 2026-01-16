@@ -467,7 +467,7 @@ http://localhost:8080
 
 ### Student Management
 
-1. **Add Student**: Fill form with Name, Student ID, and Class
+1. **Add Student**: Fill form with Name, Borrower (User) ID, and Class
 2. **Edit Student**: Click edit icon (✎) on student row
 3. **Delete Student**: Click delete icon (🗑️) with confirmation dialog
 4. **Register Face**: Click camera icon (📸) to navigate to presence page
