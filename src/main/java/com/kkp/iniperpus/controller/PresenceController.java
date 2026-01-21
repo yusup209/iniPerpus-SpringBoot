@@ -3,7 +3,7 @@ package com.kkp.iniperpus.controller;
 import com.kkp.iniperpus.model.PresenceRecord;
 import com.kkp.iniperpus.model.Borrower;
 import com.kkp.iniperpus.repository.PresenceRecordRepository;
-import com.kkp.iniperpus.repository.StudentRepository;
+import com.kkp.iniperpus.repository.BorrowerRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -24,11 +24,11 @@ import java.time.LocalDateTime;
 @Controller
 public class PresenceController {
 
-    private final StudentRepository borrowerRepository;
+    private final BorrowerRepository borrowerRepository;
     private final PresenceRecordRepository presenceRecordRepository;
     private final com.kkp.iniperpus.service.PresenceService presenceService;
 
-    public PresenceController(StudentRepository borrowerRepository, PresenceRecordRepository presenceRecordRepository, com.kkp.iniperpus.service.PresenceService presenceService) {
+    public PresenceController(BorrowerRepository borrowerRepository, PresenceRecordRepository presenceRecordRepository, com.kkp.iniperpus.service.PresenceService presenceService) {
         this.borrowerRepository = borrowerRepository;
         this.presenceRecordRepository = presenceRecordRepository;
         this.presenceService = presenceService;
@@ -44,13 +44,13 @@ public class PresenceController {
     public String enroll(@RequestParam("borrowerId") Long borrowerId, @RequestParam("image") MultipartFile image, Model model) {
         Borrower s = borrowerRepository.findById(borrowerId).orElse(null);
         if (s == null) {
-            model.addAttribute("error", "Student not found");
+            model.addAttribute("error", "Borrower not found");
             return "presence";
         }
 
         try {
-            var resp = presenceService.enroll(s.getStudentId(), image);
-            // update borrower photo filename via StudentService if needed (not done here)
+            var resp = presenceService.enroll(s.getBorrowerId(), image);
+            // update borrower photo filename via BorrowerService if needed (not done here)
             model.addAttribute("message", "Enrolled: " + resp);
         } catch (Exception ex) {
             model.addAttribute("error", "Enroll failed: " + ex.getMessage());

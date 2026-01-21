@@ -28,8 +28,8 @@ public class ApiLendingController {
     @PostMapping
     public ResponseEntity<?> lend(@Valid @RequestBody LendingRequest req) {
         try {
-            log.info("LEND request studentId={}, bookId={}, dueDate={}", req.studentId, req.bookId, req.dueDate);
-            var l = lendingService.lend(req.studentId, req.bookId, req.dueDate);
+            log.info("LEND request borrowerId={}, bookId={}, dueDate={}", req.borrowerId, req.bookId, req.dueDate);
+            var l = lendingService.lend(req.borrowerId, req.bookId, req.dueDate);
             log.info("LEND success id={} borrower={} book={} dueDate={} ", l.getId(),
                     l.getBorrower() != null ? l.getBorrower().getId() : null,
                     l.getBook() != null ? l.getBook().getId() : null,
@@ -53,7 +53,7 @@ public class ApiLendingController {
 
     static class LendingRequest {
         @jakarta.validation.constraints.NotNull
-        public Long studentId;
+        public Long borrowerId;
         @jakarta.validation.constraints.NotNull
         public Long bookId;
         public LocalDate dueDate;
