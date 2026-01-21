@@ -5,7 +5,7 @@ import com.kkp.iniperpus.model.Lending;
 import com.kkp.iniperpus.model.Borrower;
 import com.kkp.iniperpus.repository.BookRepository;
 import com.kkp.iniperpus.repository.LendingRepository;
-import com.kkp.iniperpus.repository.StudentRepository;
+import com.kkp.iniperpus.repository.BorrowerRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -16,18 +16,18 @@ public class LendingService {
 
     private final LendingRepository lendingRepository;
     private final BookRepository bookRepository;
-    private final StudentRepository studentRepository;
+    private final BorrowerRepository borrowerRepository;
 
-    public LendingService(LendingRepository lendingRepository, BookRepository bookRepository, StudentRepository studentRepository) {
+    public LendingService(LendingRepository lendingRepository, BookRepository bookRepository, BorrowerRepository borrowerRepository) {
         this.lendingRepository = lendingRepository;
         this.bookRepository = bookRepository;
-        this.studentRepository = studentRepository;
+        this.borrowerRepository = borrowerRepository;
     }
 
     public List<Lending> findAll() { return lendingRepository.findAll(); }
 
-    public Lending lend(Long studentId, Long bookId, LocalDate dueDate) {
-        Borrower s = studentRepository.findById(studentId).orElseThrow(() -> new IllegalArgumentException("invalid student"));
+    public Lending lend(Long borrowerId, Long bookId, LocalDate dueDate) {
+        Borrower s = borrowerRepository.findById(borrowerId).orElseThrow(() -> new IllegalArgumentException("invalid borrower"));
         Book b = bookRepository.findById(bookId).orElseThrow(() -> new IllegalArgumentException("invalid book"));
         if (b.getCopiesAvailable() == null || b.getCopiesAvailable() <= 0) throw new IllegalStateException("no copies available");
 

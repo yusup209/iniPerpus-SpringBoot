@@ -3,7 +3,7 @@ package com.kkp.iniperpus.service;
 import com.kkp.iniperpus.model.PresenceRecord;
 import com.kkp.iniperpus.model.Borrower;
 import com.kkp.iniperpus.repository.PresenceRecordRepository;
-import com.kkp.iniperpus.repository.StudentRepository;
+import com.kkp.iniperpus.repository.BorrowerRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpEntity;
@@ -22,14 +22,14 @@ import java.util.Map;
 @Service
 public class PresenceService {
 
-    private final StudentRepository borrowerRepository;
+    private final BorrowerRepository borrowerRepository;
     private final PresenceRecordRepository presenceRecordRepository;
     private final RestTemplate restTemplate = new RestTemplate();
 
     @Value("${face.service.url}")
     private String faceServiceUrl;
 
-    public PresenceService(StudentRepository borrowerRepository, PresenceRecordRepository presenceRecordRepository) {
+    public PresenceService(BorrowerRepository borrowerRepository, PresenceRecordRepository presenceRecordRepository) {
         this.borrowerRepository = borrowerRepository;
         this.presenceRecordRepository = presenceRecordRepository;
     }
@@ -80,7 +80,7 @@ public class PresenceService {
         PresenceRecord pr = new PresenceRecord();
         pr.setTimestamp(LocalDateTime.now());
         pr.setMatched(matched);
-        if (s != null) pr.setStudent(s);
+        if (s != null) pr.setBorrower(s);
         presenceRecordRepository.save(pr);
 
         return result;

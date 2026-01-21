@@ -7,7 +7,7 @@ import com.kkp.iniperpus.model.User;
 import com.kkp.iniperpus.repository.RoleRepository;
 import com.kkp.iniperpus.repository.UserRepository;
 import com.kkp.iniperpus.service.BookService;
-import com.kkp.iniperpus.service.StudentService;
+import com.kkp.iniperpus.service.BorrowerService;
 import com.kkp.iniperpus.service.UserService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -17,7 +17,7 @@ import org.springframework.context.annotation.Configuration;
 public class DataInitializer {
 
     @Bean
-    CommandLineRunner init(UserService userService, RoleRepository roleRepository, BookService bookService, StudentService studentService, UserRepository userRepository) {
+    CommandLineRunner init(UserService userService, RoleRepository roleRepository, BookService bookService, BorrowerService borrowerService, UserRepository userRepository) {
         return args -> {
             // Create default role if not exists
             if (roleRepository.findByName("ROLE_USER") == null) {
@@ -40,10 +40,10 @@ public class DataInitializer {
             }
 
             // Create sample borrowers only if no borrowers exist
-            if (studentService.findAll().isEmpty()) {
+            if (borrowerService.findAll().isEmpty()) {
                 try {
-                    Borrower s1 = new Borrower(); s1.setStudentId("S001"); s1.setName("Alice"); s1.setClassName("10A"); studentService.save(s1);
-                    Borrower s2 = new Borrower(); s2.setStudentId("S002"); s2.setName("Bob"); s2.setClassName("10B"); studentService.save(s2);
+                    Borrower s1 = new Borrower(); s1.setStudentId("S001"); s1.setName("Alice"); s1.setClassName("10A"); borrowerService.save(s1);
+                    Borrower s2 = new Borrower(); s2.setStudentId("S002"); s2.setName("Bob"); s2.setClassName("10B"); borrowerService.save(s2);
                 } catch (Exception ignored) {}
             }
         };

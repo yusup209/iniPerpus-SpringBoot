@@ -4,3 +4,4 @@ face_recognition
 numpy
 pillow
 python-multipart
+dlib
