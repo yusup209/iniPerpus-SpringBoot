@@ -38,7 +38,7 @@ public class PresenceService {
         String url = faceServiceUrl + "/enroll";
 
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-        body.add("student_id", borrowerId);
+        body.add("borrower_id", borrowerId);
         ByteArrayResource contents = new ByteArrayResource(image.getBytes()) {
             @Override
             public String getFilename() { return image.getOriginalFilename() == null ? "image.jpg" : image.getOriginalFilename(); }
@@ -73,9 +73,9 @@ public class PresenceService {
 
         // persist presence record if matched to a borrower
         boolean matched = result != null && Boolean.TRUE.equals(result.get("matched"));
-        String sid = result != null ? (String) result.get("student_id") : null;
+        String sid = result != null ? (String) result.get("borrower_id") : null;
         Borrower s = null;
-        if (sid != null) s = borrowerRepository.findByStudentId(sid);
+        if (sid != null) s = borrowerRepository.findByBorrowerId(sid);
 
         PresenceRecord pr = new PresenceRecord();
         pr.setTimestamp(LocalDateTime.now());
@@ -88,7 +88,7 @@ public class PresenceService {
 
     public void deleteFaceData(String borrowerId) {
         try {
-            String url = faceServiceUrl + "/student/" + borrowerId;
+            String url = faceServiceUrl + "/borrower/" + borrowerId;
             restTemplate.delete(url);
         } catch (Exception e) {
             // Log error but don't fail the borrower deletion

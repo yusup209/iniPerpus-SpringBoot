@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual Pengguna - iniPerpus</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .header h1 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header .subtitle {
+            color: #666;
+            font-size: 1.2em;
+        }
+
+        .header .version {
+            color: #999;
+            font-size: 0.9em;
+            margin-top: 10px;
+        }
+
+        .toc {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 40px;
+        }
+
+        .toc h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .toc ul {
+            list-style: none;
+        }
+
+        .toc ul li {
+            padding: 8px 0;
+        }
+
+        .toc ul li a {
+            color: #333;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .toc ul li a:hover {
+            color: #667eea;
+        }
+
+        .section {
+            margin-bottom: 50px;
+            page-break-inside: avoid;
+        }
+
+        .section h2 {
+            color: #667eea;
+            font-size: 2em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .section h3 {
+            color: #764ba2;
+            font-size: 1.5em;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        .section h4 {
+            color: #333;
+            font-size: 1.2em;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .section p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        .steps {
+            margin: 20px 0;
+        }
+
+        .step {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            border-radius: 4px;
+        }
+
+        .step-number {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+            border-radius: 50%;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .image-placeholder {
+            width: 100%;
+            min-height: 400px;
+            background: #f0f0f0;
+            border: 2px dashed #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+            border-radius: 8px;
+            color: #999;
+            font-style: italic;
+            overflow: hidden;
+        }
+
+        .image-placeholder img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 6px;
+        }
+
+        .note {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .note strong {
+            color: #856404;
+        }
+
+        .warning {
+            background: #f8d7da;
+            border-left: 4px solid #dc3545;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .warning strong {
+            color: #721c24;
+        }
+
+        .tip {
+            background: #d1ecf1;
+            border-left: 4px solid #17a2b8;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .tip strong {
+            color: #0c5460;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .feature-list li {
+            padding: 10px 0;
+            padding-left: 30px;
+            position: relative;
+        }
+
+        .feature-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        table th, table td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        table th {
+            background: #667eea;
+            color: white;
+            font-weight: bold;
+        }
+
+        table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .footer {
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 2px solid #e0e0e0;
+            text-align: center;
+            color: #666;
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .container {
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>📚 iniPerpus</h1>
+            <div class="subtitle">Manual Pengguna / User Manual</div>
+            <div class="version">Sistem Manajemen Perpustakaan dengan Presensi Berbasis Pengenalan Wajah</div>
+            <div class="version">Versi Beta 0.1 | Desember 2025</div>
+        </div>
+
+        <!-- Table of Contents -->
+        <div class="toc">
+            <h2>Daftar Isi</h2>
+            <ul>
+                <li><a href="#pengantar">1. Pengantar</a></li>
+                <li><a href="#login">2. Login dan Autentikasi</a></li>
+                <li><a href="#dashboard">3. Dashboard Utama</a></li>
+                <li><a href="#manajemen-siswa">4. Manajemen Siswa</a></li>
+                <li><a href="#manajemen-buku">5. Manajemen Buku</a></li>
+                <li><a href="#peminjaman">6. Manajemen Peminjaman</a></li>
+                <li><a href="#presensi">7. Presensi Siswa (Pengenalan Wajah)</a></li>
+                <li><a href="#logout">8. Logout</a></li>
+                <li><a href="#troubleshooting">9. Troubleshooting</a></li>
+                <li><a href="#faq">10. FAQ (Pertanyaan Umum)</a></li>
+            </ul>
+        </div>
+
+        <!-- Section 1: Pengantar -->
+        <div class="section" id="pengantar">
+            <h2>1. Pengantar</h2>
+            
+            <h3>1.1 Tentang iniPerpus</h3>
+            <p>
+                iniPerpus adalah sistem manajemen perpustakaan modern yang dirancang khusus untuk 
+                memudahkan pengelolaan perpustakaan sekolah. Aplikasi ini dilengkapi dengan fitur 
+                pengenalan wajah untuk presensi siswa, membuat proses pencatatan kehadiran menjadi 
+                lebih cepat dan akurat.
+            </p>
+
+            <h3>1.2 Fitur Utama</h3>
+            <ul class="feature-list">
+                <li>Manajemen data siswa lengkap dengan foto wajah</li>
+                <li>Manajemen koleksi buku dengan tracking ketersediaan</li>
+                <li>Sistem peminjaman dan pengembalian buku</li>
+                <li>Presensi otomatis menggunakan teknologi pengenalan wajah</li>
+                <li>Dashboard yang intuitif dan mudah digunakan</li>
+                <li>Sistem keamanan berlapis dengan autentikasi user</li>
+                <li>Tampilan responsif yang dapat diakses dari berbagai perangkat</li>
+            </ul>
+
+            <div class="image-placeholder" data-image="dashboard-overview">
+                <img src="screenshoots/collections/Tampilan_Keseluruhan_iniPerpus.png" alt="Tampilan Keseluruhan Aplikasi iniPerpus" style="display: block; width: 100%; height: auto;">
+            </div>
+
+            <h3>1.3 Kebutuhan Sistem</h3>
+            <table>
+                <tr>
+                    <th>Komponen</th>
+                    <th>Spesifikasi Minimum</th>
+                </tr>
+                <tr>
+                    <td>Browser</td>
+                    <td>Chrome 90+, Firefox 88+, Edge 90+, Safari 14+</td>
+                </tr>
+                <tr>
+                    <td>Koneksi Internet</td>
+                    <td>Stabil untuk akses aplikasi web</td>
+                </tr>
+                <tr>
+                    <td>Webcam</td>
+                    <td>Diperlukan untuk fitur presensi wajah (min. 720p)</td>
+                </tr>
+                <tr>
+                    <td>Resolusi Layar</td>
+                    <td>Minimum 1024x768 pixels</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Section 2: Login -->
+        <div class="section" id="login">
+            <h2>2. Login dan Autentikasi</h2>
+            
+            <h3>2.1 Mengakses Aplikasi</h3>
+            <p>
+                Untuk menggunakan aplikasi iniPerpus, Anda harus melakukan login terlebih dahulu 
+                menggunakan akun yang telah terdaftar.
+            </p>
+
+            <div class="steps">
+                <div class="step">
+                    <span class="step-number">1</span>
+                    Buka browser dan akses URL aplikasi (contoh: http://localhost:8080)
+                </div>
+                
+                <div class="image-placeholder" data-image="login-page">
+                    <img src="screenshoots/collections/Halaman_Login_iniPerpus.png" alt="Halaman Login iniPerpus" style="display: block; width: 100%; height: auto;">
+                </div>
+
+                <div class="step">
+                    <span class="step-number">2</span>
+                    Masukkan email dan password Anda pada form login
+                </div>
+
+                <div class="step">
+                    <span class="step-number">3</span>
+                    Klik tombol "Sign In" untuk masuk
+                </div>
+
+                <div class="step">
+                    <span class="step-number">4</span>
+                    Jika kredensial benar, Anda akan diarahkan ke Dashboard
+                </div>
+            </div>
+
+            <div class="note">
+                <strong>Catatan:</strong> Akun default administrator:
+                <ul style="margin-top: 10px; margin-left: 20px;">
+                    <li>Email: admin@example.com</li>
+                    <li>Password: adminpass</li>
+                </ul>
+                <em>Segera ganti password default setelah login pertama kali!</em>
+            </div>
+
+            <h3>2.2 Pesan Error Login</h3>
+            <p>
+                Jika login gagal, sistem akan menampilkan pesan error dengan ikon merah (✖). 
+                Beberapa penyebab umum:
+            </p>
+            <ul style="margin-left: 30px;">
+                <li>Email atau password salah</li>
+                <li>Akun belum terdaftar</li>
+                <li>Koneksi ke server bermasalah</li>
+            </ul>
+
+            <div class="image-placeholder" data-image="login-error">
+                <img src="screenshoots/collections/Contoh_Pesan_Error_Login.png" alt="Contoh Pesan Error Login" style="display: block; width: 100%; height: auto;">
+            </div>
+
+            <h3>2.3 Logout Berhasil</h3>
+            <p>
+                Setelah logout, Anda akan melihat pesan sukses dengan ikon hijau (✓) yang 
+                menginformasikan bahwa Anda telah keluar dari sistem.
+            </p>
+
+            <div class="image-placeholder" data-image="logout-success">
+                <img src="screenshoots/collections/logout_berhasil.png" alt="Pesan Logout Berhasil" style="display: block; width: 100%; height: auto;">
+            </div>
+        </div>
+
+        <!-- Section 3: Dashboard -->
+        <div class="section" id="dashboard">
+            <h2>3. Dashboard Utama</h2>
+            
+            <h3>3.1 Tampilan Dashboard</h3>
+            <p>
+                Setelah login berhasil, Anda akan diarahkan ke halaman Dashboard yang menampilkan 
+                menu utama untuk mengakses semua fitur aplikasi.
+            </p>
+
+            <div class="image-placeholder" data-image="main-dashboard">
+                <img src="screenshoots/collections/Dashboard_Utama_dengan_4_menu.png" alt="Dashboard Utama dengan 4 Menu" style="display: block; width: 100%; height: auto;">
+            </div>
+
+            <h3>3.2 Menu Navigasi</h3>
+            <p>Dashboard terdiri dari 4 menu utama yang dapat diklik:</p>
+
+            <table>
+                <tr>
+                    <th>Menu</th>
+                    <th>Ikon</th>
+                    <th>Deskripsi</th>
+                </tr>
+                <tr>
+                    <td>Student Presence</td>
+                    <td>📸</td>
+                    <td>Fitur presensi siswa menggunakan kamera dan pengenalan wajah</td>
+                </tr>
+                <tr>
+                    <td>Student Management</td>
+                    <td>👥</td>
+                    <td>Kelola data siswa (tambah, edit, hapus)</td>
+                </tr>
+                <tr>
+                    <td>Book Management</td>
+                    <td>📖</td>
+                    <td>Kelola koleksi buku perpustakaan</td>
+                </tr>
+                <tr>
+                    <td>Lending Management</td>
+                    <td>🔄</td>
+                    <td>Kelola peminjaman dan pengembalian buku</td>
+                </tr>
+            </table>
+
+            <h3>3.3 Navigation Bar</h3>
+            <p>
+                Di bagian atas setiap halaman terdapat navigation bar yang berisi:
+            </p>
+            <ul style="margin-left: 30px;">
+                <li><strong>Logo iniPerpus</strong> - Klik untuk kembali ke Dashboard</li>
+                <li><strong>Menu navigasi</strong> - Link ke halaman lain</li>
+                <li><strong>Tombol Logout</strong> - Keluar dari aplikasi</li>
+            </ul>
+        </div>
+
+        <!-- Section 4: Manajemen Siswa -->
+        <div class="section" id="manajemen-siswa">
+            <h2>4. Manajemen Siswa</h2>
+            
+            <h3>4.1 Mengakses Halaman Siswa</h3>
+            <p>
+                Klik menu "Student Management" dari Dashboard untuk masuk ke halaman manajemen siswa.
+            </p>
+
+            <div class="image-placeholder" data-image="student-page">
+                <img src="screenshoots/collections/Halaman_Manajemen_Siswa.png" alt="Halaman Manajemen Siswa" style="display: block; width: 100%; height: auto;">
+            </div>
+
+            <h3>4.2 Menambah Siswa Baru</h3>
+            <div class="steps">
+                <div class="step">
+                    <span class="step-number">1</span>
+                    Pada bagian "Add New Student", isi form dengan data siswa:
+                    <ul style="margin-top: 10px; margin-left: 20px;">
+                        <li><strong>Name</strong> - Nama lengkap siswa</li>
+                        <li><strong>Student ID</strong> - Nomor Induk Siswa (NIS)</li>
+                        <li><strong>Class</strong> - Kelas siswa (contoh: 7A, 8B)</li>
+                    </ul>
+                </div>
+
+                <div class="image-placeholder" data-image="add-student-form">
+                    <img src="screenshoots/collections/Form_tambah_data_siswa.png" alt="Form Tambah Siswa" style="display: block; width: 100%; height: auto;">
+                </div>
+
+                <div class="step">
+                    <span class="step-number">2</span>
+                    Klik tombol "Add User" untuk menyimpan data
+                </div>
+
+                <div class="step">
+                    <span class="step-number">3</span>
+                    Siswa baru akan muncul di tabel "Student List"
+                </div>
+            </div>
+
+            <div class="tip">
+                <strong>Tips:</strong> Pastikan Student ID unik untuk setiap siswa. 
+                Sistem tidak akan menerima Student ID yang sama.
+            </div>
+
+            <h3>4.3 Melihat Daftar Siswa</h3>
+            <p>
+                Tabel "Student List" menampilkan semua siswa yang terdaftar dengan kolom:
+            </p>
+            <ul style="margin-left: 30px;">
+                <li><strong>Name</strong> - Nama siswa</li>
+                <li><strong>Student ID</strong> - NIS siswa</li>
+                <li><strong>Class</strong> - Kelas siswa</li>
+                <li><strong>Action</strong> - Tombol edit (✎) dan hapus (🗑️)</li>
+                <li><strong>Face</strong> - Tombol kamera (📸) untuk registrasi wajah</li>
+            </ul>
+
+            <div class="image-placeholder" data-image="student-list">
+                <img src="screenshoots/collections/Tabel_datftar_siswa.png" alt="Tabel Daftar Siswa" style="display: block; width: 100%; height: auto;">
+            </div>
+
+            <h3>4.4 Mengedit Data Siswa</h3>
+            <div class="steps">
+                <div class="step">
+                    <span class="step-number">1</span>
+                    Klik ikon edit (✎) pada baris siswa yang ingin diubah
+                </div>
+
+                <div class="step">
+                    <span class="step-number">2</span>
+                    Modal dialog "Edit Student" akan muncul dengan data siswa
+                </div>
+
+                <div class="image-placeholder" data-image="edit-student-modal">
+                    <img src="screenshoots/collections/Modal_Edit_Siswa.png" alt="Modal Edit Siswa" style="display: block; width: 100%; height: auto;">
+                </div>
+
+                <div class="step">
+                    <span class="step-number">3</span>
+                    Ubah data yang diperlukan (Name, Student ID, atau Class)
+                </div>
+
+                <div class="step">
+                    <span class="step-number">4</span>
+                    Klik tombol "Save" untuk menyimpan perubahan
+                </div>
+
+                <div class="step">
+                    <span class="step-number">5</span>
+                    Klik tombol "Cancel" jika ingin membatalkan
+                </div>
+            </div>
+
+            <h3>4.5 Menghapus Siswa</h3>
+            <div class="steps">
+                <div class="step">
+                    <span class="step-number">1</span>
+                    Klik ikon hapus (🗑️) pada baris siswa yang ingin dihapus
+                </div>
+
+                <div class="step">
+                    <span class="step-number">2</span>
+                    Dialog konfirmasi akan muncul untuk memastikan
+                </div>
+
+                <div class="image-placeholder" data-image="delete-student-confirm">
+                    <img src="screenshoots/collections/Konfirmasi_hapus_data_siswa.png" alt="Konfirmasi Hapus Siswa" style="display: block; width: 100%; height: auto;">
+                </div>
+
+                <div class="step">
+                    <span class="step-number">3</span>
+                    Klik "Delete" untuk menghapus atau "Cancel" untuk membatalkan
+                </div>
+            </div>
+
+            <div class="warning">
+                <strong>Peringatan:</strong> Menghapus siswa akan menghapus semua data terkait 
+                termasuk riwayat peminjaman, presensi, dan data wajah. Tindakan ini tidak dapat dibatalkan!
+            </div>
+
+            <h3>4.6 Paginasi</h3>
+            <p>
+                Jika data siswa banyak, gunakan kontrol paginasi di bawah tabel untuk navigasi:
+            </p>
+            <ul style="margin-left: 30px;">
+                <li><strong>Rows per page</strong> - Pilih jumlah data per halaman (5, 10, atau 25)</li>
+                <li><strong>Page indicator</strong> - Menunjukkan halaman aktif dan total halaman</li>
+                <li><strong>Prev/Next</strong> - Tombol navigasi halaman</li>
+            </ul>
+
+            <div class="image-placeholder" data-image="student-pagination">
+                <img src="screenshoots/collections/Kontro_paginasi.png" alt="Kontrol Paginasi" style="display: block; width: 100%; height: auto;">
+            </div>
+
+            <h3>4.7 Registrasi Wajah</h3>
+            <p>
+                Klik ikon kamera (📸) untuk menuju halaman presensi dan mendaftarkan wajah siswa. 
+                Detail lengkap ada di bagian "Presensi Siswa".
+            </p>
+        </div>
+
+        <!-- Section 5: Manajemen Buku -->
+        <div class="section" id="manajemen-buku">
+            <h2>5. Manajemen Buku</h2>
+            
+            <h3>5.1 Mengakses Halaman Buku</h3>
+            <p>
+                Klik menu "Book Management" dari Dashboard atau navigation bar.
+            </p>
+
+            <div class="image-placeholder" data-image="book-page">
+                <img src="screenshoots/collections/Halaman_Manajemen_Buku.png" alt="Halaman Manajemen Buku" style="display: block; width: 100%; height: auto;">
+            </div>
+
+            <h3>5.2 Menambah Buku Baru</h3>
+            <div class="steps">
+                <div class="step">
+                    <span class="step-number">1</span>
+                    Di bagian "Add New Book", isi form dengan informasi buku:
+                    <ul style="margin-top: 10px; margin-left: 20px;">
+                        <li><strong>Title</strong> - Judul buku</li>
+                        <li><strong>Author</strong> - Nama pengarang</li>
+                        <li><strong>ISBN</strong> - Nomor ISBN (opsional)</li>
+                        <li><strong>Copies</strong> - Jumlah eksemplar buku</li>
+                    </ul>
+                </div>
+
+                <div class="image-placeholder" data-image="add-book-form">
+                    <img src="screenshoots/collections/Form_Tambah_Buku.png" alt="Form Tambah Buku" style="display: block; width: 100%; height: auto;">
+                </div>
+
+                <div class="step">
+                    <span class="step-number">2</span>
+                    Klik tombol "Add Book" untuk menyimpan
+                </div>
+
+                <div class="step">
+                    <span class="step-number">3</span>
+                    Buku baru akan tampil di "Book List"
+                </div>
+            </div>
+
+            <h3>5.3 Daftar Buku</h3>
+            <p>
+                Tabel "Book List" menampilkan koleksi buku dengan informasi:
+            </p>
+            <ul style="margin-left: 30px;">
+                <li><strong>Title</strong> - Judul buku</li>
+                <li><strong>Author</strong> - Pengarang</li>
+                <li><strong>ISBN</strong> - Nomor ISBN</li>
+                <li><strong>Available</strong> - Jumlah eksemplar tersedia / total</li>
+                <li><strong>Action</strong> - Tombol edit (✎) dan hapus (🗑️)</li>
+            </ul>
+
+            <div class="image-placeholder" data-image="book-list">
+                <img src="screenshoots/collections/Tabel_Daftar_buku.png" alt="Tabel Daftar Buku" style="display: block; width: 100%; height: auto;">
+            </div>
+
+            <div class="note">
+                <strong>Catatan:</strong> Kolom "Available" menunjukkan status ketersediaan. 
+                Contoh: "3 / 5" berarti 3 eksemplar tersedia dari total 5 eksemplar.
+            </div>
+
+            <h3>5.4 Mengedit Buku</h3>
+            <div class="steps">
+                <div class="step">
+                    <span class="step-number">1</span>
+                    Klik ikon edit (✎) pada buku yang ingin diubah
+                </div>
+
+                <div class="step">
+                    <span class="step-number">2</span>
+                    Modal "Edit Book" akan muncul dengan data buku
+                </div>
+
+                <div class="image-placeholder" data-image="edit-book-modal">
+                    <img src="screenshoots/collections/Modal_edit_buku.png" alt="Modal Edit Buku" style="display: block; width: 100%; height: auto;">
+                </div>
+
+                <div class="step">
+                    <span class="step-number">3</span>
+                    Update informasi yang diperlukan
+                </div>
+
+                <div class="step">
+                    <span class="step-number">4</span>
+                    Klik "Save" untuk menyimpan atau "Cancel" untuk batal
+                </div>
+            </div>
+
+            <h3>5.5 Menghapus Buku</h3>
+            <div class="steps">
+                <div class="step">
+                    <span class="step-number">1</span>
+                    Klik ikon hapus (🗑️) pada buku yang akan dihapus
+                </div>
+
+                <div class="step">
+                    <span class="step-number">2</span>
+                    Konfirmasi penghapusan akan muncul
+                </div>
+
+                <div class="image-placeholder" data-image="delete-book-confirm">
+                    <img src="screenshoots/collections/Konfirmasi_hapus_data_buku.png" alt="Konfirmasi Hapus Buku" style="display: block; width: 100%; height: auto;">
+                </div>
+
+                <div class="step">
+                    <span class="step-number">3</span>
+                    Klik "Delete" untuk konfirmasi atau "Cancel" untuk batal
+                </div>
+            </div>
+
+            <div class="warning">
+                <strong>Peringatan:</strong> Buku yang sedang dipinjam tidak dapat dihapus. 
+                Pastikan semua peminjaman telah dikembalikan terlebih dahulu.
+            </div>
+        </div>
+
+        <!-- Section 6: Peminjaman -->
+        <div class="section" id="peminjaman">
+            <h2>6. Manajemen Peminjaman</h2>
+            
+            <h3>6.1 Mengakses Halaman Peminjaman</h3>
+            <p>
+                Klik menu "Lending Management" dari Dashboard.
+            </p>
+
+            <div class="image-placeholder" data-image="lending-page">
+                <img src="screenshoots/collections/Halaman_Manajemen_Peminjaman.png" alt="Halaman Manajemen Peminjaman" style="display: block; width: 100%; height: auto;">
+            </div>
+
+            <h3>6.2 Meminjamkan Buku</h3>
+            <div class="steps">
+                <div class="step">
+                    <span class="step-number">1</span>
+                    Di bagian "Lend a Book", pilih siswa dari dropdown "Select Student"
+                </div>
+
+                <div class="image-placeholder" data-image="select-student">
+                    <img src="screenshoots/collections/Dropdown_pilih_siswa.png" alt="Dropdown Pilih Siswa" style="display: block; width: 100%; height: auto;">
+                </div>
+
+                <div class="step">
+                    <span class="step-number">2</span>
+                    Pilih buku yang akan dipinjamkan dari dropdown "Select Book"
+                </div>
+
+                <div class="image-placeholder" data-image="select-book">
+                    <img src="screenshoots/collections/Select_a_book_optional.png" alt="Dropdown Pilih Buku" style="display: block; width: 100%; height: auto;">
+                </div>
+
+                <div class="step">
+                    <span class="step-number">3</span>
+                    Pilih tanggal jatuh tempo di field "Due Date"
+                </div>
+
+                <div class="note">
+                    <strong>Catatan:</strong> Tanggal jatuh tempo default adalah 14 hari dari 
+                    tanggal peminjaman. Anda dapat mengubahnya sesuai kebutuhan.
+                </div>
+
+                <div class="step">
+                    <span class="step-number">4</span>
+                    Klik tombol "Lend Book" untuk memproses peminjaman
+                </div>
+
+                <div class="step">
+                    <span class="step-number">5</span>
+                    Pesan sukses akan muncul jika peminjaman berhasil
+                </div>
+            </div>
+
+            <div class="tip">
+                <strong>Tips:</strong> Sistem otomatis akan mengurangi jumlah eksemplar tersedia 
+                saat buku dipinjamkan dan menambahnya kembali saat dikembalikan.
+            </div>
+
+            <h3>6.3 Melihat Daftar Peminjaman</h3>
+            <p>
+                Tabel "Active Loans" menampilkan semua peminjaman yang belum dikembalikan:
+            </p>
+            <ul style="margin-left: 30px;">
+                <li><strong>Student</strong> - Nama peminjam</li>
+                <li><strong>Book</strong> - Judul buku yang dipinjam</li>
+                <li><strong>Lent Date</strong> - Tanggal peminjaman</li>
+                <li><strong>Due Date</strong> - Tanggal jatuh tempo</li>
+                <li><strong>Action</strong> - Tombol "Return" untuk mengembalikan</li>
+            </ul>
+
+            <div class="image-placeholder" data-image="loan-list">
+                <img src="screenshoots/collections/Tabel_daftar_peminjaman_aktif.png" alt="Tabel Daftar Peminjaman Aktif" style="display: block; width: 100%; height: auto;">
+            </div>
+
+            <h3>6.4 Mengembalikan Buku</h3>
+            <div class="steps">
+                <div class="step">
+                    <span class="step-number">1</span>
+                    Cari peminjaman yang akan dikembalikan di tabel "Active Loans"
+                </div>
+
+                <div class="step">
+                    <span class="step-number">2</span>
+                    Klik tombol "Return" pada baris peminjaman tersebut
+                </div>
+
+                <div class="image-placeholder" data-image="return-book">
+                    <img src="screenshoots/collections/Tombol_return_buku.png" alt="Tombol Return Buku" style="display: block; width: 100%; height: auto;">
+                </div>
+
+                <div class="step">
+                    <span class="step-number">3</span>
+                    Peminjaman akan dihapus dari daftar dan stok buku otomatis bertambah
+                </div>
+            </div>
+
+            <h3>6.5 Status dan Notifikasi</h3>
+            <p>
+                Di bagian atas form peminjaman, sistem menampilkan pesan status:
+            </p>
+            <ul style="margin-left: 30px;">
+                <li><strong>Hijau</strong> - Peminjaman atau pengembalian berhasil</li>
+                <li><strong>Merah</strong> - Error (buku tidak tersedia, data tidak valid, dll)</li>
+            </ul>
+
+            <div class="image-placeholder" data-image="lending-status">
+                [Gambar: Contoh Pesan Status Peminjaman]
+            </div>
+        </div>
+
+        <!-- Section 7: Presensi -->
+        <div class="section" id="presensi">
+            <h2>7. Presensi Siswa (Pengenalan Wajah)</h2>
+            
+            <h3>7.1 Mengakses Halaman Presensi</h3>
+            <p>
+                Klik menu "Student Presence" dari Dashboard atau ikon kamera (📸) dari halaman siswa.
+            </p>
+
+            <div class="image-placeholder" data-image="presence-page">
+                [Gambar: Halaman Presensi Siswa]
+            </div>
+
+            <h3>7.2 Memulai Kamera</h3>
+            <div class="steps">
+                <div class="step">
+                    <span class="step-number">1</span>
+                    Klik tombol "Start Camera" untuk mengaktifkan webcam
+                </div>
+
+                <div class="step">
+                    <span class="step-number">2</span>
+                    Browser akan meminta izin akses kamera - klik "Allow"
+                </div>
+
+                <div class="image-placeholder" data-image="camera-permission">
+                    [Gambar: Pop-up Izin Akses Kamera]
+                </div>
+
+                <div class="step">
+                    <span class="step-number">3</span>
+                    Video feed dari kamera akan muncul di layar
+                </div>
+
+                <div class="step">
+                    <span class="step-number">4</span>
+                    Tombol berubah menjadi "Stop Camera" untuk menonaktifkan kamera
+                </div>
+            </div>
+
+            <div class="image-placeholder" data-image="camera-active">
+                [Gambar: Kamera Aktif Menampilkan Video Feed]
+            </div>
+
+            <div class="note">
+                <strong>Catatan:</strong> Pastikan pencahayaan ruangan cukup dan wajah terlihat 
+                jelas oleh kamera untuk hasil terbaik.
+            </div>
+
+            <h3>7.3 Mendaftarkan Wajah Siswa</h3>
+            <p>
+                Sebelum siswa dapat melakukan check-in otomatis, wajah mereka harus didaftarkan terlebih dahulu.
+            </p>
+
+            <div class="steps">
+                <div class="step">
+                    <span class="step-number">1</span>
+                    Pastikan kamera sudah aktif
+                </div>
+
+                <div class="step">
+                    <span class="step-number">2</span>
+                    Pilih nama siswa dari dropdown "Select Student to Register"
+                </div>
+
+                <div class="image-placeholder" data-image="select-student-register">
+                    [Gambar: Dropdown Pilih Siswa untuk Registrasi]
+                </div>
+
+                <div class="step">
+                    <span class="step-number">3</span>
+                    Posisikan wajah siswa di depan kamera:
+                    <ul style="margin-top: 10px; margin-left: 20px;">
+                        <li>Wajah menghadap lurus ke kamera</li>
+                        <li>Jarak 30-50 cm dari kamera</li>
+                        <li>Pencahayaan merata tanpa bayangan</li>
+                        <li>Ekspresi wajah netral</li>
+                    </ul>
+                </div>
+
+                <div class="image-placeholder" data-image="face-positioning">
+                    [Gambar: Contoh Posisi Wajah yang Benar]
+                </div>
+
+                <div class="step">
+                    <span class="step-number">4</span>
+                    Klik tombol "Register Face"
+                </div>
+
+                <div class="step">
+                    <span class="step-number">5</span>
+                    Sistem akan memproses dan menampilkan pesan:
+                    <ul style="margin-top: 10px; margin-left: 20px;">
+                        <li><strong>Biru</strong> - "✓ Face Registered" (berhasil)</li>
+                        <li><strong>Merah</strong> - Error jika gagal mendeteksi wajah</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="image-placeholder" data-image="register-success">
+                [Gambar: Pesan Registrasi Wajah Berhasil]
+            </div>
+
+            <div class="tip">
+                <strong>Tips:</strong> Untuk akurasi terbaik, daftarkan wajah di kondisi 
+                pencahayaan yang mirip dengan kondisi saat check-in nantinya.
+            </div>
+
+            <h3>7.4 Check-In Otomatis</h3>
+            <p>
+                Setelah wajah terdaftar, siswa dapat melakukan check-in presensi secara otomatis.
+            </p>
+
+            <div class="steps">
+                <div class="step">
+                    <span class="step-number">1</span>
+                    Pastikan kamera aktif
+                </div>
+
+                <div class="step">
+                    <span class="step-number">2</span>
+                    Posisikan wajah siswa di depan kamera
+                </div>
+
+                <div class="step">
+                    <span class="step-number">3</span>
+                    Klik tombol "Check In"
+                </div>
+
+                <div class="step">
+                    <span class="step-number">4</span>
+                    Sistem akan mencocokkan wajah dengan database:
+                    <ul style="margin-top: 10px; margin-left: 20px;">
+                        <li><strong>Hijau</strong> - "✓ Check-In Successful!" jika wajah dikenali</li>
+                        <li><strong>Merah</strong> - "✗ Face Not Recognized" jika tidak cocok</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="image-placeholder" data-image="checkin-success">
+                [Gambar: Pesan Check-In Berhasil]
+            </div>
+
+            <div class="image-placeholder" data-image="checkin-failed">
+                [Gambar: Pesan Check-In Gagal]
+            </div>
+
+            <h3>7.5 Melihat Riwayat Check-In</h3>
+            <p>
+                Tabel "Recent Check-Ins" menampilkan presensi terbaru dengan informasi:
+            </p>
+            <ul style="margin-left: 30px;">
+                <li><strong>Student</strong> - Nama siswa</li>
+                <li><strong>Check-In Time</strong> - Waktu presensi</li>
+                <li><strong>Match Status</strong> - Status pencocokan (Matched / Unmatched)</li>
+            </ul>
+
+            <div class="image-placeholder" data-image="checkin-history">
+                [Gambar: Tabel Riwayat Check-In]
+            </div>
+
+            <h3>7.6 Update Wajah (Re-register)</h3>
+            <p>
+                Jika wajah siswa berubah (tumbuh dewasa, ganti gaya rambut, dll) atau 
+                sistem sering gagal mengenali, lakukan registrasi ulang:
+            </p>
+
+            <div class="steps">
+                <div class="step">
+                    <span class="step-number">1</span>
+                    Pilih siswa yang sama dari dropdown
+                </div>
+
+                <div class="step">
+                    <span class="step-number">2</span>
+                    Klik "Register Face" lagi
+                </div>
+
+                <div class="step">
+                    <span class="step-number">3</span>
+                    Data wajah lama akan diganti dengan yang baru
+                </div>
+            </div>
+
+            <div class="note">
+                <strong>Catatan:</strong> Re-register tidak menghapus riwayat check-in sebelumnya.
+            </div>
+
+            <h3>7.7 Troubleshooting Pengenalan Wajah</h3>
+            <table>
+                <tr>
+                    <th>Masalah</th>
+                    <th>Solusi</th>
+                </tr>
+                <tr>
+                    <td>Wajah tidak terdeteksi</td>
+                    <td>Perbaiki pencahayaan, pastikan wajah menghadap kamera</td>
+                </tr>
+                <tr>
+                    <td>Check-in selalu gagal</td>
+                    <td>Lakukan re-register wajah dengan kondisi pencahayaan berbeda</td>
+                </tr>
+                <tr>
+                    <td>Kamera tidak muncul</td>
+                    <td>Periksa izin browser, pastikan webcam terhubung</td>
+                </tr>
+                <tr>
+                    <td>Sistem mengenali orang lain</td>
+                    <td>Re-register dengan pencahayaan lebih baik dan wajah lebih jelas</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Section 8: Logout -->
+        <div class="section" id="logout">
+            <h2>8. Logout</h2>
+            
+            <h3>8.1 Cara Logout</h3>
+            <div class="steps">
+                <div class="step">
+                    <span class="step-number">1</span>
+                    Klik tombol "Logout" di navigation bar (pojok kanan atas)
+                </div>
+
+                <div class="step">
+                    <span class="step-number">2</span>
+                    Dialog konfirmasi akan muncul
+                </div>
+
+                <div class="image-placeholder" data-image="logout-confirm">
+                    [Gambar: Dialog Konfirmasi Logout]
+                </div>
+
+                <div class="step">
+                    <span class="step-number">3</span>
+                    Klik "Yes, Logout" untuk keluar atau "Cancel" untuk batal
+                </div>
+
+                <div class="step">
+                    <span class="step-number">4</span>
+                    Anda akan diarahkan ke halaman login dengan pesan sukses
+                </div>
+            </div>
+
+            <div class="note">
+                <strong>Catatan:</strong> Selalu logout setelah selesai menggunakan aplikasi, 
+                terutama jika menggunakan komputer bersama.
+            </div>
+        </div>
+
+        <!-- Section 9: Troubleshooting -->
+        <div class="section" id="troubleshooting">
+            <h2>9. Troubleshooting</h2>
+            
+            <h3>9.1 Masalah Umum dan Solusi</h3>
+
+            <h4>Tidak Bisa Login</h4>
+            <p><strong>Gejala:</strong> Pesan error "Invalid username or password"</p>
+            <p><strong>Solusi:</strong></p>
+            <ul style="margin-left: 30px;">
+                <li>Pastikan email dan password yang dimasukkan benar</li>
+                <li>Periksa capslock tidak aktif</li>
+                <li>Coba reset password atau hubungi administrator</li>
+            </ul>
+
+            <h4>Halaman Tidak Muncul / Blank</h4>
+            <p><strong>Gejala:</strong> Layar kosong atau tidak ada data yang tampil</p>
+            <p><strong>Solusi:</strong></p>
+            <ul style="margin-left: 30px;">
+                <li>Refresh browser (F5 atau Ctrl+R)</li>
+                <li>Clear cache dan cookies browser</li>
+                <li>Coba browser lain (Chrome, Firefox, Edge)</li>
+                <li>Periksa koneksi internet</li>
+            </ul>
+
+            <h4>Data Tidak Tersimpan</h4>
+            <p><strong>Gejala:</strong> Form berhasil disubmit tapi data tidak muncul di tabel</p>
+            <p><strong>Solusi:</strong></p>
+            <ul style="margin-left: 30px;">
+                <li>Periksa apakah ada pesan error</li>
+                <li>Pastikan semua field required terisi</li>
+                <li>Refresh halaman</li>
+                <li>Logout dan login kembali</li>
+            </ul>
+
+            <h4>Kamera Tidak Berfungsi</h4>
+            <p><strong>Gejala:</strong> Video feed tidak muncul saat klik "Start Camera"</p>
+            <p><strong>Solusi:</strong></p>
+            <ul style="margin-left: 30px;">
+                <li>Periksa izin kamera di browser (klik ikon gembok di address bar)</li>
+                <li>Pastikan webcam terhubung dan driver terinstall</li>
+                <li>Tutup aplikasi lain yang menggunakan kamera (Zoom, Skype, dll)</li>
+                <li>Restart browser</li>
+                <li>Coba browser lain</li>
+            </ul>
+
+            <h4>Wajah Tidak Dikenali</h4>
+            <p><strong>Gejala:</strong> Check-in selalu gagal meski wajah sudah terdaftar</p>
+            <p><strong>Solusi:</strong></p>
+            <ul style="margin-left: 30px;">
+                <li>Perbaiki pencahayaan ruangan</li>
+                <li>Pastikan wajah menghadap lurus ke kamera</li>
+                <li>Hapus kacamata atau aksesoris yang menutupi wajah</li>
+                <li>Lakukan re-register wajah</li>
+                <li>Pastikan Python face service berjalan</li>
+            </ul>
+
+            <h4>Aplikasi Lambat</h4>
+            <p><strong>Gejala:</strong> Loading lama atau aplikasi terasa lag</p>
+            <p><strong>Solusi:</strong></p>
+            <ul style="margin-left: 30px;">
+                <li>Periksa koneksi internet</li>
+                <li>Tutup tab browser lain yang tidak perlu</li>
+                <li>Clear cache browser</li>
+                <li>Restart browser</li>
+                <li>Hubungi administrator jika masalah berlanjut</li>
+            </ul>
+
+            <h3>9.2 Menghubungi Dukungan Teknis</h3>
+            <p>
+                Jika masalah tidak dapat diselesaikan dengan panduan di atas, 
+                hubungi administrator sistem dengan informasi berikut:
+            </p>
+            <ul style="margin-left: 30px;">
+                <li>Deskripsi masalah yang detail</li>
+                <li>Browser dan versi yang digunakan</li>
+                <li>Screenshot error jika ada</li>
+                <li>Langkah-langkah yang sudah dicoba</li>
+            </ul>
+        </div>
+
+        <!-- Section 10: FAQ -->
+        <div class="section" id="faq">
+            <h2>10. FAQ (Pertanyaan Umum)</h2>
+            
+            <h3>Q: Apakah satu siswa bisa meminjam lebih dari satu buku?</h3>
+            <p>
+                A: Ya, siswa dapat meminjam beberapa buku sekaligus. Setiap peminjaman akan 
+                tercatat terpisah di tabel Active Loans.
+            </p>
+
+            <h3>Q: Berapa lama periode peminjaman buku?</h3>
+            <p>
+                A: Default periode peminjaman adalah 14 hari. Administrator dapat mengubah 
+                tanggal jatuh tempo sesuai kebutuhan saat meminjamkan buku.
+            </p>
+
+            <h3>Q: Apakah bisa menghapus data peminjaman?</h3>
+            <p>
+                A: Peminjaman yang sudah dikembalikan akan otomatis terhapus dari Active Loans. 
+                Untuk membatalkan peminjaman yang belum dikembalikan, gunakan tombol Return.
+            </p>
+
+            <h3>Q: Apakah data wajah aman?</h3>
+            <p>
+                A: Ya, data wajah disimpan dalam bentuk encoding matematis (bukan foto) di 
+                server yang aman. Data hanya digunakan untuk presensi dan tidak disebarkan.
+            </p>
+
+            <h3>Q: Bagaimana jika siswa lupa check-in?</h3>
+            <p>
+                A: Administrator dapat melihat riwayat check-in di tabel Recent Check-Ins. 
+                Untuk koreksi manual, hubungi administrator sistem.
+            </p>
+
+            <h3>Q: Apakah bisa akses dari smartphone?</h3>
+            <p>
+                A: Ya, aplikasi responsif dan dapat diakses dari smartphone. Namun fitur 
+                pengenalan wajah akan lebih optimal menggunakan webcam komputer/laptop.
+            </p>
+
+            <h3>Q: Berapa maksimal jumlah siswa yang bisa terdaftar?</h3>
+            <p>
+                A: Tidak ada batasan hard-coded. Kapasitas tergantung spesifikasi server 
+                yang digunakan.
+            </p>
+
+            <h3>Q: Apakah ada laporan atau statistik?</h3>
+            <p>
+                A: Saat ini aplikasi menampilkan total count untuk siswa, buku, peminjaman, 
+                dan presensi. Fitur laporan detail sedang dalam pengembangan.
+            </p>
+
+            <h3>Q: Bagaimana cara backup data?</h3>
+            <p>
+                A: Backup data adalah tanggung jawab administrator. Hubungi administrator 
+                untuk informasi jadwal backup dan restore data.
+            </p>
+
+            <h3>Q: Apakah bisa custom tampilan atau fitur?</h3>
+            <p>
+                A: Ya, aplikasi ini open-source dan dapat dikustomisasi. Hubungi developer 
+                atau administrator untuk request fitur khusus.
+            </p>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p><strong>iniPerpus - Library Management System</strong></p>
+            <p>Versi Beta 0.1 | Desember 2025</p>
+            <p>Dikembangkan oleh Kelompok 1 - KKP S7A (Teknik Informatika)</p>
+            <p style="margin-top: 20px; font-size: 0.9em;">
+                Untuk pertanyaan lebih lanjut, silakan hubungi administrator sistem Anda.
+            </p>
+            <p style="margin-top: 10px; font-size: 0.85em; color: #999;">
+                © 2025 iniPerpus. All rights reserved.
+            </p>
+        </div>
+    </div>
+</body>
+</html>

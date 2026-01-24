@@ -32,7 +32,7 @@ def save_encodings(encs: Dict[str, List[float]]):
         pickle.dump(encs, f)
 
 @app.post("/enroll")
-async def enroll(student_id: str = Form(...), image: UploadFile = File(...)):
+async def enroll(borrower_id: str = Form(...), image: UploadFile = File(...)):
     contents = await image.read()
     try:
         img = face_recognition.load_image_file(contents)
@@ -53,14 +53,14 @@ async def enroll(student_id: str = Form(...), image: UploadFile = File(...)):
 
     with lock:
         db = load_encodings()
-        db[student_id] = encoding
+        db[borrower_id] = encoding
         save_encodings(db)
         # save image file
-        img_path = IMAGES_DIR / f"{student_id}.jpg"
+        img_path = IMAGES_DIR / f"{borrower_id}.jpg"
         with open(img_path, "wb") as f:
             f.write(contents)
 
-    return JSONResponse({"student_id": student_id, "status": "enrolled"})
+    return JSONResponse({"borrower_id": borrower_id, "status": "enrolled"})
 
 @app.post("/match")
 async def match(image: UploadFile = File(...)):
@@ -98,25 +98,25 @@ async def match(image: UploadFile = File(...)):
     threshold = 0.6
     matched = bool(best_id is not None and best_distance <= threshold)
 
-    return {"matched": matched, "student_id": best_id if matched else None, "distance": float(best_distance)}
+    return {"matched": matched, "borrower_id": best_id if matched else None, "distance": float(best_distance)}
 
-@app.get("/students")
-def students():
+@app.get("/borrowers")
+def borrowers():
     with lock:
         db = load_encodings()
-    return {"students": list(db.keys())}
+    return {"borrowers": list(db.keys())}
 
-@app.delete("/student/{student_id}")
-async def delete_student(student_id: str):
+@app.delete("/borrower/{borrower_id}")
+async def delete_borrower(borrower_id: str):
     with lock:
         db = load_encodings()
-        if student_id in db:
-            del db[student_id]
+        if borrower_id in db:
+            del db[borrower_id]
             save_encodings(db)
             # delete image file if exists
-            img_path = IMAGES_DIR / f"{student_id}.jpg"
+            img_path = IMAGES_DIR / f"{borrower_id}.jpg"
             if img_path.exists():
                 img_path.unlink()
-            return {"student_id": student_id, "status": "deleted"}
+            return {"borrower_id": borrower_id, "status": "deleted"}
         else:
-            raise HTTPException(status_code=404, detail="Student face data not found")
+            raise HTTPException(status_code=404, detail="Borrower face data not found")

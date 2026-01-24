@@ -12,7 +12,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/students")
+@RequestMapping("/api/borrowers")
 public class ApiBorrowerController {
 
     private final BorrowerService borrowerService;
@@ -34,7 +34,7 @@ public class ApiBorrowerController {
         Borrower existing = borrowerService.findById(id);
         if (existing == null) throw new RuntimeException("Borrower not found");
         if (updates.getName() != null) existing.setName(updates.getName());
-        if (updates.getBorrowerId() != null) existing.setStudentId(updates.getBorrowerId());
+        if (updates.getBorrowerId() != null) existing.setBorrowerId(updates.getBorrowerId());
         if (updates.getClassName() != null) existing.setClassName(updates.getClassName());
         return borrowerService.save(existing);
     }

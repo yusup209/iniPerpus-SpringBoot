@@ -10,7 +10,7 @@ const paging = {
 };
 
 const api = {
-  borrowers: '/api/students',
+  borrowers: '/api/borrowers',
   books: '/api/books',
   lendings: '/api/lendings'
 };
@@ -26,10 +26,10 @@ function setLendingStatus(message, isError = false) {
 async function addBorrower(e) {
   e.preventDefault();
   const name = document.getElementById('userName').value;
-  const studentId = document.getElementById('userEmail').value; // reuse email field as studentId input field id
+  const borrowerId = document.getElementById('userEmail').value; // reuse email field as borrowerId input field id
   const className = document.getElementById('userPhone').value;
 
-  const payload = { name: name, studentId: studentId, className: className };
+  const payload = { name: name, borrowerId: borrowerId, className: className };
   await fetch(api.borrowers, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
   await fetchBorrowers();
   e.target.reset();
@@ -63,7 +63,7 @@ function renderPagination(kind, total, state, elId) {
 function renderBorrowers() {
   const tbody = document.getElementById('usersBody');
   if (!tbody) return;
-  const totalEl = document.getElementById('totalStudents');
+  const totalEl = document.getElementById('totalBorrowers');
   if (totalEl) totalEl.textContent = borrowers.length;
   const state = paging.borrowers;
   const maxPages = ensureValidPage(state, borrowers.length);
@@ -73,7 +73,7 @@ function renderBorrowers() {
   tbody.innerHTML = pageRows.map(s => `
     <tr>
       <td>${s.name}</td>
-      <td>${s.studentId}</td>
+      <td>${s.borrowerId}</td>
       <td>${s.className || '—'}</td>
       <td style="text-align:center;">
         <button class="btn-icon-edit" title="Edit" onclick="editBorrower(${s.id})">✎</button>
@@ -112,7 +112,7 @@ function editBorrower(id) {
   if (!borrower) return;
   document.getElementById('editBorrowerId').value = borrower.id;
   document.getElementById('editBorrowerName').value = borrower.name;
-  document.getElementById('editBorrowerStudentId').value = borrower.studentId;
+  document.getElementById('editBorrowerBorrowerId').value = borrower.borrowerId;
   document.getElementById('editBorrowerClassName').value = borrower.className || '';
   document.getElementById('editBorrowerModal').style.display = 'block';
 }
@@ -121,10 +121,10 @@ async function saveBorrower(e) {
   e.preventDefault();
   const id = document.getElementById('editBorrowerId').value;
   const name = document.getElementById('editBorrowerName').value;
-  const studentId = document.getElementById('editBorrowerStudentId').value;
+  const borrowerId = document.getElementById('editBorrowerBorrowerId').value;
   const className = document.getElementById('editBorrowerClassName').value;
   
-  const payload = { name, studentId, className };
+  const payload = { name, borrowerId, className };
   await fetch(`${api.borrowers}/${id}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
@@ -248,7 +248,7 @@ function updateLendingDropdowns() {
   if (!userSelect || !bookSelect) return;
 
   userSelect.innerHTML = '<option value="">Select a borrower</option>' +
-    borrowers.map(s => `<option value="${s.id}">${s.name || s.studentId}</option>`).join('');
+    borrowers.map(s => `<option value="${s.id}">${s.name || s.borrowerId}</option>`).join('');
 
   bookSelect.innerHTML = '<option value="">Select a book</option>' +
     books.filter(b => (b.copiesAvailable || b.copiesAvailable === 0 ? b.copiesAvailable : b.availableCopies) > 0)
@@ -259,16 +259,16 @@ async function lendBook(e) {
   console.log('lendBook called with event:', e);
   e.preventDefault();
   console.log('preventDefault executed');
-  const studentId = parseInt(document.getElementById('lendUser').value);
+  const borrowerId = parseInt(document.getElementById('lendUser').value);
   const bookId = parseInt(document.getElementById('lendBook').value);
   const dueDate = document.getElementById('lendDueDate').value || null;
 
-  if (!studentId || !bookId) {
+  if (!borrowerId || !bookId) {
     alert('Please select both borrower and book.');
     return;
   }
 
-  const payload = { studentId: studentId, bookId: bookId, dueDate: dueDate };
+  const payload = { borrowerId: borrowerId, bookId: bookId, dueDate: dueDate };
   console.log('Lending payload:', payload);
   try {
     const resp = await fetch(api.lendings, {
@@ -315,7 +315,7 @@ function renderLoans() {
 
   tbody.innerHTML = pageRows.map(l => `
     <tr>
-      <td>${l.borrower ? (l.borrower.name || l.borrower.studentId) : '—'}</td>
+      <td>${l.borrower ? (l.borrower.name || l.borrower.borrowerId) : '—'}</td>
       <td>${l.book ? l.book.title : '—'}</td>
       <td>${l.dueDate ? l.dueDate : ''}</td>
       <td><span class="status-badge">${l.returnDate ? 'returned' : 'borrowed'}</span></td>

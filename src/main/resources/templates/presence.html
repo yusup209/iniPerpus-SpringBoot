@@ -43,7 +43,7 @@
           <label for="borrowerSelect" style="font-weight:600; color:#374151;">Link to Borrower:</label>
           <select id="borrowerSelect" style="min-width:220px; padding:10px 12px; border-radius:10px; border:1px solid #d1d5db;">
             <option value="">-- Select borrower --</option>
-            <option th:each="s : ${borrowers}" th:value="${s.id}" th:text="${s.name + ' (' + s.studentId + ')'}" th:attr="data-sid=${s.studentId}"></option>
+            <option th:each="s : ${borrowers}" th:value="${s.id}" th:text="${s.name + ' (' + s.borrowerId + ')'}" th:attr="data-sid=${s.borrowerId}"></option>
           </select>
         </div>
 
@@ -153,13 +153,13 @@
       const pageRows = records.slice(start, start + pagingPresence.size);
       tbody.innerHTML = pageRows.map(r => {
         const time = new Date(r.timestamp).toLocaleString();
-        const studentId = r.student ? r.student.studentId : '—';
-        const name = r.student ? r.student.name : '—';
+        const borrowerId = r.borrower ? r.borrower.borrowerId : '—';
+        const name = r.borrower ? r.borrower.name : '—';
         const status = r.matched ? '<span style="color:#10b981;">✓ Matched</span>' : '<span style="color:#ef4444;">✗ Not matched</span>';
         return `
           <tr>
             <td>${time}</td>
-            <td>${studentId}</td>
+            <td>${borrowerId}</td>
             <td>${name}</td>
             <td>${status}</td>
           </tr>
@@ -221,7 +221,7 @@
           if (result.matched) {
             setStatus(resultDiv, `
               <p style="color: #10b981; font-size: 1.2em; font-weight: 600;">✓ Check-In Successful!</p>
-              <p style="color: #333; margin-top: 10px;">Welcome, ${result.student_id || 'Borrower'}</p>
+              <p style="color: #333; margin-top: 10px;">Welcome, ${result.borrower_id || 'Borrower'}</p>
             `, 'linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%)');
             fetchPresenceRecords();
           } else {
@@ -260,7 +260,7 @@
           if (response.ok) {
             setStatus(enrollResultDiv, `
               <p style="color: #2563eb; font-size: 1.1em; font-weight: 600;">✓ Face Registered</p>
-              <p style="color: #374151; margin-top: 8px;">Linked to borrower ${result.student_id || ''}</p>
+              <p style="color: #374151; margin-top: 8px;">Linked to borrower ${result.borrower_id || ''}</p>
             `, 'linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%)');
           } else {
             setStatus(enrollResultDiv, `<p style="color: #ef4444;">Failed: ${result.error || 'Unknown error'}</p>`, 'linear-gradient(135deg, #fee2e2 0%, #fecaca 100%)');

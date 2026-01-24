@@ -42,14 +42,14 @@ CREATE TABLE IF NOT EXISTS `book` (
   KEY `idx_book_isbn` (`isbn`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-CREATE TABLE IF NOT EXISTS `student` (
+CREATE TABLE IF NOT EXISTS `borrower` (
   `id` BIGINT NOT NULL AUTO_INCREMENT,
-  `student_id` VARCHAR(100) DEFAULT NULL,
+  `borrower_id` VARCHAR(100) DEFAULT NULL,
   `name` VARCHAR(255) DEFAULT NULL,
   `class_name` VARCHAR(255) DEFAULT NULL,
   `photo_filename` VARCHAR(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `uk_student_studentId` (`student_id`)
+  UNIQUE KEY `uk_borrower_borrowerId` (`borrower_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `lending` (
@@ -63,17 +63,17 @@ CREATE TABLE IF NOT EXISTS `lending` (
   KEY `fk_lending_book_idx` (`book_id`),
   KEY `fk_lending_borrower_idx` (`borrower_id`),
   CONSTRAINT `fk_lending_book` FOREIGN KEY (`book_id`) REFERENCES `book` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE,
-  CONSTRAINT `fk_lending_borrower` FOREIGN KEY (`borrower_id`) REFERENCES `student` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `fk_lending_borrower` FOREIGN KEY (`borrower_id`) REFERENCES `borrower` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `presence_record` (
   `id` BIGINT NOT NULL AUTO_INCREMENT,
-  `student_id` BIGINT NOT NULL,
+  `borrower_id` BIGINT NOT NULL,
   `timestamp` DATETIME DEFAULT NULL,
   `matched` TINYINT(1) DEFAULT 1,
   PRIMARY KEY (`id`),
-  KEY `fk_presence_student_idx` (`student_id`),
-  CONSTRAINT `fk_presence_student` FOREIGN KEY (`student_id`) REFERENCES `student` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  KEY `fk_presence_borrower_idx` (`borrower_id`),
+  CONSTRAINT `fk_presence_borrower` FOREIGN KEY (`borrower_id`) REFERENCES `borrower` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- End of schema
