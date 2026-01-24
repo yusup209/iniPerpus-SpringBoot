@@ -506,6 +506,18 @@ public class ReportService {
         headerTable.addCell(infoCell);
         
         document.add(headerTable);
+        
+        // Horizontal line separator (Indonesian letter format)
+        PdfPTable lineTable = new PdfPTable(1);
+        lineTable.setWidthPercentage(100);
+        PdfPCell lineCell = new PdfPCell();
+        lineCell.setBorder(Rectangle.NO_BORDER);
+        lineCell.setBorderWidthBottom(2);
+        lineCell.setPaddingTop(5);
+        lineCell.setPaddingBottom(5);
+        lineTable.addCell(lineCell);
+        document.add(lineTable);
+        
         document.add(new Paragraph("\n"));
 
         // Document title
@@ -516,55 +528,131 @@ public class ReportService {
         document.add(new Paragraph("\n"));
 
         // Date aligned to the right
-        Paragraph date = new Paragraph("Date: " + LocalDate.now().format(dateFormatter), 
-                FontFactory.getFont(FontFactory.HELVETICA, 10));
-        date.setAlignment(Element.ALIGN_RIGHT);
-        document.add(date);
-        document.add(new Paragraph("\n"));
+        // Paragraph date = new Paragraph("Date: " + LocalDate.now().format(dateFormatter), 
+        //         FontFactory.getFont(FontFactory.HELVETICA, 10));
+        // date.setAlignment(Element.ALIGN_RIGHT);
+        // document.add(date);
+        // document.add(new Paragraph("\n"));
 
         // Lending details
         Font labelFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 11);
         Font valueFont = FontFactory.getFont(FontFactory.HELVETICA, 11);
 
         // Borrower information
-        Paragraph borrowerSection = new Paragraph();
-        borrowerSection.add(new Chunk("Borrower Information:\n", labelFont));
-        borrowerSection.add(new Chunk("Name: ", labelFont));
-        borrowerSection.add(new Chunk((lending.getBorrower() != null ? lending.getBorrower().getName() : "-") + "\n", valueFont));
-        borrowerSection.add(new Chunk("Borrower ID: ", labelFont));
-        borrowerSection.add(new Chunk((lending.getBorrower() != null ? lending.getBorrower().getBorrowerId() : "-") + "\n", valueFont));
-        borrowerSection.add(new Chunk("Division: ", labelFont));
-        borrowerSection.add(new Chunk((lending.getBorrower() != null && lending.getBorrower().getDivision() != null 
-                ? lending.getBorrower().getDivision() : "-") + "\n", valueFont));
-        document.add(borrowerSection);
+        PdfPTable borrowerTable = new PdfPTable(2);
+        borrowerTable.setWidthPercentage(100);
+        borrowerTable.setWidths(new float[]{1, 3});
+        
+        PdfPCell borrowerHeaderCell = new PdfPCell(new Phrase("Borrower Information:", labelFont));
+        borrowerHeaderCell.setColspan(2);
+        borrowerHeaderCell.setBorder(Rectangle.NO_BORDER);
+        borrowerHeaderCell.setPaddingBottom(5);
+        borrowerTable.addCell(borrowerHeaderCell);
+        
+        PdfPCell nameLabel = new PdfPCell(new Phrase("Name", labelFont));
+        nameLabel.setBorder(Rectangle.NO_BORDER);
+        nameLabel.setPaddingLeft(10);
+        borrowerTable.addCell(nameLabel);
+        PdfPCell nameValue = new PdfPCell(new Phrase(": " + (lending.getBorrower() != null ? lending.getBorrower().getName() : "-"), valueFont));
+        nameValue.setBorder(Rectangle.NO_BORDER);
+        borrowerTable.addCell(nameValue);
+        
+        PdfPCell idLabel = new PdfPCell(new Phrase("Borrower ID", labelFont));
+        idLabel.setBorder(Rectangle.NO_BORDER);
+        idLabel.setPaddingLeft(10);
+        borrowerTable.addCell(idLabel);
+        PdfPCell idValue = new PdfPCell(new Phrase(": " + (lending.getBorrower() != null ? lending.getBorrower().getBorrowerId() : "-"), valueFont));
+        idValue.setBorder(Rectangle.NO_BORDER);
+        borrowerTable.addCell(idValue);
+        
+        PdfPCell divisionLabel = new PdfPCell(new Phrase("Division", labelFont));
+        divisionLabel.setBorder(Rectangle.NO_BORDER);
+        divisionLabel.setPaddingLeft(10);
+        borrowerTable.addCell(divisionLabel);
+        PdfPCell divisionValue = new PdfPCell(new Phrase(": " + (lending.getBorrower() != null && lending.getBorrower().getDivision() != null 
+                ? lending.getBorrower().getDivision() : "-"), valueFont));
+        divisionValue.setBorder(Rectangle.NO_BORDER);
+        borrowerTable.addCell(divisionValue);
+        
+        document.add(borrowerTable);
         document.add(new Paragraph("\n"));
 
         // Book information
-        Paragraph bookSection = new Paragraph();
-        bookSection.add(new Chunk("Book Information:\n", labelFont));
-        bookSection.add(new Chunk("Title: ", labelFont));
-        bookSection.add(new Chunk((lending.getBook() != null ? lending.getBook().getTitle() : "-") + "\n", valueFont));
-        bookSection.add(new Chunk("Author: ", labelFont));
-        bookSection.add(new Chunk((lending.getBook() != null ? lending.getBook().getAuthor() : "-") + "\n", valueFont));
-        bookSection.add(new Chunk("ISBN: ", labelFont));
-        bookSection.add(new Chunk((lending.getBook() != null && lending.getBook().getIsbn() != null 
-                ? lending.getBook().getIsbn() : "-") + "\n", valueFont));
-        document.add(bookSection);
+        PdfPTable bookTable = new PdfPTable(2);
+        bookTable.setWidthPercentage(100);
+        bookTable.setWidths(new float[]{1, 3});
+        
+        PdfPCell bookHeaderCell = new PdfPCell(new Phrase("Book Information:", labelFont));
+        bookHeaderCell.setColspan(2);
+        bookHeaderCell.setBorder(Rectangle.NO_BORDER);
+        bookHeaderCell.setPaddingBottom(5);
+        bookTable.addCell(bookHeaderCell);
+        
+        PdfPCell titleLabel = new PdfPCell(new Phrase("Title", labelFont));
+        titleLabel.setBorder(Rectangle.NO_BORDER);
+        titleLabel.setPaddingLeft(10);
+        bookTable.addCell(titleLabel);
+        PdfPCell titleValue = new PdfPCell(new Phrase(": " + (lending.getBook() != null ? lending.getBook().getTitle() : "-"), valueFont));
+        titleValue.setBorder(Rectangle.NO_BORDER);
+        bookTable.addCell(titleValue);
+        
+        PdfPCell authorLabel = new PdfPCell(new Phrase("Author", labelFont));
+        authorLabel.setBorder(Rectangle.NO_BORDER);
+        authorLabel.setPaddingLeft(10);
+        bookTable.addCell(authorLabel);
+        PdfPCell authorValue = new PdfPCell(new Phrase(": " + (lending.getBook() != null ? lending.getBook().getAuthor() : "-"), valueFont));
+        authorValue.setBorder(Rectangle.NO_BORDER);
+        bookTable.addCell(authorValue);
+        
+        PdfPCell isbnLabel = new PdfPCell(new Phrase("ISBN", labelFont));
+        isbnLabel.setBorder(Rectangle.NO_BORDER);
+        isbnLabel.setPaddingLeft(10);
+        bookTable.addCell(isbnLabel);
+        PdfPCell isbnValue = new PdfPCell(new Phrase(": " + (lending.getBook() != null && lending.getBook().getIsbn() != null 
+                ? lending.getBook().getIsbn() : "-"), valueFont));
+        isbnValue.setBorder(Rectangle.NO_BORDER);
+        bookTable.addCell(isbnValue);
+        
+        document.add(bookTable);
         document.add(new Paragraph("\n"));
 
         // Lending details
-        Paragraph lendingSection = new Paragraph();
-        lendingSection.add(new Chunk("Lending Details:\n", labelFont));
-        lendingSection.add(new Chunk("Lend Date: ", labelFont));
-        lendingSection.add(new Chunk((lending.getLendDate() != null ? lending.getLendDate().format(dateFormatter) : "-") + "\n", valueFont));
-        lendingSection.add(new Chunk("Due Date: ", labelFont));
-        lendingSection.add(new Chunk((lending.getDueDate() != null ? lending.getDueDate().format(dateFormatter) : "-") + "\n", valueFont));
+        PdfPTable lendingTable = new PdfPTable(2);
+        lendingTable.setWidthPercentage(100);
+        lendingTable.setWidths(new float[]{1, 3});
+        
+        PdfPCell lendingHeaderCell = new PdfPCell(new Phrase("Lending Details:", labelFont));
+        lendingHeaderCell.setColspan(2);
+        lendingHeaderCell.setBorder(Rectangle.NO_BORDER);
+        lendingHeaderCell.setPaddingBottom(5);
+        lendingTable.addCell(lendingHeaderCell);
+        
+        PdfPCell lendDateLabel = new PdfPCell(new Phrase("Lend Date", labelFont));
+        lendDateLabel.setBorder(Rectangle.NO_BORDER);
+        lendDateLabel.setPaddingLeft(10);
+        lendingTable.addCell(lendDateLabel);
+        PdfPCell lendDateValue = new PdfPCell(new Phrase(": " + (lending.getLendDate() != null ? lending.getLendDate().format(dateFormatter) : "-"), valueFont));
+        lendDateValue.setBorder(Rectangle.NO_BORDER);
+        lendingTable.addCell(lendDateValue);
+        
+        PdfPCell dueDateLabel = new PdfPCell(new Phrase("Due Date", labelFont));
+        dueDateLabel.setBorder(Rectangle.NO_BORDER);
+        dueDateLabel.setPaddingLeft(10);
+        lendingTable.addCell(dueDateLabel);
+        PdfPCell dueDateValue = new PdfPCell(new Phrase(": " + (lending.getDueDate() != null ? lending.getDueDate().format(dateFormatter) : "-"), valueFont));
+        dueDateValue.setBorder(Rectangle.NO_BORDER);
+        lendingTable.addCell(dueDateValue);
         
         // Calculate duration
         if (lending.getLendDate() != null && lending.getDueDate() != null) {
             long duration = java.time.temporal.ChronoUnit.DAYS.between(lending.getLendDate(), lending.getDueDate());
-            lendingSection.add(new Chunk("Lending Duration: ", labelFont));
-            lendingSection.add(new Chunk(duration + " days\n", valueFont));
+            PdfPCell durationLabel = new PdfPCell(new Phrase("Lending Duration", labelFont));
+            durationLabel.setBorder(Rectangle.NO_BORDER);
+            durationLabel.setPaddingLeft(10);
+            lendingTable.addCell(durationLabel);
+            PdfPCell durationValue = new PdfPCell(new Phrase(": " + duration + " days", valueFont));
+            durationValue.setBorder(Rectangle.NO_BORDER);
+            lendingTable.addCell(durationValue);
         }
         
         // Status
@@ -574,9 +662,15 @@ public class ReportService {
         } else if (lending.getDueDate() != null && lending.getDueDate().isBefore(LocalDate.now())) {
             status = "Overdue";
         }
-        lendingSection.add(new Chunk("Status: ", labelFont));
-        lendingSection.add(new Chunk(status + "\n", valueFont));
-        document.add(lendingSection);
+        PdfPCell statusLabel = new PdfPCell(new Phrase("Status", labelFont));
+        statusLabel.setBorder(Rectangle.NO_BORDER);
+        statusLabel.setPaddingLeft(10);
+        lendingTable.addCell(statusLabel);
+        PdfPCell statusValue = new PdfPCell(new Phrase(": " + status, valueFont));
+        statusValue.setBorder(Rectangle.NO_BORDER);
+        lendingTable.addCell(statusValue);
+        
+        document.add(lendingTable);
         document.add(new Paragraph("\n\n"));
 
         // Footer with location, date and signature
