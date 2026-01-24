@@ -51,8 +51,45 @@ public class ReportService {
 
         document.open();
 
+        // Letterhead with Logo
+        try {
+            InputStream logoStream = getClass().getClassLoader().getResourceAsStream("static/logo.png");
+            if (logoStream != null) {
+                Image logo = Image.getInstance(logoStream.readAllBytes());
+                logo.scaleToFit(80, 80);
+                logo.setAlignment(Element.ALIGN_CENTER);
+                document.add(logo);
+                document.add(new Paragraph("\n"));
+            } else {
+                Paragraph logoPlaceholder = new Paragraph("[LIBRARY LOGO]", 
+                        FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12));
+                logoPlaceholder.setAlignment(Element.ALIGN_CENTER);
+                document.add(logoPlaceholder);
+            }
+        } catch (Exception e) {
+            Paragraph logoPlaceholder = new Paragraph("[LIBRARY LOGO]", 
+                    FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12));
+            logoPlaceholder.setAlignment(Element.ALIGN_CENTER);
+            document.add(logoPlaceholder);
+        }
+
+        Paragraph letterhead = new Paragraph("iniPerpus Library System", 
+                FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18));
+        letterhead.setAlignment(Element.ALIGN_CENTER);
+        document.add(letterhead);
+
+        Paragraph subtitle = new Paragraph("Borrower Management", 
+                FontFactory.getFont(FontFactory.HELVETICA, 10));
+        subtitle.setAlignment(Element.ALIGN_CENTER);
+        document.add(subtitle);
+
+        Paragraph line = new Paragraph("_________________________________________________________________________________________________________");
+        line.setAlignment(Element.ALIGN_CENTER);
+        document.add(line);
+        document.add(new Paragraph("\n"));
+
         // Add title
-        Paragraph title = new Paragraph("Borrower Report", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18));
+        Paragraph title = new Paragraph("Borrower Report", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 14));
         title.setAlignment(Element.ALIGN_CENTER);
         document.add(title);
 
@@ -102,8 +139,45 @@ public class ReportService {
 
         document.open();
 
+        // Letterhead with Logo
+        try {
+            InputStream logoStream = getClass().getClassLoader().getResourceAsStream("static/logo.png");
+            if (logoStream != null) {
+                Image logo = Image.getInstance(logoStream.readAllBytes());
+                logo.scaleToFit(80, 80);
+                logo.setAlignment(Element.ALIGN_CENTER);
+                document.add(logo);
+                document.add(new Paragraph("\n"));
+            } else {
+                Paragraph logoPlaceholder = new Paragraph("[LIBRARY LOGO]", 
+                        FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12));
+                logoPlaceholder.setAlignment(Element.ALIGN_CENTER);
+                document.add(logoPlaceholder);
+            }
+        } catch (Exception e) {
+            Paragraph logoPlaceholder = new Paragraph("[LIBRARY LOGO]", 
+                    FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12));
+            logoPlaceholder.setAlignment(Element.ALIGN_CENTER);
+            document.add(logoPlaceholder);
+        }
+
+        Paragraph letterhead = new Paragraph("iniPerpus Library System", 
+                FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18));
+        letterhead.setAlignment(Element.ALIGN_CENTER);
+        document.add(letterhead);
+
+        Paragraph subtitle = new Paragraph("Book Inventory Management", 
+                FontFactory.getFont(FontFactory.HELVETICA, 10));
+        subtitle.setAlignment(Element.ALIGN_CENTER);
+        document.add(subtitle);
+
+        Paragraph line = new Paragraph("_________________________________________________________________________________________________________");
+        line.setAlignment(Element.ALIGN_CENTER);
+        document.add(line);
+        document.add(new Paragraph("\n"));
+
         // Add title
-        Paragraph title = new Paragraph("Book Report", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18));
+        Paragraph title = new Paragraph("Book Report", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 14));
         title.setAlignment(Element.ALIGN_CENTER);
         document.add(title);
 
@@ -156,8 +230,45 @@ public class ReportService {
 
         document.open();
 
+        // Letterhead with Logo
+        try {
+            InputStream logoStream = getClass().getClassLoader().getResourceAsStream("static/logo.png");
+            if (logoStream != null) {
+                Image logo = Image.getInstance(logoStream.readAllBytes());
+                logo.scaleToFit(80, 80);
+                logo.setAlignment(Element.ALIGN_CENTER);
+                document.add(logo);
+                document.add(new Paragraph("\n"));
+            } else {
+                Paragraph logoPlaceholder = new Paragraph("[LIBRARY LOGO]", 
+                        FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12));
+                logoPlaceholder.setAlignment(Element.ALIGN_CENTER);
+                document.add(logoPlaceholder);
+            }
+        } catch (Exception e) {
+            Paragraph logoPlaceholder = new Paragraph("[LIBRARY LOGO]", 
+                    FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12));
+            logoPlaceholder.setAlignment(Element.ALIGN_CENTER);
+            document.add(logoPlaceholder);
+        }
+
+        Paragraph letterhead = new Paragraph("iniPerpus Library System", 
+                FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18));
+        letterhead.setAlignment(Element.ALIGN_CENTER);
+        document.add(letterhead);
+
+        Paragraph subtitle = new Paragraph("Book Lending Management", 
+                FontFactory.getFont(FontFactory.HELVETICA, 10));
+        subtitle.setAlignment(Element.ALIGN_CENTER);
+        document.add(subtitle);
+
+        Paragraph line = new Paragraph("_________________________________________________________________________________________________________");
+        line.setAlignment(Element.ALIGN_CENTER);
+        document.add(line);
+        document.add(new Paragraph("\n"));
+
         // Add title
-        Paragraph title = new Paragraph("Lending Report", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18));
+        Paragraph title = new Paragraph("Lending Report", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 14));
         title.setAlignment(Element.ALIGN_CENTER);
         document.add(title);
 
@@ -249,8 +360,45 @@ public class ReportService {
 
         document.open();
 
+        // Letterhead with Logo
+        try {
+            InputStream logoStream = getClass().getClassLoader().getResourceAsStream("static/logo.png");
+            if (logoStream != null) {
+                Image logo = Image.getInstance(logoStream.readAllBytes());
+                logo.scaleToFit(80, 80);
+                logo.setAlignment(Element.ALIGN_CENTER);
+                document.add(logo);
+                document.add(new Paragraph("\n"));
+            } else {
+                Paragraph logoPlaceholder = new Paragraph("[LIBRARY LOGO]", 
+                        FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12));
+                logoPlaceholder.setAlignment(Element.ALIGN_CENTER);
+                document.add(logoPlaceholder);
+            }
+        } catch (Exception e) {
+            Paragraph logoPlaceholder = new Paragraph("[LIBRARY LOGO]", 
+                    FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12));
+            logoPlaceholder.setAlignment(Element.ALIGN_CENTER);
+            document.add(logoPlaceholder);
+        }
+
+        Paragraph letterhead = new Paragraph("iniPerpus Library System", 
+                FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18));
+        letterhead.setAlignment(Element.ALIGN_CENTER);
+        document.add(letterhead);
+
+        Paragraph subtitle = new Paragraph("Presence Record Management", 
+                FontFactory.getFont(FontFactory.HELVETICA, 10));
+        subtitle.setAlignment(Element.ALIGN_CENTER);
+        document.add(subtitle);
+
+        Paragraph line = new Paragraph("_________________________________________________________________________________________________________");
+        line.setAlignment(Element.ALIGN_CENTER);
+        document.add(line);
+        document.add(new Paragraph("\n"));
+
         // Add title
-        Paragraph title = new Paragraph("Presence Report", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18));
+        Paragraph title = new Paragraph("Presence Report", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 14));
         title.setAlignment(Element.ALIGN_CENTER);
         document.add(title);
 
