@@ -215,7 +215,7 @@ gradlew.bat bootRun
 1. **Click "Lending"** in the top menu
 2. **Click "Add Lending"** button
 3. **Fill in the form**:
-   - Select Student: `John Doe`
+   - Select Borrower: `John Doe`
    - Select Book: `Harry Potter...`
    - Lending Date: Today's date (auto-filled)
 4. **Click "Save"**

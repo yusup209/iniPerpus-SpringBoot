@@ -1,10 +1,10 @@
 # iniPerpus - Library Management System
 
-Sistem manajemen perpustakaan komprehensif dengan fitur presensi siswa berbasis pengenalan wajah. Dibangun dengan Spring Boot (Java) dan FastAPI (Python).
+Sistem manajemen perpustakaan komprehensif dengan fitur presensi berbasis pengenalan wajah. Dibangun dengan Spring Boot (Java) dan FastAPI (Python).
 
 ---
 
-*A comprehensive library management system with face recognition-based student attendance. Built with Spring Boot (Java) and FastAPI (Python).*
+*A comprehensive library management system with face recognition-based borrower attendance. Built with Spring Boot (Java) and FastAPI (Python).*
 
 ## 📋 Daftar Isi / Table of Contents
 
@@ -20,14 +20,14 @@ Sistem manajemen perpustakaan komprehensif dengan fitur presensi siswa berbasis 
 
 ## ✨ Fitur / Features
 
-### 👥 Manajemen Siswa / Student Management
-- **Tambah Siswa**: Menambahkan data siswa baru dengan informasi nama, NIS, dan kelas
-- **Edit Siswa**: Memperbarui informasi siswa yang sudah ada melalui dialog modal
-- **Hapus Siswa**: Menghapus siswa dengan dialog konfirmasi dan penghapusan cascade otomatis
-- **Cari & Filter**: Fungsi pencarian real-time untuk semua data siswa
-- **Paginasi**: Navigasi melalui daftar siswa dengan ukuran halaman yang dapat disesuaikan (5, 10, 25)
-- **Tampilan Total**: Melihat jumlah total siswa yang terdaftar secara langsung
-- **Integrasi Data Wajah**: Link langsung ke registrasi wajah dari data siswa
+### 👥 Manajemen Peminjam / Borrower Management
+- **Tambah Peminjam**: Menambahkan data peminjam baru dengan informasi nama, NIS, dan kelas
+- **Edit Peminjam**: Memperbarui informasi peminjam yang sudah ada melalui dialog modal
+- **Hapus Peminjam**: Menghapus peminjam dengan dialog konfirmasi dan penghapusan cascade otomatis
+- **Cari & Filter**: Fungsi pencarian real-time untuk semua data peminjam
+- **Paginasi**: Navigasi melalui daftar peminjam dengan ukuran halaman yang dapat disesuaikan (5, 10, 25)
+- **Tampilan Total**: Melihat jumlah total peminjam yang terdaftar secara langsung
+- **Integrasi Data Wajah**: Link langsung ke registrasi wajah dari data peminjam
 - **Aksi Berbasis Ikon**: Ikon intuitif untuk edit (✎), hapus (🗑️), dan kamera (📸) untuk aksi cepat
 
 ### 📚 Manajemen Buku / Book Management
@@ -42,29 +42,29 @@ Sistem manajemen perpustakaan komprehensif dengan fitur presensi siswa berbasis 
 - **Umpan Balik Visual**: Indikasi jelas status ketersediaan buku
 
 ### 🔄 Manajemen Peminjaman / Lending Management
-- **Pinjam Buku**: Meminjamkan buku ke siswa dengan perhitungan tanggal jatuh tempo otomatis
+- **Pinjam Buku**: Meminjamkan buku ke peminjam dengan perhitungan tanggal jatuh tempo otomatis
 - **Proses Pengembalian**: Tandai buku sebagai dikembalikan dan pulihkan inventori
 - **Pelacakan Pinjaman Aktif**: Lihat semua buku yang sedang dipinjam dalam satu tempat
 - **Manajemen Tanggal Jatuh Tempo**: Periode pinjaman 14 hari otomatis dengan tampilan tanggal jatuh tempo visual
-- **Hubungan Siswa-Buku**: Menghubungkan peminjam dengan item yang dipinjam secara mulus
+- **Hubungan Peminjam-Buku**: Menghubungkan peminjam dengan item yang dipinjam secara mulus
 - **Validasi**: Mencegah peminjaman saat tidak ada eksemplar tersedia
 - **Update Status**: Refleksi real-time status peminjaman di seluruh sistem
 - **Dukungan Paginasi**: Menangani riwayat peminjaman besar secara efisien
 - **Tampilan Total Pinjaman**: Ringkasan cepat transaksi peminjaman aktif
 
-### 📸 Presensi Siswa (Pengenalan Wajah) / Student Presence (Face Recognition)
+### 📸 Presensi Peminjam (Pengenalan Wajah) / Borrower Presence (Face Recognition)
 - **Integrasi Kamera**: Akses webcam langsung untuk menangkap wajah
-- **Pendaftaran Wajah**: Mendaftarkan wajah siswa yang terhubung dengan data siswa mereka
+- **Pendaftaran Wajah**: Mendaftarkan wajah peminjam yang terhubung dengan data peminjam mereka
 - **Pencocokan Wajah**: Pengenalan wajah real-time untuk check-in otomatis
 - **Pencatatan Check-in**: Pencatatan kehadiran otomatis dengan timestamp
-- **Pendaftaran Ulang**: Memperbarui data wajah untuk siswa yang sudah ada
+- **Pendaftaran Ulang**: Memperbarui data wajah untuk peminjam yang sudah ada
 - **Kepercayaan Pencocokan**: Threshold 0.6 untuk pencocokan wajah yang akurat
 - **Check-in Terbaru**: Lihat catatan kehadiran terbaru dengan detail siswa
 - **Paginasi**: Navigasi melalui riwayat kehadiran
 - **Umpan Balik Visual**: Pesan sukses/error yang jelas dengan alert berkode warna
 - **Toggle Kamera**: Mulai/hentikan kamera dengan satu klik tombol
 - **Video Responsif**: Ukuran feed kamera adaptif untuk berbagai ukuran layar
-- **Pembersihan Data Wajah**: Penghapusan otomatis encoding wajah saat siswa dihapus
+- **Pembersihan Data Wajah**: Penghapusan otomatis encoding wajah saat peminjam dihapus
 - **Integrasi Layanan Python**: Microservice terpisah untuk pemrosesan wajah
 
 ### 🔐 Keamanan & Autentikasi / Security & Authentication
@@ -121,29 +121,29 @@ Sistem manajemen perpustakaan komprehensif dengan fitur presensi siswa berbasis 
 - **Visual Feedback**: Clear indication of book availability status
 
 ### 🔄 Lending Management
-- **Lend Books**: Issue books to students with automatic due date calculation
+- **Lend Books**: Issue books to borrowers with automatic due date calculation
 - **Return Processing**: Mark books as returned and restore inventory
 - **Active Loans Tracking**: View all currently borrowed books in one place
 - **Due Date Management**: Automatic 14-day loan period with visual due date display
-- **Student-Book Linking**: Connect borrowers with borrowed items seamlessly
+- **Borrower-Book Linking**: Connect borrowers with borrowed items seamlessly
 - **Validation**: Prevent lending when no copies are available
 - **Status Updates**: Real-time reflection of lending status across the system
 - **Pagination Support**: Handle large lending histories efficiently
 - **Total Loans Display**: Quick overview of active lending transactions
 
-### 📸 Student Presence (Face Recognition)
+### 📸 Borrower Presence (Face Recognition)
 - **Camera Integration**: Live webcam access for face capture
-- **Face Enrollment**: Register student faces linked to their student records
+- **Face Enrollment**: Register borrower faces linked to their borrower records
 - **Face Matching**: Real-time face recognition for automatic check-ins
 - **Check-in Recording**: Automatic attendance logging with timestamps
-- **Re-registration**: Update face data for existing students
+- **Re-registration**: Update face data for existing borrowers
 - **Match Confidence**: 0.6 threshold for accurate face matching
-- **Recent Check-ins**: View latest attendance records with student details
+- **Recent Check-ins**: View latest attendance records with borrower details
 - **Pagination**: Navigate through attendance history
 - **Visual Feedback**: Clear success/error messages with color-coded alerts
 - **Camera Toggle**: Start/stop camera with single button click
 - **Responsive Video**: Adaptive camera feed sizing for different screen sizes
-- **Face Data Cleanup**: Automatic removal of face encodings when students are deleted
+- **Face Data Cleanup**: Automatic removal of face encodings when borrowers are deleted
 - **Python Service Integration**: Separate microservice for face processing
 
 ### 🔐 Security & Authentication
@@ -463,13 +463,13 @@ http://localhost:8080
 ### Dashboard
 
 - Access all features from the main dashboard
-- Navigate to Student Presence, Student Management, Book Management, or Lending Management
+- Navigate to Borrower Presence, Borrower Management, Book Management, or Lending Management
 
-### Student Management
+### Borrower Management
 
-1. **Add Student**: Fill form with Name, Borrower (User) ID, and Class
-2. **Edit Student**: Click edit icon (✎) on student row
-3. **Delete Student**: Click delete icon (🗑️) with confirmation dialog
+1. **Add Borrower**: Fill form with Name, Borrower (User) ID, and Class
+2. **Edit Borrower**: Click edit icon (✎) on borrower row
+3. **Delete Borrower**: Click delete icon (🗑️) with confirmation dialog
 4. **Register Face**: Click camera icon (📸) to navigate to presence page
 
 ### Book Management
@@ -481,15 +481,15 @@ http://localhost:8080
 
 ### Lending Management
 
-1. **Lend Book**: Select student and book, system auto-calculates due date
+1. **Lend Book**: Select borrower and book, system auto-calculates due date
 2. **Return Book**: Click return button on active loan
 3. **View Active Loans**: See all current borrowings with due dates
 
-### Student Presence (Face Recognition)
+### Borrower Presence (Face Recognition)
 
 1. **Start Camera**: Click "Start Camera" button to activate webcam
 2. **Register Face**:
-   - Select student from dropdown
+   - Select borrower from dropdown
    - Position face in camera
    - Click "Register Face" button
 3. **Check-In**:
