@@ -7,6 +7,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -107,6 +108,20 @@ public class ApiReportController {
 
         byte[] pdfContent = reportService.generatePresenceReport(startDate, endDate);
         String filename = "Presence_Report_" + LocalDateTime.now().format(dateTimeFormatter) + ".pdf";
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_PDF)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"")
+                .body(pdfContent);
+    }
+
+    /**
+     * Generate formal lending letter for a specific lending record
+     */
+    @GetMapping("/lending/{id}/letter")
+    public ResponseEntity<byte[]> generateLendingLetter(@PathVariable Long id) throws DocumentException {
+        byte[] pdfContent = reportService.generateLendingLetter(id);
+        String filename = "Lending_Letter_" + id + "_" + LocalDateTime.now().format(dateTimeFormatter) + ".pdf";
 
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_PDF)

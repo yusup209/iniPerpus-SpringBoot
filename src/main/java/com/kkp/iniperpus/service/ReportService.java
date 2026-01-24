@@ -15,6 +15,7 @@ import com.lowagie.text.pdf.PdfWriter;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -303,5 +304,141 @@ public class ReportService {
     /** Backward-compatible method without filters */
     public byte[] generatePresenceReport() throws DocumentException {
         return generatePresenceReport(null, null);
+    }
+
+    /**
+     * Generate formal PDF letter for a specific lending record
+     */
+    public byte[] generateLendingLetter(Long lendingId) throws DocumentException {
+        Lending lending = lendingRepository.findById(lendingId)
+                .orElseThrow(() -> new IllegalArgumentException("Lending record not found"));
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        Document document = new Document(PageSize.A4, 50, 50, 50, 50);
+        PdfWriter.getInstance(document, outputStream);
+
+        document.open();
+
+        // Letterhead with Logo
+        try {
+            // Try to load logo from resources
+            InputStream logoStream = getClass().getClassLoader().getResourceAsStream("static/logo.png");
+            if (logoStream != null) {
+                Image logo = Image.getInstance(logoStream.readAllBytes());
+                logo.scaleToFit(80, 80);
+                logo.setAlignment(Element.ALIGN_CENTER);
+                document.add(logo);
+                document.add(new Paragraph("\n"));
+            } else {
+                // Logo placeholder if file not found
+                Paragraph logoPlaceholder = new Paragraph("[LIBRARY LOGO]", 
+                        FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12));
+                logoPlaceholder.setAlignment(Element.ALIGN_CENTER);
+                document.add(logoPlaceholder);
+            }
+        } catch (Exception e) {
+            // Fallback to text placeholder if any error occurs
+            Paragraph logoPlaceholder = new Paragraph("[LIBRARY LOGO]", 
+                    FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12));
+            logoPlaceholder.setAlignment(Element.ALIGN_CENTER);
+            document.add(logoPlaceholder);
+        }
+
+        Paragraph letterhead = new Paragraph("iniPerpus Library System", 
+                FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18));
+        letterhead.setAlignment(Element.ALIGN_CENTER);
+        document.add(letterhead);
+
+        Paragraph address = new Paragraph("Book Lending Management", 
+                FontFactory.getFont(FontFactory.HELVETICA, 10));
+        address.setAlignment(Element.ALIGN_CENTER);
+        document.add(address);
+
+        // Horizontal line
+        Paragraph line = new Paragraph("_________________________________________________________________________________________________________");
+        line.setAlignment(Element.ALIGN_CENTER);
+        document.add(line);
+        document.add(new Paragraph("\n\n"));
+
+        // Document title
+        Paragraph title = new Paragraph("BOOK LENDING RECORD", 
+                FontFactory.getFont(FontFactory.HELVETICA_BOLD, 14));
+        title.setAlignment(Element.ALIGN_CENTER);
+        document.add(title);
+        document.add(new Paragraph("\n"));
+
+        // Date
+        Paragraph date = new Paragraph("Date: " + LocalDate.now().format(dateFormatter), 
+                FontFactory.getFont(FontFactory.HELVETICA, 10));
+        date.setAlignment(Element.ALIGN_RIGHT);
+        document.add(date);
+        document.add(new Paragraph("\n"));
+
+        // Lending details
+        Font labelFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 11);
+        Font valueFont = FontFactory.getFont(FontFactory.HELVETICA, 11);
+
+        // Borrower information
+        Paragraph borrowerSection = new Paragraph();
+        borrowerSection.add(new Chunk("Borrower Information:\n", labelFont));
+        borrowerSection.add(new Chunk("Name: ", labelFont));
+        borrowerSection.add(new Chunk((lending.getBorrower() != null ? lending.getBorrower().getName() : "-") + "\n", valueFont));
+        borrowerSection.add(new Chunk("Borrower ID: ", labelFont));
+        borrowerSection.add(new Chunk((lending.getBorrower() != null ? lending.getBorrower().getBorrowerId() : "-") + "\n", valueFont));
+        borrowerSection.add(new Chunk("Division: ", labelFont));
+        borrowerSection.add(new Chunk((lending.getBorrower() != null && lending.getBorrower().getDivision() != null 
+                ? lending.getBorrower().getDivision() : "-") + "\n", valueFont));
+        document.add(borrowerSection);
+        document.add(new Paragraph("\n"));
+
+        // Book information
+        Paragraph bookSection = new Paragraph();
+        bookSection.add(new Chunk("Book Information:\n", labelFont));
+        bookSection.add(new Chunk("Title: ", labelFont));
+        bookSection.add(new Chunk((lending.getBook() != null ? lending.getBook().getTitle() : "-") + "\n", valueFont));
+        bookSection.add(new Chunk("Author: ", labelFont));
+        bookSection.add(new Chunk((lending.getBook() != null ? lending.getBook().getAuthor() : "-") + "\n", valueFont));
+        bookSection.add(new Chunk("ISBN: ", labelFont));
+        bookSection.add(new Chunk((lending.getBook() != null && lending.getBook().getIsbn() != null 
+                ? lending.getBook().getIsbn() : "-") + "\n", valueFont));
+        document.add(bookSection);
+        document.add(new Paragraph("\n"));
+
+        // Lending details
+        Paragraph lendingSection = new Paragraph();
+        lendingSection.add(new Chunk("Lending Details:\n", labelFont));
+        lendingSection.add(new Chunk("Lend Date: ", labelFont));
+        lendingSection.add(new Chunk((lending.getLendDate() != null ? lending.getLendDate().format(dateFormatter) : "-") + "\n", valueFont));
+        lendingSection.add(new Chunk("Due Date: ", labelFont));
+        lendingSection.add(new Chunk((lending.getDueDate() != null ? lending.getDueDate().format(dateFormatter) : "-") + "\n", valueFont));
+        
+        // Calculate duration
+        if (lending.getLendDate() != null && lending.getDueDate() != null) {
+            long duration = java.time.temporal.ChronoUnit.DAYS.between(lending.getLendDate(), lending.getDueDate());
+            lendingSection.add(new Chunk("Lending Duration: ", labelFont));
+            lendingSection.add(new Chunk(duration + " days\n", valueFont));
+        }
+        
+        // Status
+        String status = "Active";
+        if (lending.getReturnDate() != null) {
+            status = "Returned on " + lending.getReturnDate().format(dateFormatter);
+        } else if (lending.getDueDate() != null && lending.getDueDate().isBefore(LocalDate.now())) {
+            status = "Overdue";
+        }
+        lendingSection.add(new Chunk("Status: ", labelFont));
+        lendingSection.add(new Chunk(status + "\n", valueFont));
+        document.add(lendingSection);
+        document.add(new Paragraph("\n\n\n"));
+
+        // Regards section
+        Paragraph regards = new Paragraph();
+        regards.add(new Chunk("Best Regards,\n\n\n", FontFactory.getFont(FontFactory.HELVETICA, 11)));
+        regards.add(new Chunk("Administrator\n", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 11)));
+        regards.add(new Chunk("Library Clerk", FontFactory.getFont(FontFactory.HELVETICA, Font.ITALIC, 10)));
+        document.add(regards);
+
+        document.close();
+        return outputStream.toByteArray();
     }
 }

@@ -319,7 +319,10 @@ function renderLoans() {
       <td>${l.book ? l.book.title : '—'}</td>
       <td>${l.dueDate ? l.dueDate : ''}</td>
       <td><span class="status-badge">${l.returnDate ? 'returned' : 'borrowed'}</span></td>
-      <td>${l.returnDate ? '' : `<button class="btn-delete" onclick="returnBook(${l.id})">Return</button>`}</td>
+      <td>
+        ${l.returnDate ? '' : `<button class="btn-delete" onclick="returnBook(${l.id})">Return</button>`}
+        <button class="btn-edit" onclick="generateLendingLetter(${l.id})" style="margin-left: 4px;">Generate Letter</button>
+      </td>
     </tr>
   `).join('');
   renderPagination('loans', loans.length, state, 'lendingPagination');
@@ -329,6 +332,11 @@ async function returnBook(loanId) {
   await fetch(`${api.lendings}/${loanId}/return`, { method: 'POST' });
   await fetchLoans();
   await fetchBooks();
+}
+
+function generateLendingLetter(lendingId) {
+  const url = `/api/reports/lending/${lendingId}/letter`;
+  window.open(url, '_blank');
 }
 
 async function fetchLoans() {
