@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reports - iniPerpus</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="navbar">
+    <a href="/" class="navbar-brand">📚 iniPerpus</a>
+    <div class="navbar-links">
+      <a href="/" class="nav-link">Home</a>
+      <a href="/users" class="nav-link">Borrowers</a>
+      <a href="/books" class="nav-link">Books</a>
+      <a href="/lending" class="nav-link">Lending</a>
+      <a href="#" class="nav-link" onclick="appLogout(event)">Logout</a>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="page-header">
+      <h1>📊 Reports</h1>
+      <p style="color: #6b7280; margin-top: 8px;">Generate and export data reports to PDF</p>
+    </div>
+
+    <div class="grid">
+      <!-- Unified Report Generator -->
+      <div class="card">
+        <div style="display: flex; align-items: center; margin-bottom: 16px;">
+          <div style="font-size: 32px; margin-right: 12px;">📄</div>
+          <h2 style="margin: 0;">Generate Report</h2>
+        </div>
+        <p style="color: #6b7280; margin-bottom: 16px;">Choose the data type from the list, then click Generate to download a PDF.</p>
+        <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center;">
+          <select id="reportTypeSelect" onchange="updateFilterUI()" style="padding:10px 12px; border-radius:10px; border:1px solid #d1d5db; min-width:240px;">
+            <option value="borrowers">👥 Borrower Report</option>
+            <option value="books">📖 Book Report</option>
+            <option value="lending">🔄 Lending Report</option>
+            <option value="presence">📸 Presence Report</option>
+          </select>
+          <div id="filterContainer" style="display:flex; gap:12px; flex-wrap:wrap; align-items:center;"></div>
+          <button type="button" onclick="generateSelectedReport()">Generate PDF</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Summary Section -->
+    <div class="card" style="margin-top: 32px;">
+      <h2>📋 Report Summary</h2>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 16px;">
+        <div style="padding: 12px; background: #f3f4f6; border-radius: 8px;">
+          <div style="font-size: 14px; color: #6b7280; margin-bottom: 8px;">Total Borrowers</div>
+          <div style="font-size: 24px; font-weight: 600; color: #1f2937;" id="totalBorrowers">-</div>
+        </div>
+        <div style="padding: 12px; background: #f3f4f6; border-radius: 8px;">
+          <div style="font-size: 14px; color: #6b7280; margin-bottom: 8px;">Total Books</div>
+          <div style="font-size: 24px; font-weight: 600; color: #1f2937;" id="totalBooks">-</div>
+        </div>
+        <div style="padding: 12px; background: #f3f4f6; border-radius: 8px;">
+          <div style="font-size: 14px; color: #6b7280; margin-bottom: 8px;">Active Loans</div>
+          <div style="font-size: 24px; font-weight: 600; color: #1f2937;" id="totalLoans">-</div>
+        </div>
+        <div style="padding: 12px; background: #f3f4f6; border-radius: 8px;">
+          <div style="font-size: 14px; color: #6b7280; margin-bottom: 8px;">Presence Records</div>
+          <div style="font-size: 24px; font-weight: 600; color: #1f2937;" id="totalPresence">-</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading Indicator -->
+  <div id="loadingModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000; justify-content:center; align-items:center;">
+    <div style="background:white; padding:32px; border-radius:12px; text-align:center;">
+      <div style="font-size: 24px; margin-bottom: 16px;">⏳</div>
+      <p style="color: #666; margin: 0;">Generating report...</p>
+    </div>
+  </div>
+
+  <!-- Logout Confirmation Modal -->
+  <div id="logoutConfirmModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:1000;">
+    <div style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); background:white; padding:32px; border-radius:12px; width:90%; max-width:500px; box-shadow:0 10px 40px rgba(0,0,0,0.3);">
+      <h2 style="color:#333; margin-bottom:16px;">Confirm Logout</h2>
+      <p style="color:#666; margin-bottom:24px; font-size:16px;">Are you sure you want to logout?</p>
+      <div style="display:flex; gap:12px; justify-content:flex-end;">
+        <button type="button" class="btn-cancel" onclick="cancelLogout()">Cancel</button>
+        <button type="button" class="btn-delete-confirm" onclick="confirmLogout()">Yes, Logout</button>
+      </div>
+    </div>
+  </div>
+
+  <form id="logoutForm" method="post" style="display:none;">
+  </form>
+
+  <script>
+    // Load summary data on page load
+    async function loadSummary() {
+      try {
+        const borrowersRes = await fetch('/api/borrowers');
+        const borrowersData = await borrowersRes.json();
+        document.getElementById('totalBorrowers').textContent = borrowersData.length;
+
+        const booksRes = await fetch('/api/books');
+        const booksData = await booksRes.json();
+        document.getElementById('totalBooks').textContent = booksData.length;
+
+        const loansRes = await fetch('/api/lendings');
+        const loansData = await loansRes.json();
+        const activeLoans = loansData.filter(l => l.returnDate === null).length;
+        document.getElementById('totalLoans').textContent = activeLoans;
+
+        const presenceRes = await fetch('/api/presence/records');
+        const presenceData = await presenceRes.json();
+        document.getElementById('totalPresence').textContent = presenceData.length;
+      } catch (error) {
+        console.error('Error loading summary:', error);
+      }
+    }
+
+    // Download report function
+    async function downloadReport(reportType) {
+      try {
+        document.getElementById('loadingModal').style.display = 'flex';
+        const response = await fetch(`/api/reports/${reportType}`);
+        
+        if (!response.ok) {
+          throw new Error('Failed to generate report');
+        }
+
+        const blob = await response.blob();
+        const filename = response.headers.get('content-disposition').split('filename="')[1].slice(0, -1);
+        
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(link);
+      } catch (error) {
+        console.error('Error downloading report:', error);
+        alert('Error generating report: ' + error.message);
+      } finally {
+        document.getElementById('loadingModal').style.display = 'none';
+      }
+    }
+
+    // Generate based on selected type
+    function generateSelectedReport() {
+      const sel = document.getElementById('reportTypeSelect');
+      const type = sel ? sel.value : 'borrowers';
+      let query = '';
+      if (type === 'lending') {
+        const s = document.getElementById('lendStartDate');
+        const e = document.getElementById('lendEndDate');
+        const st = document.getElementById('lendStatus');
+        const parts = [];
+        if (s && s.value) parts.push('startDate=' + encodeURIComponent(s.value));
+        if (e && e.value) parts.push('endDate=' + encodeURIComponent(e.value));
+        if (st && st.value && st.value !== 'all') parts.push('status=' + encodeURIComponent(st.value));
+        if (parts.length) query = '?' + parts.join('&');
+      } else if (type === 'presence') {
+        const s = document.getElementById('presenceStartDate');
+        const e = document.getElementById('presenceEndDate');
+        const parts = [];
+        if (s && s.value) parts.push('startDate=' + encodeURIComponent(s.value));
+        if (e && e.value) parts.push('endDate=' + encodeURIComponent(e.value));
+        if (parts.length) query = '?' + parts.join('&');
+      }
+
+      downloadReport(type + (query || ''));
+    }
+
+    function updateFilterUI() {
+      const type = document.getElementById('reportTypeSelect').value;
+      const container = document.getElementById('filterContainer');
+      if (!container) return;
+      if (type === 'lending') {
+        container.innerHTML = `
+          <label style="color:#374151; font-weight:600;">Date Range:</label>
+          <input type="date" id="lendStartDate" />
+          <span style="color:#6b7280;">to</span>
+          <input type="date" id="lendEndDate" />
+          <label style="color:#374151; font-weight:600;">Status:</label>
+          <select id="lendStatus" style="padding:8px 10px; border-radius:8px; border:1px solid #d1d5db;">
+            <option value="all">All</option>
+            <option value="active">Active</option>
+            <option value="overdue">Overdue</option>
+            <option value="returned">Returned</option>
+          </select>
+        `;
+      } else if (type === 'presence') {
+        container.innerHTML = `
+          <label style="color:#374151; font-weight:600;">Date Range:</label>
+          <input type="date" id="presenceStartDate" />
+          <span style="color:#6b7280;">to</span>
+          <input type="date" id="presenceEndDate" />
+        `;
+      } else {
+        container.innerHTML = '';
+      }
+    }
+
+    window.addEventListener('load', () => {
+      loadSummary();
+      updateFilterUI();
+    });
+
+    // Logout functions
+    function appLogout(e) {
+      e.preventDefault();
+      document.getElementById('logoutConfirmModal').style.display = 'block';
+    }
+
+    function confirmLogout() {
+      try { sessionStorage.removeItem('isLoggedIn'); } catch (err) {}
+      document.getElementById('logoutForm').action = '/logout';
+      document.getElementById('logoutForm').submit();
+    }
+
+    function cancelLogout() {
+      document.getElementById('logoutConfirmModal').style.display = 'none';
+    }
+
+    // Load summary on page load
+    window.addEventListener('load', loadSummary);
+  </script>
+</body>
+</html>

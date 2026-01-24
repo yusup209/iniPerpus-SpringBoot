@@ -152,6 +152,7 @@ body::before {
   text-decoration: none;
   display: block;
   text-align: center;
+  width: 100%;
 }
 
 .home-btn:hover {

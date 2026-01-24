@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS `borrower` (
   `id` BIGINT NOT NULL AUTO_INCREMENT,
   `borrower_id` VARCHAR(100) DEFAULT NULL,
   `name` VARCHAR(255) DEFAULT NULL,
-  `class_name` VARCHAR(255) DEFAULT NULL,
+  `division` VARCHAR(255) DEFAULT NULL,
   `photo_filename` VARCHAR(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_borrower_borrowerId` (`borrower_id`)

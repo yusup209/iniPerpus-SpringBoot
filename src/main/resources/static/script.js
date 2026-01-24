@@ -27,9 +27,9 @@ async function addBorrower(e) {
   e.preventDefault();
   const name = document.getElementById('userName').value;
   const borrowerId = document.getElementById('userEmail').value; // reuse email field as borrowerId input field id
-  const className = document.getElementById('userPhone').value;
+  const division = document.getElementById('userDivision').value;
 
-  const payload = { name: name, borrowerId: borrowerId, className: className };
+  const payload = { name: name, borrowerId: borrowerId, division: division };
   await fetch(api.borrowers, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
   await fetchBorrowers();
   e.target.reset();
@@ -74,7 +74,7 @@ function renderBorrowers() {
     <tr>
       <td>${s.name}</td>
       <td>${s.borrowerId}</td>
-      <td>${s.className || '—'}</td>
+      <td>${s.division || '—'}</td>
       <td style="text-align:center;">
         <button class="btn-icon-edit" title="Edit" onclick="editBorrower(${s.id})">✎</button>
         <button class="btn-icon-delete" title="Delete" onclick="deleteBorrower(${s.id})">🗑</button>
@@ -113,7 +113,7 @@ function editBorrower(id) {
   document.getElementById('editBorrowerId').value = borrower.id;
   document.getElementById('editBorrowerName').value = borrower.name;
   document.getElementById('editBorrowerBorrowerId').value = borrower.borrowerId;
-  document.getElementById('editBorrowerClassName').value = borrower.className || '';
+  document.getElementById('editBorrowerDivision').value = borrower.division || '';
   document.getElementById('editBorrowerModal').style.display = 'block';
 }
 
@@ -122,9 +122,9 @@ async function saveBorrower(e) {
   const id = document.getElementById('editBorrowerId').value;
   const name = document.getElementById('editBorrowerName').value;
   const borrowerId = document.getElementById('editBorrowerBorrowerId').value;
-  const className = document.getElementById('editBorrowerClassName').value;
+  const division = document.getElementById('editBorrowerDivision').value;
   
-  const payload = { name, borrowerId, className };
+  const payload = { name, borrowerId, division };
   await fetch(`${api.borrowers}/${id}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },

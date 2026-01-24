@@ -42,8 +42,8 @@ public class DataInitializer {
             // Create sample borrowers only if no borrowers exist
             if (borrowerService.findAll().isEmpty()) {
                 try {
-                    Borrower s1 = new Borrower(); s1.setBorrowerId("S001"); s1.setName("Alice"); s1.setClassName("10A"); borrowerService.save(s1);
-                    Borrower s2 = new Borrower(); s2.setBorrowerId("S002"); s2.setName("Bob"); s2.setClassName("10B"); borrowerService.save(s2);
+                    Borrower s1 = new Borrower(); s1.setBorrowerId("S001"); s1.setName("Alice"); s1.setDivision("10A"); borrowerService.save(s1);
+                    Borrower s2 = new Borrower(); s2.setBorrowerId("S002"); s2.setName("Bob"); s2.setDivision("10B"); borrowerService.save(s2);
                 } catch (Exception ignored) {}
             }
         };

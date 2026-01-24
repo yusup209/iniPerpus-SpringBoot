@@ -35,7 +35,7 @@ public class ApiBorrowerController {
         if (existing == null) throw new RuntimeException("Borrower not found");
         if (updates.getName() != null) existing.setName(updates.getName());
         if (updates.getBorrowerId() != null) existing.setBorrowerId(updates.getBorrowerId());
-        if (updates.getClassName() != null) existing.setClassName(updates.getClassName());
+        if (updates.getDivision() != null) existing.setDivision(updates.getDivision());
         return borrowerService.save(existing);
     }
 

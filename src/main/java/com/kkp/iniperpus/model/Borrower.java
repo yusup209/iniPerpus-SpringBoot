@@ -13,7 +13,8 @@ public class Borrower {
     private String borrowerId;
 
     private String name;
-    private String className;
+    @Column(name = "division")
+    private String division;
     private String photoFilename;
 
     public Long getId() { return id; }
@@ -22,8 +23,8 @@ public class Borrower {
     public void setBorrowerId(String borrowerId) { this.borrowerId = borrowerId; }
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
-    public String getClassName() { return className; }
-    public void setClassName(String className) { this.className = className; }
+    public String getDivision() { return division; }
+    public void setDivision(String division) { this.division = division; }
     public String getPhotoFilename() { return photoFilename; }
     public void setPhotoFilename(String photoFilename) { this.photoFilename = photoFilename; }
 }
