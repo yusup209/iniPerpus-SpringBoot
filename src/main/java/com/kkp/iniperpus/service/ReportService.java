@@ -467,55 +467,55 @@ public class ReportService {
 
         document.open();
 
-        // Letterhead with Logo
+        // Header with Logo and Company Info side by side
+        PdfPTable headerTable = new PdfPTable(2);
+        headerTable.setWidthPercentage(100);
+        headerTable.setWidths(new float[]{1, 3});
+        
+        // Logo cell
+        PdfPCell logoCell = new PdfPCell();
+        logoCell.setBorder(Rectangle.NO_BORDER);
         try {
-            // Try to load logo from resources
-            InputStream logoStream = getClass().getClassLoader().getResourceAsStream("static/logo.png");
+            InputStream logoStream = getClass().getClassLoader().getResourceAsStream("static/ina_armedforces_logo.png");
             if (logoStream != null) {
                 Image logo = Image.getInstance(logoStream.readAllBytes());
-                logo.scaleToFit(80, 80);
-                logo.setAlignment(Element.ALIGN_CENTER);
-                document.add(logo);
-                document.add(new Paragraph("\n"));
+                logo.scaleToFit(60, 60);
+                logoCell.addElement(logo);
             } else {
-                // Logo placeholder if file not found
-                Paragraph logoPlaceholder = new Paragraph("[LIBRARY LOGO]", 
-                        FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12));
-                logoPlaceholder.setAlignment(Element.ALIGN_CENTER);
-                document.add(logoPlaceholder);
+                logoCell.addElement(new Paragraph("[LOGO]", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10)));
             }
         } catch (Exception e) {
-            // Fallback to text placeholder if any error occurs
-            Paragraph logoPlaceholder = new Paragraph("[LIBRARY LOGO]", 
-                    FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12));
-            logoPlaceholder.setAlignment(Element.ALIGN_CENTER);
-            document.add(logoPlaceholder);
+            logoCell.addElement(new Paragraph("[LOGO]", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10)));
         }
-
-        Paragraph letterhead = new Paragraph("iniPerpus Library System", 
-                FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18));
-        letterhead.setAlignment(Element.ALIGN_CENTER);
-        document.add(letterhead);
-
-        Paragraph address = new Paragraph("Book Lending Management", 
-                FontFactory.getFont(FontFactory.HELVETICA, 10));
-        address.setAlignment(Element.ALIGN_CENTER);
-        document.add(address);
-
-        // Horizontal line
-        Paragraph line = new Paragraph("_________________________________________________________________________________________________________");
-        line.setAlignment(Element.ALIGN_CENTER);
-        document.add(line);
-        document.add(new Paragraph("\n\n"));
+        logoCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        headerTable.addCell(logoCell);
+        
+        // Company info cell
+        PdfPCell infoCell = new PdfPCell();
+        infoCell.setBorder(Rectangle.NO_BORDER);
+        Paragraph companyName = new Paragraph("iniPerpus Library System", 
+                FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16));
+        companyName.setAlignment(Element.ALIGN_CENTER);
+        infoCell.addElement(companyName);
+        
+        Paragraph companyAddress = new Paragraph("Book Lending Management System\nLibrary Administration Office", 
+                FontFactory.getFont(FontFactory.HELVETICA, 9));
+        companyAddress.setAlignment(Element.ALIGN_CENTER);
+        infoCell.addElement(companyAddress);
+        infoCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        headerTable.addCell(infoCell);
+        
+        document.add(headerTable);
+        document.add(new Paragraph("\n"));
 
         // Document title
-        Paragraph title = new Paragraph("BOOK LENDING RECORD", 
+        Paragraph title = new Paragraph("Book Lending Record", 
                 FontFactory.getFont(FontFactory.HELVETICA_BOLD, 14));
         title.setAlignment(Element.ALIGN_CENTER);
         document.add(title);
         document.add(new Paragraph("\n"));
 
-        // Date
+        // Date aligned to the right
         Paragraph date = new Paragraph("Date: " + LocalDate.now().format(dateFormatter), 
                 FontFactory.getFont(FontFactory.HELVETICA, 10));
         date.setAlignment(Element.ALIGN_RIGHT);
@@ -577,14 +577,44 @@ public class ReportService {
         lendingSection.add(new Chunk("Status: ", labelFont));
         lendingSection.add(new Chunk(status + "\n", valueFont));
         document.add(lendingSection);
+        document.add(new Paragraph("\n\n"));
+
+        // Footer with location, date and signature
+        String[] months = {"January", "February", "March", "April", "May", "June", 
+                          "July", "August", "September", "October", "November", "December"};
+        String[] days = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
+        LocalDate now = LocalDate.now();
+        String dayName = days[now.getDayOfWeek().getValue() % 7];
+        String monthName = months[now.getMonthValue() - 1];
+        
+        Paragraph dateTime = new Paragraph(
+                String.format("Jakarta, %s, %d %s %d", dayName, now.getDayOfMonth(), monthName, now.getYear()),
+                FontFactory.getFont(FontFactory.HELVETICA, 10));
+        dateTime.setAlignment(Element.ALIGN_RIGHT);
+        document.add(dateTime);
+        
+        Paragraph onBehalf = new Paragraph("On behalf of Kapusinfolahta TNI", 
+                FontFactory.getFont(FontFactory.HELVETICA, 10));
+        onBehalf.setAlignment(Element.ALIGN_RIGHT);
+        document.add(onBehalf);
+        
+        Paragraph clerkPosition = new Paragraph("The Library", 
+                FontFactory.getFont(FontFactory.HELVETICA, 10));
+        clerkPosition.setAlignment(Element.ALIGN_RIGHT);
+        document.add(clerkPosition);
+        
         document.add(new Paragraph("\n\n\n"));
 
-        // Regards section
-        Paragraph regards = new Paragraph();
-        regards.add(new Chunk("Best Regards,\n\n\n", FontFactory.getFont(FontFactory.HELVETICA, 11)));
-        regards.add(new Chunk("Administrator\n", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 11)));
-        regards.add(new Chunk("Library Clerk", FontFactory.getFont(FontFactory.HELVETICA, Font.ITALIC, 10)));
-        document.add(regards);
+        // Signature section
+        Paragraph clerkName = new Paragraph("Khane, S.E., M.M.", 
+                FontFactory.getFont(FontFactory.HELVETICA_BOLD, 11));
+        clerkName.setAlignment(Element.ALIGN_RIGHT);
+        document.add(clerkName);
+        
+        Paragraph academicDegree = new Paragraph("Mayor Caj NRP 630117", 
+                FontFactory.getFont(FontFactory.HELVETICA, 10));
+        academicDegree.setAlignment(Element.ALIGN_RIGHT);
+        document.add(academicDegree);
 
         document.close();
         return outputStream.toByteArray();
