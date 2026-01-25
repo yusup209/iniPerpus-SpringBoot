@@ -498,7 +498,7 @@ public class ReportService {
         companyName.setAlignment(Element.ALIGN_CENTER);
         infoCell.addElement(companyName);
         
-        Paragraph companyAddress = new Paragraph("Book Lending Management System\nLibrary Administration Office", 
+        Paragraph companyAddress = new Paragraph("Pusat Informasi dan Pengolah Data Tentara Nasional Indonesia\nGedung Jenderal Besar A.H. Nasution Mabes TNI Cilangkap, Jakarta Timur, 13870\nTelp. (021) 8459 5576 | E-mail: zipusinfo@gmail.com", 
                 FontFactory.getFont(FontFactory.HELVETICA, 9));
         companyAddress.setAlignment(Element.ALIGN_CENTER);
         infoCell.addElement(companyAddress);
